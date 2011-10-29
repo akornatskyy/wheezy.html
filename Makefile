@@ -2,6 +2,8 @@
 .PHONY: clean env doc release test
 
 VERSION=2.6
+PYPI=http://pypi.python.org/simple
+
 PYTHON=env/bin/python$(VERSION)
 EASY_INSTALL=env/bin/easy_install-$(VERSION)
 PYTEST=env/bin/py.test-$(VERSION)
@@ -26,8 +28,8 @@ env:
 	fi;\
 	virtualenv --python=$$PYTHON_EXE \
 		--no-site-packages env
-	$(EASY_INSTALL) -O2 -U distribute
-	$(EASY_INSTALL) -O2 coverage nose pytest \
+	$(EASY_INSTALL) -i $(PYPI) -O2 -U distribute
+	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
 		pytest-pep8 pytest-cov wsgiref
 	# The following packages available for python < 3.0
 	#if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \
