@@ -7,6 +7,11 @@ from wheezy.html.markup import Fragment
 from wheezy.html.markup import Tag
 
 
+CSS_CLASS_ERROR_MESSAGE = 'error-message'
+CSS_CLASS_WARNING_MESSAGE = 'warning-message'
+CSS_CLASS_INFO_MESSAGE = 'info-message'
+
+
 class TagFactory(object):
     """ Factory of xhtml tags.
 
@@ -127,6 +132,34 @@ class WidgetFactory(object):
             type="hidden" name="accept" />
         >>> user.favorite_color.label('Color:')
         <label class="error" for="favorite-color">Color:</label>
+
+        General messages: info, warning, error
+
+        >>> user.info(None)
+        ''
+        >>> user.info('Your changes have been saved.')
+        <span class="info-message">Your changes have been saved.</span>
+
+        >>> user.warning('')
+        ''
+        >>> user.warning('No matching records were found.')
+        <span class="warning-message">No matching records were found.</span>
+
+        >>> user.error('The username or password '
+        ...     'provided is incorrect.')  #doctest: +NORMALIZE_WHITESPACE
+        <span class="error-message">The username or password provided
+        is incorrect.</span>
+
+        Error message is taken from context
+
+        >>> user.error()
+        ''
+        >>> errors['__ERROR__'] = ['The username or password '
+        ...     'provided is incorrect.']
+        >>> user.error()  #doctest: +NORMALIZE_WHITESPACE
+        <span class="error-message">The username or password provided
+        is incorrect.</span>
+
     """
 
     def __init__(self, model, errors):
@@ -136,6 +169,24 @@ class WidgetFactory(object):
     def __getattr__(self, name):
         value = getattr(self.model, name)
         return WidgetBuilder(name, value, self.errors.get(name, None))
+
+    def error(self, text=None):
+        if text is None:
+            errors = self.errors.get('__ERROR__', None)
+            if errors:
+                text = errors[0]
+        return self.info(text, class_=CSS_CLASS_ERROR_MESSAGE)
+
+    def warning(self, text):
+        return self.info(text, class_=CSS_CLASS_WARNING_MESSAGE)
+
+    def info(self, text, class_=CSS_CLASS_INFO_MESSAGE):
+        if text:
+            return Tag('span', text, {
+                'class_': class_
+            })
+        else:
+            return ''
 
 
 tag = TagFactory()
