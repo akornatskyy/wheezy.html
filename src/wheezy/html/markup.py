@@ -4,6 +4,7 @@
 """
 
 from wheezy.html.comp import iteritems
+from wheezy.html.comp import str_type
 
 
 class Tag(object):
@@ -51,21 +52,33 @@ class Tag(object):
         else:
             attrs[name] = value
 
+    def __unicode__(self):  # pragma: nocover, python 3
+        """
+            >>> assert str_type(Tag('x')) == str_type('<x />')
+        """
+        return self.render(str_type)
+
+    def __str__(self):
+        return self.render(str_type)
+
     def __repr__(self):
+        return self.render(str)
+
+    def render(self, converter):
         """
             Normal tag with attributes
 
-            >>> print(Tag('span')("abc", class_='error'))
+            >>> Tag('span')("abc", class_='error')
             <span class="error">abc</span>
 
             Alternatively you can use ``attr``:
 
-            >>> print(Tag('span')("abc", attrs={'class': 'error'}))
+            >>> Tag('span')("abc", attrs={'class': 'error'})
             <span class="error">abc</span>
 
             Self closing tag
 
-            >>> print(Tag('input')(id='name', value='abc'))
+            >>> Tag('input')(id='name', value='abc')
             <input id="name" value="abc" />
         """
         parts = []
@@ -74,27 +87,41 @@ class Tag(object):
         if self.attrs:
             for name, value in iteritems(self.attrs):
                 append(' ' + name.rstrip('_') +
-                        '="' + str(value) + '"')
+                        '="' + converter(value) + '"')
         if self.inner is not None:
-            append('>' + str(self.inner) + '</' + self.name + '>')
+            append('>')
+            append(converter(self.inner))
+            append('</' + self.name + '>')
         else:
             append(' />')
         return ''.join(parts)
 
 
 class Fragment(object):
-    """
-    """
 
     __slots__ = ['tags']
 
     def __init__(self, *tags):
         self.tags = tags
 
+    def __unicode__(self):  # pragma: nocover, python 3
+        """
+            >>> assert str_type(Fragment(1, 2)) == str_type('12')
+        """
+        return ''.join(map(str_type, self.tags))
+
     def __str__(self):
-        return self.__repr__()
+        """
+            >>> print(Fragment(1, 2))
+            12
+        """
+        return ''.join(map(str, self.tags))
 
     def __repr__(self):
+        """
+            >>> Fragment(1, 2)
+            12
+        """
         return ''.join(map(repr, self.tags))
 
     def __getattr__(self, name):
