@@ -98,7 +98,7 @@ def label(name, value, attrs=None):
     return Tag('label', inner=value, attrs=tag_attrs)
 
 
-def dropdown(name, value, attrs=None):
+def dropdown(name, value, attrs):
     """
         >>> colors = (('1', 'Yellow'), ('2', 'Red'))
         >>> dropdown('favorite_color', '1', attrs={
