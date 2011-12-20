@@ -35,6 +35,19 @@ def textbox(name, value, attrs=None):
     })
 
 
+def password(name, value, attrs=None):
+    """
+        >>> password('passwd', '')
+        <input type="password" id="passwd" value="" name="passwd" />
+    """
+    return Tag('input', attrs={
+            'id': id(name),
+            'name': name,
+            'type': 'password',
+            'value': value
+    })
+
+
 def textarea(name, value, attrs=None):
     """
         >>> textarea('message_text', 'x')  #doctest: +NORMALIZE_WHITESPACE
@@ -91,10 +104,14 @@ def label(name, value, attrs=None):
     """
         >>> label('zip_code', 'Zip Code')
         <label for="zip-code">Zip Code</label>
+        >>> label('zip_code', 'Zip Code', attrs={'class_': 'inline'})
+        <label class="inline" for="zip-code">Zip Code</label>
     """
     tag_attrs = {
             'for': id(name)
     }
+    if attrs:
+        tag_attrs.update(attrs)
     return Tag('label', inner=value, attrs=tag_attrs)
 
 
@@ -131,6 +148,7 @@ def dropdown(name, value, attrs):
 default = {
         'hidden': hidden,
         'textbox': textbox,
+        'password': password,
         'textarea': textarea,
         'checkbox': checkbox,
         'label': label,
