@@ -125,4 +125,4 @@ class Fragment(object):
         return ''.join(map(repr, self.tags))
 
     def __getattr__(self, name):
-        return getattr(self.tags[0], name)
+        return getattr(self.tags[-1], name)

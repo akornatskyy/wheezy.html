@@ -80,14 +80,13 @@ class WidgetFactory(object):
             name="name">John</textarea>
 
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input type="checkbox" id="accept" value="1"
-            name="accept" /><input type="hidden" name="accept" />
+        <input type="hidden" name="accept" /><input type="checkbox"
+            id="accept" value="1" name="accept" />
 
         >>> user.model.accept = True
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input checked="checked" type="checkbox" id="accept"
-            value="1" name="accept" /><input type="hidden"
-            name="accept" />
+        <input type="hidden" name="accept" /><input checked="checked"
+            type="checkbox" id="accept" value="1" name="accept" />
 
         >>> user.favorite_color.label('Color:')
         <label for="favorite-color">Color:</label>
@@ -127,9 +126,9 @@ class WidgetFactory(object):
         <textarea class="error" rows="9" cols="40" id="name"
             name="name">John</textarea>
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input checked="checked" name="accept" value="1"
-            class="error" type="checkbox" id="accept" /><input
-            type="hidden" name="accept" />
+        <input type="hidden" name="accept" /><input checked="checked"
+            name="accept" value="1" class="error" type="checkbox"
+            id="accept" />
         >>> user.favorite_color.label('Color:')
         <label class="error" for="favorite-color">Color:</label>
 
@@ -174,7 +173,7 @@ class WidgetFactory(object):
         if text is None:
             errors = self.errors.get('__ERROR__', None)
             if errors:
-                text = errors[0]
+                text = errors[-1]
         return self.info(text, class_=CSS_CLASS_ERROR_MESSAGE)
 
     def warning(self, text):
