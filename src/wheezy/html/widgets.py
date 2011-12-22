@@ -116,12 +116,16 @@ def label(name, value, attrs=None):
 
 def dropdown(name, value, attrs):
     """
-        >>> colors = (('1', 'Yellow'), ('2', 'Red'))
+        >>> from operator import itemgetter
+        >>> colors = sorted({'1': 'Yellow', '2': 'Red'}.items(),
+        ...         key=itemgetter(1))
+        >>> colors
+        [('2', 'Red'), ('1', 'Yellow')]
         >>> dropdown('favorite_color', '1', attrs={
         ...     'choices': colors})  #doctest: +NORMALIZE_WHITESPACE
         <select id="favorite-color" name="favorite_color"><option
-            selected="selected" value="1">Yellow</option><option
-            value="2">Red</option></select>
+            value="2">Red</option><option selected="selected"
+            value="1">Yellow</option></select>
     """
     choices = attrs.pop('choices')
     options = []
