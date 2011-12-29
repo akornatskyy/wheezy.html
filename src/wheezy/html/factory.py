@@ -83,6 +83,7 @@ class WidgetFactory(object):
         <input type="hidden" name="accept" /><input type="checkbox"
             id="accept" value="1" name="accept" />
 
+        >>> user = widget(model, errors)  # widget builders are cached
         >>> user.model.accept = True
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
         <input type="hidden" name="accept" /><input checked="checked"
@@ -164,10 +165,16 @@ class WidgetFactory(object):
     def __init__(self, model, errors):
         self.model = model
         self.errors = errors
+        self.builders = {}
 
     def __getattr__(self, name):
-        value = getattr(self.model, name)
-        return WidgetBuilder(name, value, self.errors.get(name, None))
+        try:
+            return self.builders[name]
+        except KeyError:
+            value = getattr(self.model, name)
+            builder = WidgetBuilder(name, value, self.errors.get(name, None))
+            self.builders[name] = builder
+            return builder
 
     def error(self, text=None):
         if text is None:
