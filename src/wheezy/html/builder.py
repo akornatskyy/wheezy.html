@@ -2,9 +2,11 @@
 """ ``builder`` module.
 """
 
+from wheezy.html.comp import str_type
 from wheezy.html.markup import Tag
 from wheezy.html.widgets import default
 from wheezy.html.widgets import hidden
+from wheezy.html.utils import html_escape
 
 
 CSS_CLASS_ERROR = 'error'
@@ -24,10 +26,14 @@ class Widget(object):
 
     def __call__(self, value=None, **attrs):
         """
-            >>> w = Widget('label', 'zip_code', '79053', None)
+            >>> w = Widget('label', 'zip_code', 'Zip Code', None)
+            >>> w()
+            <label for="zip-code">Zip Code</label>
         """
         if value is None:
             value = self.value
+        else:
+            value = html_escape(value)
         tag = self.tag(self.name, value, attrs)
         if attrs and hasattr(tag, 'attrs'):
             tag.attrs.update(attrs)
@@ -40,20 +46,16 @@ class WidgetBuilder(object):
     """
         ``errors`` - a list of errors.
 
-        >>> class User(object): pass
-        >>> model = User()
-
         textbox
 
-        >>> model.age = 33
         >>> errors = []
-        >>> h = WidgetBuilder('age', 33, errors)
+        >>> h = WidgetBuilder('age', '33', errors)
         >>> h.textbox(class_='b')
         <input class="b" type="text" id="age" value="33" name="age" />
         >>> h.error()
         ''
         >>> errors.append('required')
-        >>> h = WidgetBuilder('age', 0, errors)
+        >>> h = WidgetBuilder('age', '0', errors)
         >>> h.textbox(class_='b')
         <input class="error b" type="text" id="age" value="0" name="age" />
         >>> h.error()
@@ -69,15 +71,11 @@ class WidgetBuilder(object):
 
     def __repr__(self):
         """
-            >>> class A(object):pass
-            >>> model = A()
-            >>> model.x = 100
-            >>> errors = []
-            >>> h = WidgetBuilder('x', 100, errors)
+            >>> h = WidgetBuilder('age', '0', None)
             >>> h
-            100
+            0
         """
-        return str(self.value)
+        return self.value
 
     def __getattr__(self, tag_name):
         return Widget(tag_name, self.name, self.value,

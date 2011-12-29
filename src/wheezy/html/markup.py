@@ -59,7 +59,7 @@ class Tag(object):
         return self.render(str_type)
 
     def __str__(self):
-        return self.render(str_type)
+        return self.render(str)
 
     def __repr__(self):
         return self.render(str)
@@ -87,11 +87,10 @@ class Tag(object):
         if self.attrs:
             for name, value in iteritems(self.attrs):
                 append(' ' + name.rstrip('_') +
-                        '="' + converter(value) + '"')
+                        '="' + value + '"')
         if self.inner is not None:
-            append('>')
-            append(converter(self.inner))
-            append('</' + self.name + '>')
+            append('>' + converter(self.inner) +
+                    '</' + self.name + '>')
         else:
             append(' />')
         return ''.join(parts)

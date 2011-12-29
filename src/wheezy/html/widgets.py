@@ -70,14 +70,14 @@ def textarea(name, value, attrs=None):
 
 def checkbox(name, checked, attrs=None):
     """
-        >>> checkbox('accept', True)  #doctest: +NORMALIZE_WHITESPACE
+        >>> checkbox('accept', 'True')  #doctest: +NORMALIZE_WHITESPACE
         <input type="hidden" name="accept" /><input checked="checked"
             type="checkbox" id="accept" value="1" name="accept" />
-        >>> checkbox('accept', False)  #doctest: +NORMALIZE_WHITESPACE
+        >>> checkbox('accept', 'False')  #doctest: +NORMALIZE_WHITESPACE
         <input type="hidden" name="accept" /><input type="checkbox"
             id="accept" value="1" name="accept" />
 
-        >>> checkbox('accept', True,
+        >>> checkbox('accept', 'True',
         ...         attrs={'class_': 'b'})  #doctest: +NORMALIZE_WHITESPACE
         <input type="hidden" name="accept" /><input class="b"
             checked="checked" name="accept" type="checkbox"
@@ -89,7 +89,7 @@ def checkbox(name, checked, attrs=None):
             'type': 'checkbox',
             'value': '1'
     }
-    if checked:
+    if checked == 'True':
         tag_attrs['checked'] = 'checked'
     if attrs:
         tag_attrs.update(attrs)

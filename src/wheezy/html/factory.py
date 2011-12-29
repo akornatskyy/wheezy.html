@@ -3,8 +3,10 @@
 """
 
 from wheezy.html.builder import WidgetBuilder
+from wheezy.html.comp import str_type
 from wheezy.html.markup import Fragment
 from wheezy.html.markup import Tag
+from wheezy.html.utils import html_escape
 
 
 CSS_CLASS_ERROR_MESSAGE = 'error-message'
@@ -71,11 +73,11 @@ class WidgetFactory(object):
         >>> user.id.hidden()
         <input type="hidden" name="id" value="12345" />
 
-        >>> user.name.textbox(maxlength=30)  #doctest: +NORMALIZE_WHITESPACE
+        >>> user.name.textbox(maxlength='30')  #doctest: +NORMALIZE_WHITESPACE
         <input maxlength="30" type="text" id="name"
             value="John" name="name" />
 
-        >>> user.name.textarea(rows=10)  #doctest: +NORMALIZE_WHITESPACE
+        >>> user.name.textarea(rows='10')  #doctest: +NORMALIZE_WHITESPACE
         <textarea rows="10" cols="40" id="name"
             name="name">John</textarea>
 
@@ -162,6 +164,8 @@ class WidgetFactory(object):
 
     """
 
+    __slots__ = ['model', 'errors', 'builders']
+
     def __init__(self, model, errors):
         self.model = model
         self.errors = errors
@@ -171,7 +175,7 @@ class WidgetFactory(object):
         try:
             return self.builders[name]
         except KeyError:
-            value = getattr(self.model, name)
+            value = html_escape(str_type(getattr(self.model, name)))
             builder = WidgetBuilder(name, value, self.errors.get(name, None))
             self.builders[name] = builder
             return builder
@@ -188,7 +192,7 @@ class WidgetFactory(object):
 
     def info(self, text, class_=CSS_CLASS_INFO_MESSAGE):
         if text:
-            return Tag('span', text, {
+            return Tag('span', html_escape(text), {
                 'class_': class_
             })
         else:
