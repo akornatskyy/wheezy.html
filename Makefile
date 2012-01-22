@@ -1,7 +1,7 @@
 .SILENT: clean env po doctest-cover test doc release
 .PHONY: clean env po doctest-cover test doc release
 
-VERSION=2.6
+VERSION=2.7
 PYPI=http://pypi.python.org/simple
 
 PYTHON=env/bin/python$(VERSION)
@@ -37,7 +37,7 @@ env:
 		echo 'done.'; \
 	fi
 	$(EASY_INSTALL) -i $(PYPI) -O2 coverage nose pytest \
-		pytest-pep8 pytest-cov wsgiref
+		pytest-pep8 pytest-cov
 	# The following packages available for python < 3.0
 	#if [ "$$(echo $(VERSION) | sed 's/\.//')" -lt 30 ]; then \
 	#	$(EASY_INSTALL) sphinx; \

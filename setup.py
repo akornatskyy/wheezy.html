@@ -38,7 +38,7 @@ setup(
         'Topic :: Utilities'
     ],
     keywords = [
-        'html'
+        'html widget markup'
     ],
     packages = ['wheezy', 'wheezy.html'],
     package_dir = {'': 'src'},
@@ -49,7 +49,6 @@ setup(
     ],
     extras_require = {
         'dev': [
-            'wsgiref',
             'coverage',
             'nose',
             'pytest',
