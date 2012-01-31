@@ -8,7 +8,7 @@ from wheezy.html.comp import str_type
 
 
 class Tag(object):
-    """
+    """ Represents object version of HTML tag.
     """
     __slots__ = ['name', 'inner', 'attrs']
 
@@ -97,6 +97,8 @@ class Tag(object):
 
 
 class Fragment(object):
+    """ Represents object version of composite HTML tag.
+    """
 
     __slots__ = ['tags']
 
