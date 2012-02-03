@@ -15,7 +15,7 @@ Resources:
 
 * `source code`_, `examples`_ and `issues`_ tracker are available
   on `bitbucket`_
-* `documentation`_
+* `documentation`_, `readthedocs`_
 * `eggs`_ on `pypi`_
 
 Contents
@@ -29,11 +29,12 @@ Contents
    userguide
    modules
 
-.. _`python`: http://www.python.org
-.. _`source code`: http://bitbucket.org/akorn/wheezy.html/src
 .. _`bitbucket`: http://bitbucket.org/akorn/wheezy.html
-.. _`issues`: http://bitbucket.org/akorn/wheezy.html/issues
 .. _`documentation`: http://packages.python.org/wheezy.html
-.. _`examples`: http://bitbucket.org/akorn/wheezy.html/src/tip/demos
-.. _`pypi`: http://pypi.python.org
 .. _`eggs`: http://pypi.python.org/pypi/wheezy.html
+.. _`examples`: http://bitbucket.org/akorn/wheezy.html/src/tip/demos
+.. _`issues`: http://bitbucket.org/akorn/wheezy.html/issues
+.. _`pypi`: http://pypi.python.org
+.. _`python`: http://www.python.org
+.. _`readthedocs`: http://readthedocs.org/builds/wheezyhtml/
+.. _`source code`: http://bitbucket.org/akorn/wheezy.html/src
