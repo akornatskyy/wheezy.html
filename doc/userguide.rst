@@ -56,7 +56,45 @@ Once that code is executed we get the following::
 
     <input autocomplete="off" type="text" id="username" 
       value="" name="username" />
-      
+
+Value Formatting
+~~~~~~~~~~~~~~~~
+
+You can format model value before it is passed to widget for rendering.
+
+Let declare our domain model::
+
+    from datetime import date
+    
+    class Registration(object):
+
+        def __init__(self):
+            self.date_of_birth = date.min
+
+Here is how you can apply formatting::
+
+    registration.date_of_birth.format('%Y/%m/%d')
+
+or this way::
+
+    registration.date_of_birth.format(
+            format_provider=lambda value, ignore: value.strftime('%m-%d-%y'))
+
+``format_provider`` - a callable of the following form::
+
+    def my_format_provider(value, format_string):
+        return value_formatted
+
+There are default format providers for built-in types. You can replace and
+extend it with your own by altering ``format_providers`` map::
+
+    from wheezy.html.builder import format_providers
+    
+    format_providers['my_type'] = my_format_provider
+
+Default implementation for date/time types formats it minimal value to empty
+string.
+
 Model Error
 ~~~~~~~~~~~
 

@@ -81,10 +81,10 @@ class WidgetBuilder(object):
                 def my_formatter(value, format_string):
                     return value_formatted
 
-            >>> h = WidgetBuilder('age', date(2012, 2, 6), None)
+            >>> h = WidgetBuilder('date_of_birth', date(2012, 2, 6), None)
             >>> h.format('%m-%d-%y')
             '02-06-12'
-            >>> h = WidgetBuilder('age', date(2012, 2, 6), None)
+            >>> h = WidgetBuilder('date_of_birth', date(2012, 2, 6), None)
             >>> h.format(format_provider=lambda value, ignore:
             ...         value.strftime('%m-%d-%y'))
             '02-06-12'
