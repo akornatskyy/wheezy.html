@@ -175,7 +175,7 @@ class WidgetFactory(object):
         try:
             return self.builders[name]
         except KeyError:
-            value = html_escape(str_type(getattr(self.model, name)))
+            value = getattr(self.model, name)
             builder = WidgetBuilder(name, value, self.errors.get(name, None))
             self.builders[name] = builder
             return builder
