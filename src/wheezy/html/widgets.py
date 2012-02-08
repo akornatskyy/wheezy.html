@@ -180,8 +180,9 @@ def radio(name, value, attrs):
         ...     'choices': scm, 'class': 'error'
         ... })  #doctest: +NORMALIZE_WHITESPACE
         <label class="error"><input type="radio" name="scm" value="git"
-        />Git</label><label class="error"><input checked="checked"
-        type="radio" name="scm" value="hg" />Mercurial</label>
+            class="error" />Git</label><label class="error"><input
+            checked="checked" type="radio" name="scm" value="hg"
+            class="error" />Mercurial</label>
     """
     choices = attrs.pop('choices')
     elements = []
@@ -194,6 +195,8 @@ def radio(name, value, attrs):
         }
         if key == value:
             tag_attrs['checked'] = 'checked'
+        if attrs:
+            tag_attrs.update(attrs)
         append(Tag('label',
             Fragment((Tag('input', attrs=tag_attrs), text)), attrs=attrs))
     return Fragment(elements)
