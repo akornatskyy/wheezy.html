@@ -102,25 +102,25 @@ class Fragment(object):
 
     __slots__ = ['tags']
 
-    def __init__(self, *tags):
+    def __init__(self, tags):
         self.tags = tags
 
     def __unicode__(self):  # pragma: nocover, python 3
         """
-            >>> assert str_type(Fragment(1, 2)) == str_type('12')
+            >>> assert str_type(Fragment((1, 2))) == str_type('12')
         """
         return ''.join(map(str_type, self.tags))
 
     def __str__(self):
         """
-            >>> print(Fragment(1, 2))
+            >>> print(Fragment((1, 2)))
             12
         """
         return ''.join(map(str, self.tags))
 
     def __repr__(self):
         """
-            >>> Fragment(1, 2)
+            >>> Fragment((1, 2))
             12
         """
         return ''.join(map(repr, self.tags))

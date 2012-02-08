@@ -5,6 +5,7 @@
 from wheezy.html.comp import iteritems
 from wheezy.html.markup import Fragment
 from wheezy.html.markup import Tag
+from wheezy.html.utils import html_escape
 
 
 id = lambda name: name.replace('_', '-')
@@ -93,10 +94,10 @@ def checkbox(name, checked, attrs=None):
         tag_attrs['checked'] = 'checked'
     if attrs:
         tag_attrs.update(attrs)
-    return Fragment(
+    return Fragment((
             Tag('input', attrs={'name': name, 'type': 'hidden'}),
             Tag('input', attrs=tag_attrs)
-    )
+    ))
 
 
 def label(name, value, attrs=None):
@@ -140,13 +141,44 @@ def dropdown(name, value, attrs):
                     'value': key
             }
         options.append(Tag('option', inner=text, attrs=tag_attrs))
-    options = Fragment(*options)
+    options = Fragment(options)
     tag_attrs = {
             'id': id(name),
             'name': name
     }
     return Tag('select', inner=options, attrs=tag_attrs)
 
+
+def radio(name, value, attrs=None):
+    """
+        >>> from operator import itemgetter
+        >>> scm = sorted({'git': 'Git', 'hg': 'Mercurial'}.items(),
+        ...         key=itemgetter(1))
+
+        >>> scm
+        [('git', 'Git'), ('hg', 'Mercurial')]
+
+        >>> radio('scm', 'hg',
+        ...         attrs={'choices': scm})  #doctest: +NORMALIZE_WHITESPACE
+        <label><input type="radio" name="scm" value="git"
+        />Git</label><label><input checked="checked" type="radio" name="scm"
+        value="hg" />Mercurial</label>
+    """
+    choices = attrs.pop('choices')
+    elements = []
+    append = elements.append
+    for key, text in choices:
+        i = id(name) + '-' + key
+        tag_attrs={
+                'name': name,
+                'type': 'radio',
+                'value': key
+        }
+        if key == value:
+            tag_attrs['checked'] = 'checked'
+        append(Tag('label',
+            Fragment((Tag('input', attrs=tag_attrs), text))))
+    return Fragment(elements)
 
 default = {
         'hidden': hidden,
@@ -155,5 +187,7 @@ default = {
         'textarea': textarea,
         'checkbox': checkbox,
         'label': label,
-        'dropdown': dropdown
+        'dropdown': dropdown,
+        'select': dropdown,
+        'radio': radio
 }

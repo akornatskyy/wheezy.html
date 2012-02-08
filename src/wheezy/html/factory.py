@@ -25,7 +25,7 @@ class TagFactory(object):
     def __call__(self, *tags):
         """ Call function let combine several tags into fragment.
 
-            >>> tag(tag.b('1'), tag.i('2'))
+            >>> tag((tag.b('1'), tag.i('2')))
             <b>1</b><i>2</i>
         """
         return Fragment(*tags)
