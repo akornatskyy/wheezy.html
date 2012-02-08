@@ -22,7 +22,7 @@ Let declare our domain model::
 This way we get HTML widget::
 
     from wheezy.html import widget
-    
+
     credential = Credential()
     errors = {}
     credential = widget(credential, errors)
@@ -45,7 +45,7 @@ widget for rendering::
 
 Let explain this single line:
 
-* ``credential`` - an instance of 
+* ``credential`` - an instance of
   :py:class:`~wheezy.html.factory.WidgetFactory` that wraps ``model`` and
   ``errors``.
 * ``username`` - attribute name of our domain object.
@@ -54,7 +54,7 @@ Let explain this single line:
 
 Once that code is executed we get the following::
 
-    <input autocomplete="off" type="text" id="username" 
+    <input autocomplete="off" type="text" id="username"
       value="" name="username" />
 
 Value Formatting
@@ -65,7 +65,7 @@ You can format model value before it is passed to widget for rendering.
 Let declare our domain model::
 
     from datetime import date
-    
+
     class Registration(object):
 
         def __init__(self):
@@ -89,7 +89,7 @@ There are default format providers for built-in types. You can replace and
 extend it with your own by altering ``format_providers`` map::
 
     from wheezy.html.builder import format_providers
-    
+
     format_providers['my_type'] = my_format_provider
 
 Default implementation for date/time types formats it minimal value to empty
@@ -98,7 +98,7 @@ string.
 Model Error
 ~~~~~~~~~~~
 
-Since ``widget`` is initialized with model and errors, it capable to 
+Since ``widget`` is initialized with model and errors, it capable to
 decorate html widget with attributes specific to errors. Let see this
 in the following example::
 
@@ -107,7 +107,7 @@ in the following example::
 We get the errors from some sort of validation. The same ``textbox`` is now
 decorated with class error::
 
-    <input name="username" value="" autocomplete="off" 
+    <input name="username" value="" autocomplete="off"
        class="error" type="text" id="username" />
 
 So I can apply appropriate css style to draw a border around input, or what
@@ -119,7 +119,7 @@ Now let display error::
     credential.username.error()
 
 Read above as render error message for username, here is what we get::
-    
+
     <span class="error">Required field cannot be left blank.</span>
 
 General Error
@@ -130,14 +130,14 @@ related instead. If ``errors`` dictionary contains an element with __ERROR__
 key than that one is used as general error::
 
     errors = {'__ERROR__': 'The username or password provided is incorrect.'}
-    
+
 You can display it this way::
 
     credential.error()
-    
+
 It renders the following html element only if __ERROR__ key exists::
 
-    <span class="error-message">The username or password 
+    <span class="error-message">The username or password
       provided is incorrect.</span>
 
 Notice class ``error-message``. Your application is able to distinguish field
@@ -157,8 +157,32 @@ Widgets
 * :py:meth:`~wheezy.html.widgets.checkbox` - two html elements: input type
   hidden and input type checkbox.
 * :py:meth:`~wheezy.html.widgets.label` - html element label.
-* :py:meth:`~wheezy.html.widgets.dropdown` - html element select. Attribute
-  ``choices`` is a list of html options.
+* :py:meth:`~wheezy.html.widgets.dropdown` - html element select (there is
+  also synonym ``select``). Attribute ``choices`` is a list of html options.
+* :py:meth:`~wheezy.html.widgets.radio` - a group of html input elements
+  radio. Attribute ``choices`` is a list of options.
+
+Several widgets support ``choinces`` attribute, it is an iteratable of tuple
+of two::
+
+    account_types = (('u', 'User'), ('b', 'Business'))
+    account.account_type.radio(choices=account_types)
+
+It renders the following html::
+
+    <label><input checked="checked" type="radio"
+        name="account_type" value="1" />User</label>
+    <label><input type="radio" name="account_type"
+        value="2" />Business</label>
+
+It is sometimes more convinient to operate with dictionary::
+
+    >>> from operator import itemgetter
+    >>> account_types = sorted({'u': 'User', 'b': 'Business'}.items(),
+    ...         key=itemgetter(1))
+    >>> account_types
+    [('u', 'User'), ('b', 'Business')]
+
 
 Custom Widgets
 ~~~~~~~~~~~~~~
@@ -167,19 +191,23 @@ It is easy to provide own widgets. A widget is any callable of the following
 contract::
 
     from wheezy.html.markup import Tag
-    
-    def my_widget(name, value, attrs=None):
-        tag = Tag()
-        return tag
-    
+
+    def my_widget(name, value, attrs):
+        tag_attrs = {
+            'id' = id(name)
+        }
+        if attrs:
+            tag_attrs.update(attrs)
+        return Tag('name', value, attrs=tag_attrs)
+
 Here is a description of each attribute:
 
 * ``name`` - name of model attribute.
 * ``value`` - value that is currently rendered.
 * ``attrs`` - a dictionary of extra key-word arguments passed.
 
-Your custom widget must return an instance of 
-:py:class:`~wheezy.html.markup.Tag` or 
+Your custom widget must return an instance of
+:py:class:`~wheezy.html.markup.Tag` or
 :py:class:`~wheezy.html.markup.Fragment`. In case of field error html element
 is decorated with css class ``error``.
 
@@ -189,11 +217,11 @@ Registration
 Once ``my_widget`` is ready you can add it to a list of default widgets::
 
     from wheezy.html.widgets import default as default_widgets
-    
+
     default_widgets['my_widget'] = my_widget
-    
+
 Now you should be able to use it::
-    
+
     credential.username.my_widget()
 
 Since ``default_widgets`` is python dictionary you can manipulate it a way you
