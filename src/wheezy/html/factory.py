@@ -82,14 +82,13 @@ class WidgetFactory(object):
             name="name">John</textarea>
 
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input type="hidden" name="accept" /><input type="checkbox"
-            id="accept" value="1" name="accept" />
+        <input type="checkbox" id="accept" value="1" name="accept" />
 
         >>> user = widget(model, errors)  # widget builders are cached
         >>> user.model.accept = True
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input type="hidden" name="accept" /><input checked="checked"
-            type="checkbox" id="accept" value="1" name="accept" />
+        <input checked="checked" type="checkbox" id="accept" value="1"
+            name="accept" />
 
         >>> user.favorite_color.label('Color:')
         <label for="favorite-color">Color:</label>
@@ -126,9 +125,8 @@ class WidgetFactory(object):
         <textarea class="error" rows="9" cols="40" id="name"
             name="name">John</textarea>
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input type="hidden" name="accept" /><input checked="checked"
-            name="accept" type="checkbox" id="accept" value="1"
-            class="error" />
+        <input checked="checked" name="accept" type="checkbox" id="accept"
+            value="1" class="error" />
         >>> user.favorite_color.label('Color:')
         <label class="error" for="favorite-color">Color:</label>
 

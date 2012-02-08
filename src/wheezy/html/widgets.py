@@ -87,16 +87,15 @@ def textarea(name, value, attrs):
 def checkbox(name, checked, attrs):
     """
         >>> checkbox('accept', 'True', {})  #doctest: +NORMALIZE_WHITESPACE
-        <input type="hidden" name="accept" /><input checked="checked"
-            type="checkbox" id="accept" value="1" name="accept" />
+        <input checked="checked" type="checkbox" id="accept" value="1"
+            name="accept" />
         >>> checkbox('accept', 'False', {})  #doctest: +NORMALIZE_WHITESPACE
-        <input type="hidden" name="accept" /><input type="checkbox"
-            id="accept" value="1" name="accept" />
+        <input type="checkbox" id="accept" value="1" name="accept" />
 
         >>> checkbox('accept', 'True',
         ...         attrs={'class': 'b'})  #doctest: +NORMALIZE_WHITESPACE
-        <input type="hidden" name="accept" /><input checked="checked"
-            name="accept" type="checkbox" id="accept" value="1" class="b" />
+        <input checked="checked" name="accept" type="checkbox" id="accept"
+            value="1" class="b" />
      """
     tag_attrs = {
             'id': id(name),
@@ -108,10 +107,7 @@ def checkbox(name, checked, attrs):
         tag_attrs['checked'] = 'checked'
     if attrs:
         tag_attrs.update(attrs)
-    return Fragment((
-            Tag('input', attrs={'name': name, 'type': 'hidden'}),
-            Tag('input', attrs=tag_attrs)
-    ))
+    return Tag('input', attrs=tag_attrs)
 
 
 def label(name, value, attrs):
