@@ -31,27 +31,6 @@ class Tag(object):
             self.attrs.update(attrs)
         return self
 
-    def append_attr(self, name, value):
-        """
-            If there is no attribute with ``name`` than it added.
-
-            >>> t = Tag('x')
-            >>> t.append_attr('class', 'a')
-            >>> t
-            <x class="a" />
-
-            Existing attribute is extended with space and value.
-
-            >>> t.append_attr('class', 'b')
-            >>> t
-            <x class="b a" />
-        """
-        attrs = self.attrs
-        if name in attrs:
-            attrs[name] = value + ' ' + attrs[name]
-        else:
-            attrs[name] = value
-
     def __unicode__(self):  # pragma: nocover, python 3
         """
             >>> assert str_type(Tag('x')) == str_type('<x />')
@@ -59,6 +38,9 @@ class Tag(object):
         return self.render(str_type)
 
     def __str__(self):
+        """
+            >>> assert str(Tag('x')) == '<x />'
+        """
         return self.render(str)
 
     def __repr__(self):
@@ -124,6 +106,3 @@ class Fragment(object):
             12
         """
         return ''.join(map(repr, self.tags))
-
-    def __getattr__(self, name):
-        return getattr(self.tags[-1], name)

@@ -25,64 +25,78 @@ def hidden(name, value, attrs=None):
 
 def textbox(name, value, attrs=None):
     """
-        >>> textbox('zip_code', '79053')
-        <input type="text" id="zip-code" value="79053" name="zip_code" />
+        >>> textbox('zip_code', '79053',
+        ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
+        <input class="error" type="text" id="zip-code" value="79053"
+            name="zip_code" />
     """
-    return Tag('input', attrs={
+    tag_attrs = {
             'id': id(name),
             'name': name,
             'type': 'text',
             'value': value
-    })
+    }
+    if attrs:
+        tag_attrs.update(attrs)
+    return Tag('input', attrs=tag_attrs)
 
 
 def password(name, value, attrs=None):
     """
-        >>> password('passwd', '')
-        <input type="password" id="passwd" value="" name="passwd" />
+        >>> password('passwd', '',
+        ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
+        <input class="error" type="password" id="passwd" value=""
+            name="passwd" />
     """
-    return Tag('input', attrs={
+    tag_attrs = {
             'id': id(name),
             'name': name,
             'type': 'password',
             'value': value
-    })
+    }
+    if attrs:
+        tag_attrs.update(attrs)
+    return Tag('input', attrs=tag_attrs)
 
 
-def textarea(name, value, attrs=None):
+def textarea(name, value, attrs):
     """
-        >>> textarea('message_text', 'x')  #doctest: +NORMALIZE_WHITESPACE
+        >>> textarea('message_text', 'x', {})  #doctest: +NORMALIZE_WHITESPACE
         <textarea rows="9" cols="40" id="message-text"
             name="message_text">x</textarea>
 
         ``value`` is empty.
 
-        >>> textarea('message_text', '')  #doctest: +NORMALIZE_WHITESPACE
-        <textarea rows="9" cols="40" id="message-text"
-            name="message_text"></textarea>
+        >>> textarea('message_text', '', attrs={
+        ...    'class': 'error', 'rows': '10'
+        ... })  #doctest: +NORMALIZE_WHITESPACE
+        <textarea rows="10" name="message_text" class="error" cols="40"
+            id="message-text"></textarea>
     """
-    return Tag('textarea', value, attrs={
+    tag_attrs = {
             'id': id(name),
             'name': name,
             'rows': '9',
             'cols': '40'
-    })
+    }
+    if attrs:
+        tag_attrs.update(attrs)
+    return Tag('textarea', value, tag_attrs)
 
 
-def checkbox(name, checked, attrs=None):
+def checkbox(name, checked, attrs):
     """
-        >>> checkbox('accept', 'True')  #doctest: +NORMALIZE_WHITESPACE
+        >>> checkbox('accept', 'True', {})  #doctest: +NORMALIZE_WHITESPACE
         <input type="hidden" name="accept" /><input checked="checked"
             type="checkbox" id="accept" value="1" name="accept" />
-        >>> checkbox('accept', 'False')  #doctest: +NORMALIZE_WHITESPACE
+        >>> checkbox('accept', 'False', {})  #doctest: +NORMALIZE_WHITESPACE
         <input type="hidden" name="accept" /><input type="checkbox"
             id="accept" value="1" name="accept" />
 
         >>> checkbox('accept', 'True',
-        ...         attrs={'class_': 'b'})  #doctest: +NORMALIZE_WHITESPACE
-        <input type="hidden" name="accept" /><input class="b"
-            checked="checked" name="accept" type="checkbox"
-            id="accept" value="1" />
+        ...         attrs={'class': 'b'})  #doctest: +NORMALIZE_WHITESPACE
+        <input type="hidden" name="accept" /><input checked="checked"
+            name="accept" type="checkbox" id="accept" value="1" class="b" />
      """
     tag_attrs = {
             'id': id(name),
@@ -100,9 +114,9 @@ def checkbox(name, checked, attrs=None):
     ))
 
 
-def label(name, value, attrs=None):
+def label(name, value, attrs):
     """
-        >>> label('zip_code', 'Zip Code')
+        >>> label('zip_code', 'Zip Code', {})
         <label for="zip-code">Zip Code</label>
         >>> label('zip_code', 'Zip Code', attrs={'class_': 'inline'})
         <label class="inline" for="zip-code">Zip Code</label>
@@ -123,13 +137,16 @@ def dropdown(name, value, attrs):
         >>> colors
         [('2', 'Red'), ('1', 'Yellow')]
         >>> dropdown('favorite_color', '1', attrs={
-        ...     'choices': colors})  #doctest: +NORMALIZE_WHITESPACE
-        <select id="favorite-color" name="favorite_color"><option
-            value="2">Red</option><option selected="selected"
-            value="1">Yellow</option></select>
+        ...     'choices': colors,
+        ...     'class': 'error'
+        ... })  #doctest: +NORMALIZE_WHITESPACE
+        <select class="error" id="favorite-color"
+            name="favorite_color"><option value="2">Red</option><option
+            selected="selected" value="1">Yellow</option></select>
     """
     choices = attrs.pop('choices')
-    options = []
+    options = Fragment([])
+    append = options.tags.append
     for key, text in choices:
         if key == value:
             tag_attrs = {
@@ -140,16 +157,17 @@ def dropdown(name, value, attrs):
             tag_attrs = {
                     'value': key
             }
-        options.append(Tag('option', inner=text, attrs=tag_attrs))
-    options = Fragment(options)
+        append(Tag('option', inner=text, attrs=tag_attrs))
     tag_attrs = {
             'id': id(name),
             'name': name
     }
+    if attrs:
+        tag_attrs.update(attrs)
     return Tag('select', inner=options, attrs=tag_attrs)
 
 
-def radio(name, value, attrs=None):
+def radio(name, value, attrs):
     """
         >>> from operator import itemgetter
         >>> scm = sorted({'git': 'Git', 'hg': 'Mercurial'}.items(),
@@ -158,11 +176,12 @@ def radio(name, value, attrs=None):
         >>> scm
         [('git', 'Git'), ('hg', 'Mercurial')]
 
-        >>> radio('scm', 'hg',
-        ...         attrs={'choices': scm})  #doctest: +NORMALIZE_WHITESPACE
-        <label><input type="radio" name="scm" value="git"
-        />Git</label><label><input checked="checked" type="radio" name="scm"
-        value="hg" />Mercurial</label>
+        >>> radio('scm', 'hg', attrs={
+        ...     'choices': scm, 'class': 'error'
+        ... })  #doctest: +NORMALIZE_WHITESPACE
+        <label class="error"><input type="radio" name="scm" value="git"
+        />Git</label><label class="error"><input checked="checked"
+        type="radio" name="scm" value="hg" />Mercurial</label>
     """
     choices = attrs.pop('choices')
     elements = []
@@ -176,7 +195,7 @@ def radio(name, value, attrs=None):
         if key == value:
             tag_attrs['checked'] = 'checked'
         append(Tag('label',
-            Fragment((Tag('input', attrs=tag_attrs), text))))
+            Fragment((Tag('input', attrs=tag_attrs), text)), attrs=attrs))
     return Fragment(elements)
 
 default = {

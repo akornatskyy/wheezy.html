@@ -106,7 +106,6 @@ class WidgetFactory(object):
         Errors
 
         >>> errors = {
-        ...         'id': ['error 1'],
         ...         'name': ['error 2'],
         ...         'accept': ['error 3'],
         ...         'favorite_color': ['error 4']
@@ -115,13 +114,11 @@ class WidgetFactory(object):
 
         Render error message
 
-        >>> user.id.error()
-        <span class="error">error 1</span>
+        >>> user.favorite_color.error()
+        <span class="error">error 4</span>
 
         HTML tags got class ``error``.
 
-        >>> user.id.hidden()
-        <input class="error" type="hidden" name="id" value="12345" />
         >>> user.name.textbox(class_='x')  #doctest: +NORMALIZE_WHITESPACE
         <input class="error x" type="text" id="name" value="John"
             name="name" />
@@ -130,8 +127,8 @@ class WidgetFactory(object):
             name="name">John</textarea>
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
         <input type="hidden" name="accept" /><input checked="checked"
-            name="accept" value="1" class="error" type="checkbox"
-            id="accept" />
+            name="accept" type="checkbox" id="accept" value="1"
+            class="error" />
         >>> user.favorite_color.label('Color:')
         <label class="error" for="favorite-color">Color:</label>
 

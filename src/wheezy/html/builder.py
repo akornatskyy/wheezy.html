@@ -32,17 +32,20 @@ class Widget(object):
             >>> w = Widget('label', 'zip_code', 'Zip Code', None)
             >>> w()
             <label for="zip-code">Zip Code</label>
+            >>> w = Widget('label', 'zip_code', None, None)
+            >>> w('Zip Code')
+            <label for="zip-code">Zip Code</label>
         """
         if value is None:
             value = self.value
         else:
             value = html_escape(value)
-        tag = self.tag(self.name, value, attrs)
-        if attrs and hasattr(tag, 'attrs'):
-            tag.attrs.update(attrs)
         if self.errors:
-            tag.append_attr('class_', CSS_CLASS_ERROR)
-        return tag
+            if 'class_' in attrs:
+                attrs['class_'] = CSS_CLASS_ERROR + ' ' + attrs['class_']
+            else:
+                attrs['class'] = CSS_CLASS_ERROR
+        return self.tag(self.name, value, attrs)
 
 
 class WidgetBuilder(object):
@@ -59,6 +62,8 @@ class WidgetBuilder(object):
         ''
         >>> errors.append('required')
         >>> h = WidgetBuilder('age', '0', errors)
+        >>> h.textbox()
+        <input class="error" type="text" id="age" value="0" name="age" />
         >>> h.textbox(class_='b')
         <input class="error b" type="text" id="age" value="0" name="age" />
         >>> h.error()
