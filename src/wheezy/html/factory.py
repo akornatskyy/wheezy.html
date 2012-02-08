@@ -193,7 +193,7 @@ class WidgetFactory(object):
     def info(self, text, class_=CSS_CLASS_INFO_MESSAGE):
         if text:
             return Tag('span', html_escape(text), {
-                'class_': class_
+                'class': class_
             })
         else:
             return ''

@@ -168,8 +168,7 @@ def radio(name, value, attrs=None):
     elements = []
     append = elements.append
     for key, text in choices:
-        i = id(name) + '-' + key
-        tag_attrs={
+        tag_attrs = {
                 'name': name,
                 'type': 'radio',
                 'value': key

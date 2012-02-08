@@ -113,7 +113,7 @@ class WidgetBuilder(object):
     def error(self):
         if self.errors:
             return Tag('span', self.errors[-1], {
-                'class_': CSS_CLASS_ERROR
+                'class': CSS_CLASS_ERROR
             })
         else:
             return ''
