@@ -180,6 +180,6 @@ format_providers = {
         'float': str_format_provider,
         'date': date_format_provider,
         'time': lambda value, format_string: value.strftime(
-            format_string or '%H:%M'),
+            str(format_string or '%H:%M')),
         'datetime': datetime_format_provider
 }
