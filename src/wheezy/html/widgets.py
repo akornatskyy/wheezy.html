@@ -23,6 +23,16 @@ def hidden(name, value, attrs=None):
     })
 
 
+def multiple_hidden(name, value, attrs=None):
+    """
+        >>> items = ('a', 'b')
+        >>> multiple_hidden('pref', items)  #doctest: +NORMALIZE_WHITESPACE
+        <input type="hidden" name="pref" value="a" /><input
+            type="hidden" name="pref" value="b" />
+    """
+    return Fragment([hidden(name, item) for item in value])
+
+
 def textbox(name, value, attrs=None):
     """
         >>> textbox('zip_code', '79053',
@@ -110,6 +120,44 @@ def checkbox(name, checked, attrs):
     return Tag('input', attrs=tag_attrs)
 
 
+def multiple_checkbox(name, value, attrs):
+    """
+        >>> from operator import itemgetter
+        >>> scm = sorted({
+        ...         'git': 'Git', 'hg': 'Mercurial', 'svn': 'SVN'
+        ...     }.items(),
+        ...     key=itemgetter(1))
+        >>> scm
+        [('git', 'Git'), ('hg', 'Mercurial'), ('svn', 'SVN')]
+
+        >>> multiple_checkbox('scm', ['hg', 'git'], attrs={
+        ...     'choices': scm, 'class': 'error'
+        ... })  #doctest: +NORMALIZE_WHITESPACE
+        <label class="error"><input checked="checked" type="checkbox"
+            name="scm" value="git" class="error" />Git</label><label
+            class="error"><input checked="checked" type="checkbox"
+            name="scm" value="hg" class="error" />Mercurial</label><label
+            class="error"><input type="checkbox" name="scm" value="svn"
+            class="error" />SVN</label>
+    """
+    choices = attrs.pop('choices')
+    elements = []
+    append = elements.append
+    for key, text in choices:
+        tag_attrs = {
+                'name': name,
+                'type': 'checkbox',
+                'value': key
+        }
+        if key in value:
+            tag_attrs['checked'] = 'checked'
+        if attrs:
+            tag_attrs.update(attrs)
+        append(Tag('label',
+            Fragment((Tag('input', attrs=tag_attrs), text)), attrs=attrs))
+    return Fragment(elements)
+
+
 def label(name, value, attrs):
     """
         >>> label('zip_code', 'Zip Code', {})
@@ -163,6 +211,46 @@ def dropdown(name, value, attrs):
     return Tag('select', inner=options, attrs=tag_attrs)
 
 
+def listbox(name, value, attrs):
+    """
+        >>> from operator import itemgetter
+        >>> colors = sorted({'1': 'Yellow', '2': 'Red', '3': 'Blue'}.items(),
+        ...         key=itemgetter(1))
+        >>> colors
+        [('3', 'Blue'), ('2', 'Red'), ('1', 'Yellow')]
+        >>> listbox('favorite_color', ['1', '3'], attrs={
+        ...     'choices': colors,
+        ...     'class': 'error'
+        ... })  #doctest: +NORMALIZE_WHITESPACE
+        <select class="error" multiple="multiple" id="favorite-color"
+            name="favorite_color"><option selected="selected"
+            value="3">Blue</option><option value="2">Red</option><option
+            selected="selected" value="1">Yellow</option></select>
+    """
+    choices = attrs.pop('choices')
+    options = Fragment([])
+    append = options.tags.append
+    for key, text in choices:
+        if key in value:
+            tag_attrs = {
+                    'value': key,
+                    'selected': 'selected'
+            }
+        else:
+            tag_attrs = {
+                    'value': key
+            }
+        append(Tag('option', inner=text, attrs=tag_attrs))
+    tag_attrs = {
+            'id': id(name),
+            'name': name,
+            'multiple': 'multiple'
+    }
+    if attrs:
+        tag_attrs.update(attrs)
+    return Tag('select', inner=options, attrs=tag_attrs)
+
+
 def radio(name, value, attrs):
     """
         >>> from operator import itemgetter
@@ -199,12 +287,16 @@ def radio(name, value, attrs):
 
 default = {
         'hidden': hidden,
+        'multiple_hidden': multiple_hidden,
         'textbox': textbox,
         'password': password,
         'textarea': textarea,
         'checkbox': checkbox,
+        'multiple_checkbox': multiple_checkbox,
         'label': label,
         'dropdown': dropdown,
         'select': dropdown,
+        'listbox': listbox,
+        'multiple_select': listbox,
         'radio': radio
 }
