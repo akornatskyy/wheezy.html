@@ -93,12 +93,30 @@ class WidgetBuilder(object):
             >>> h.format(format_provider=lambda value, ignore:
             ...         value.strftime('%m-%d-%y')).formatted
             '02-06-12'
+            >>> h = WidgetBuilder('pref', [1, 2, 7], None)
+            >>> list(map(str, h.format().formatted))
+            ['1', '2', '7']
+            >>> h = WidgetBuilder('pref', [], None)
+            >>> h.format().formatted
+            ()
         """
         value = self.value
-        if format_provider is None:
-            formatter_name = type(value).__name__
-            format_provider = format_providers[formatter_name]
-        self.formatted = format_provider(self.value, format_string)
+        # TODO: probably there is better check since attribute check for
+        # __iter__ is not valid in python 3.2, str support it.
+        if isinstance(value, (list, tuple)):
+            try:
+                if format_provider is None:
+                    formatter_name = type(value[0]).__name__
+                    format_provider = format_providers[formatter_name]
+                self.formatted = tuple(format_provider(item, format_string)
+                        for item in value)
+            except IndexError:
+                self.formatted = tuple([])
+        else:
+            if format_provider is None:
+                formatter_name = type(value).__name__
+                format_provider = format_providers[formatter_name]
+            self.formatted = format_provider(self.value, format_string)
         return self
 
     def __repr__(self):
