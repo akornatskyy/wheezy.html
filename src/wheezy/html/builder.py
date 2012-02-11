@@ -155,7 +155,7 @@ def date_format_provider(value, format_string=None):
     """
     if date.min == value:
         return ''
-    return value.strftime(format_string or '%Y/%m/%d')
+    return value.strftime(str(format_string or '%Y/%m/%d'))
 
 
 def datetime_format_provider(value, format_string=None):
@@ -168,7 +168,7 @@ def datetime_format_provider(value, format_string=None):
     """
     if datetime.min == value:
         return ''
-    return value.strftime(format_string or '%Y/%m/%d %H:%M')
+    return value.strftime(str(format_string or '%Y/%m/%d %H:%M'))
 
 
 format_providers = {
