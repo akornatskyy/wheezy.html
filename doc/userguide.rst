@@ -80,6 +80,10 @@ or this way::
     registration.date_of_birth.format(
             format_provider=lambda value, ignore: value.strftime('%m-%d-%y'))
 
+Widget formatting can follow by actual widget that needs to be rendered::
+
+    registration.date_of_birth.format('%Y/%m/%d').textbox()
+
 ``format_provider`` - a callable of the following form::
 
     def my_format_provider(value, format_string):
@@ -146,7 +150,11 @@ errors from general errors.
 Widgets
 ~~~~~~~
 
-:ref:`wheezy.html` comes with a number of built-in widgets:
+:ref:`wheezy.html` comes with a number of built-in widgets. They can be
+generally divided into two categories with support of a single value 
+(``string``, ``int``, ``datetime``, etc) or multiple (``list`` or ``tuple``).
+
+Single value widgets:
 
 * :py:meth:`~wheezy.html.widgets.hidden` - html element input of type hidden.
 * :py:meth:`~wheezy.html.widgets.textbox` - html element input of type text.
@@ -161,6 +169,17 @@ Widgets
   also synonym ``select``). Attribute ``choices`` is a list of html options.
 * :py:meth:`~wheezy.html.widgets.radio` - a group of html input elements
   radio. Attribute ``choices`` is a list of options.
+
+Widgets that support multiple values:
+
+* :py:meth:`~wheezy.html.widgets.multiple_hidden` - renders several html
+  input elements of type hidden per item in the value list.
+* :py:meth:`~wheezy.html.widgets.multiple_checkbox` - renders several
+  html elements of type checkbox per item in the value list nested into
+  html label element.
+* :py:meth:`~wheezy.html.widgets.listbox` - html element select of type
+  multiple (there is also synonym ``multiple_select``). Attribute 
+  ``choices`` is a list of html options.
 
 Several widgets support ``choinces`` attribute, it is an iteratable of tuple
 of two::
