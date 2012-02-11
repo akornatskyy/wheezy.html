@@ -87,21 +87,19 @@ class WidgetBuilder(object):
                     return value_formatted
 
             >>> h = WidgetBuilder('date_of_birth', date(2012, 2, 6), None)
-            >>> h.format('%m-%d-%y')
+            >>> h.format('%m-%d-%y').formatted
             '02-06-12'
             >>> h = WidgetBuilder('date_of_birth', date(2012, 2, 6), None)
             >>> h.format(format_provider=lambda value, ignore:
-            ...         value.strftime('%m-%d-%y'))
+            ...         value.strftime('%m-%d-%y')).formatted
             '02-06-12'
         """
-        if self.formatted is not None:
-            return self.formatted
         value = self.value
         if format_provider is None:
             formatter_name = type(value).__name__
             format_provider = format_providers[formatter_name]
-        self.formatted = value = format_provider(self.value, format_string)
-        return value
+        self.formatted = format_provider(self.value, format_string)
+        return self
 
     def __repr__(self):
         """
@@ -109,10 +107,12 @@ class WidgetBuilder(object):
             >>> h
             0
         """
-        return self.format()
+        return self.format().formatted
 
     def __getattr__(self, tag_name):
-        return Widget(tag_name, self.name, self.format(),
+        if self.formatted is None:
+            self.format()
+        return Widget(tag_name, self.name, self.formatted,
                 self.errors)
 
     def error(self):
