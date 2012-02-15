@@ -63,19 +63,36 @@ class Tag(object):
             >>> Tag('input')(id='name', value='abc')
             <input id="name" value="abc" />
         """
-        parts = []
-        append = parts.append
-        append('<' + self.name)
-        if self.attrs:
-            for name, value in iteritems(self.attrs):
-                append(' ' + name.rstrip('_') +
-                        '="' + value + '"')
-        if self.inner is not None:
-            append('>' + converter(self.inner) +
-                    '</' + self.name + '>')
+        name = self.name
+        attrs = self.attrs
+        if attrs:
+            t = '<' + name + ' ' + ' '.join(
+                    [k.rstrip('_') + '="' + attrs[k] + '"'
+                        for k in attrs])
         else:
-            append(' />')
-        return ''.join(parts)
+            t = '<' + name
+        inner = self.inner
+        if inner is not None:
+            return t + '>' + converter(inner) + '</' + name + '>'
+        else:
+            return t + ' />'
+        # 0.442
+        #parts = []
+        #append = parts.append
+        #append('<' + self.name)
+        #attrs = self.attrs
+        #if attrs:
+        #    parts.extend([' ' + name.rstrip('_') + '="' + attrs[name] + '"'
+        #        for name in attrs])
+        #    #for name, value in iteritems(self.attrs):
+        #    #    append(' ' + name.rstrip('_') +
+        #    #            '="' + value + '"')
+        #if self.inner is not None:
+        #    append('>' + converter(self.inner) +
+        #            '</' + self.name + '>')
+        #else:
+        #    append(' />')
+        #return ''.join(parts)
 
 
 class Fragment(object):

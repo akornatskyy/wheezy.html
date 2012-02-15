@@ -167,9 +167,9 @@ class WidgetFactory(object):
         self.builders = {}
 
     def __getattr__(self, name):
-        try:
+        if name in self.builders:
             return self.builders[name]
-        except KeyError:
+        else:
             value = getattr(self.model, name)
             builder = WidgetBuilder(name, value, self.errors.get(name, None))
             self.builders[name] = builder
