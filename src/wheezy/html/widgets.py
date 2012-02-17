@@ -13,14 +13,26 @@ id = lambda name: name.replace('_', '-')
 
 def hidden(name, value, attrs=None):
     """
-        >>> hidden('pref', 'abc')
-        <input type="hidden" name="pref" value="abc" />
+        '<input type="hidden" name="pref" value="abc" />'
     """
     return Tag('input', attrs={
             'name': name,
             'type': 'hidden',
             'value': value
     })
+
+
+def hidden2(name, value, attrs=None):
+    """
+    """
+    return '<input type="hidden" name="' + name + '" value="' + value + '" />'
+
+
+def x():
+    """
+        >> x = [x() for i in xrange(100000)]
+    """
+    return str(hidden('pref', 'abc'))
 
 
 def multiple_hidden(name, value, attrs=None):
@@ -49,6 +61,31 @@ def textbox(name, value, attrs=None):
     if attrs:
         tag_attrs.update(attrs)
     return Tag('input', attrs=tag_attrs)
+
+
+def join_attrs(attrs):
+    if attrs:
+        return ''.join([' ' + k.rstrip('_') + '="' + attrs[k] + '"'
+                        for k in attrs])
+    else:
+        return ''
+
+
+def textbox2(name, value, attrs=None):
+    """
+        >>> x = textbox2('zip_code', '79053',
+        ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
+    """
+    return '<input type="text" id="' + id(name) \
+            + '" name="' + name + '" value="' \
+            + value + '" ' + join_attrs(attrs) + ' />'
+
+
+def x2():
+    """
+        >> x = [x2() for i in xrange(100000)]
+    """
+    return str(textbox('zip_code', '79053', attrs={'class': 'error'}))
 
 
 def password(name, value, attrs=None):
