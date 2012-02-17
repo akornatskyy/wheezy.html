@@ -151,7 +151,7 @@ Widgets
 ~~~~~~~
 
 :ref:`wheezy.html` comes with a number of built-in widgets. They can be
-generally divided into two categories with support of a single value 
+generally divided into two categories with support of a single value
 (``string``, ``int``, ``datetime``, etc) or multiple (``list`` or ``tuple``).
 
 Single value widgets:
@@ -160,15 +160,14 @@ Single value widgets:
 * :py:meth:`~wheezy.html.widgets.textbox` - html element input of type text.
 * :py:meth:`~wheezy.html.widgets.password` - html element input of type
   password.
-* :py:meth:`~wheezy.html.widgets.textarea` - html element textarea html
-  element.
-* :py:meth:`~wheezy.html.widgets.checkbox` - two html elements: input type
-  hidden and input type checkbox.
+* :py:meth:`~wheezy.html.widgets.textarea` - html element textarea.
+* :py:meth:`~wheezy.html.widgets.checkbox` - html element input of type
+  checkbox.
 * :py:meth:`~wheezy.html.widgets.label` - html element label.
 * :py:meth:`~wheezy.html.widgets.dropdown` - html element select (there is
   also synonym ``select``). Attribute ``choices`` is a list of html options.
 * :py:meth:`~wheezy.html.widgets.radio` - a group of html input elements
-  radio. Attribute ``choices`` is a list of options.
+  of type radio. Attribute ``choices`` is a list of options.
 
 Widgets that support multiple values:
 
@@ -178,7 +177,7 @@ Widgets that support multiple values:
   html elements of type checkbox per item in the value list nested into
   html label element.
 * :py:meth:`~wheezy.html.widgets.listbox` - html element select of type
-  multiple (there is also synonym ``multiple_select``). Attribute 
+  multiple (there is also synonym ``multiple_select``). Attribute
   ``choices`` is a list of html options.
 
 Several widgets support ``choinces`` attribute, it is an iteratable of tuple

@@ -12,8 +12,10 @@ id = lambda name: name.replace('_', '-')
 
 
 def hidden(name, value, attrs=None):
-    """
-        '<input type="hidden" name="pref" value="abc" />'
+    """ HTML element input of type hidden.
+
+        >>> hidden('pref', 'abc')
+        <input type="hidden" name="pref" value="abc" />
     """
     return Tag('input', attrs={
             'name': name,
@@ -22,21 +24,10 @@ def hidden(name, value, attrs=None):
     })
 
 
-def hidden2(name, value, attrs=None):
-    """
-    """
-    return '<input type="hidden" name="' + name + '" value="' + value + '" />'
-
-
-def x():
-    """
-        >> x = [x() for i in xrange(100000)]
-    """
-    return str(hidden('pref', 'abc'))
-
-
 def multiple_hidden(name, value, attrs=None):
-    """
+    """ Renders several HTML input elements of type hidden per
+        item in the value list.
+
         >>> items = ('a', 'b')
         >>> multiple_hidden('pref', items)  #doctest: +NORMALIZE_WHITESPACE
         <input type="hidden" name="pref" value="a" /><input
@@ -46,7 +37,8 @@ def multiple_hidden(name, value, attrs=None):
 
 
 def textbox(name, value, attrs=None):
-    """
+    """ HTML element input of type text.
+
         >>> textbox('zip_code', '79053',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
         <input class="error" type="text" id="zip-code" value="79053"
@@ -63,33 +55,9 @@ def textbox(name, value, attrs=None):
     return Tag('input', attrs=tag_attrs)
 
 
-def join_attrs(attrs):
-    if attrs:
-        return ''.join([' ' + k.rstrip('_') + '="' + attrs[k] + '"'
-                        for k in attrs])
-    else:
-        return ''
-
-
-def textbox2(name, value, attrs=None):
-    """
-        >>> x = textbox2('zip_code', '79053',
-        ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
-    """
-    return '<input type="text" id="' + id(name) \
-            + '" name="' + name + '" value="' \
-            + value + '" ' + join_attrs(attrs) + ' />'
-
-
-def x2():
-    """
-        >> x = [x2() for i in xrange(100000)]
-    """
-    return str(textbox('zip_code', '79053', attrs={'class': 'error'}))
-
-
 def password(name, value, attrs=None):
-    """
+    """ HTML element input of type password.
+
         >>> password('passwd', '',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
         <input class="error" type="password" id="passwd" value=""
@@ -107,7 +75,8 @@ def password(name, value, attrs=None):
 
 
 def textarea(name, value, attrs):
-    """
+    """ HTML element textarea.
+
         >>> textarea('message_text', 'x', {})  #doctest: +NORMALIZE_WHITESPACE
         <textarea rows="9" cols="40" id="message-text"
             name="message_text">x</textarea>
@@ -132,7 +101,8 @@ def textarea(name, value, attrs):
 
 
 def checkbox(name, checked, attrs):
-    """
+    """ HTML element input of type checkbox.
+
         >>> checkbox('accept', 'True', {})  #doctest: +NORMALIZE_WHITESPACE
         <input checked="checked" type="checkbox" id="accept" value="1"
             name="accept" />
@@ -158,7 +128,9 @@ def checkbox(name, checked, attrs):
 
 
 def multiple_checkbox(name, value, attrs):
-    """
+    """ Renders several HTML elements of type checkbox per item
+        in the value list nested into HTML label element.
+
         >>> from operator import itemgetter
         >>> scm = sorted({
         ...         'git': 'Git', 'hg': 'Mercurial', 'svn': 'SVN'
@@ -196,7 +168,8 @@ def multiple_checkbox(name, value, attrs):
 
 
 def label(name, value, attrs):
-    """
+    """ HTML element label.
+
         >>> label('zip_code', 'Zip Code', {})
         <label for="zip-code">Zip Code</label>
         >>> label('zip_code', 'Zip Code', attrs={'class_': 'inline'})
@@ -211,7 +184,9 @@ def label(name, value, attrs):
 
 
 def dropdown(name, value, attrs):
-    """
+    """ HTML element select (there is also synonym ``select``).
+        Attribute ``choices`` is a list of HTML options.
+
         >>> from operator import itemgetter
         >>> colors = sorted({'1': 'Yellow', '2': 'Red'}.items(),
         ...         key=itemgetter(1))
@@ -249,7 +224,10 @@ def dropdown(name, value, attrs):
 
 
 def listbox(name, value, attrs):
-    """
+    """ HTML element select of type multiple (there is also
+        synonym ``multiple_select``). Attribute ``choices`` is a
+        list of HTML options.
+
         >>> from operator import itemgetter
         >>> colors = sorted({'1': 'Yellow', '2': 'Red', '3': 'Blue'}.items(),
         ...         key=itemgetter(1))
@@ -289,7 +267,9 @@ def listbox(name, value, attrs):
 
 
 def radio(name, value, attrs):
-    """
+    """ A group of html input elements of type radio. Attribute
+        ``choices`` is a list of options.
+
         >>> from operator import itemgetter
         >>> scm = sorted({'git': 'Git', 'hg': 'Mercurial'}.items(),
         ...         key=itemgetter(1))
