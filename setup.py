@@ -22,6 +22,7 @@ setup(
     license='MIT',
     classifiers=[
         'Development Status :: 4 - Beta',
+        'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -34,17 +35,20 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        'Topic :: Utilities'
+        'Topic :: Software Development :: Widget Sets',
+        'Topic :: Text Processing :: Markup :: HTML'
     ],
     keywords='html widget markup',
     packages=['wheezy', 'wheezy.html'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],
 
-    zip_safe=True,
+    zip_safe=False,
     install_requires=[
     ],
     extras_require={

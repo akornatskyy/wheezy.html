@@ -3,7 +3,6 @@
 """
 
 from wheezy.html.builder import WidgetBuilder
-from wheezy.html.comp import str_type
 from wheezy.html.markup import Fragment
 from wheezy.html.markup import Tag
 from wheezy.html.utils import html_escape

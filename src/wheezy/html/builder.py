@@ -8,7 +8,6 @@ from datetime import datetime
 from wheezy.html.comp import str_type
 from wheezy.html.markup import Tag
 from wheezy.html.widgets import default
-from wheezy.html.widgets import hidden
 from wheezy.html.utils import html_escape
 
 

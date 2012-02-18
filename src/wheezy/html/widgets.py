@@ -2,10 +2,8 @@
 """ ``widgets`` module.
 """
 
-from wheezy.html.comp import iteritems
 from wheezy.html.markup import Fragment
 from wheezy.html.markup import Tag
-from wheezy.html.utils import html_escape
 
 
 id = lambda name: name.replace('_', '-')
