@@ -3,7 +3,6 @@
 """
 
 from wheezy.html.builder import WidgetBuilder
-from wheezy.html.markup import Fragment
 from wheezy.html.markup import Tag
 from wheezy.html.utils import html_escape
 
@@ -11,31 +10,6 @@ from wheezy.html.utils import html_escape
 CSS_CLASS_ERROR_MESSAGE = 'error-message'
 CSS_CLASS_WARNING_MESSAGE = 'warning-message'
 CSS_CLASS_INFO_MESSAGE = 'info-message'
-
-
-class TagFactory(object):
-    """ Factory of xhtml tags.
-
-        ``tag`` is a shortcut for ``TagFactory`` class instance.
-
-        >>> assert isinstance(tag, TagFactory)
-    """
-
-    def __call__(self, *tags):
-        """ Call function let combine several tags into fragment.
-
-            >>> tag((tag.b('1'), tag.i('2')))
-            <b>1</b><i>2</i>
-        """
-        return Fragment(*tags)
-
-    def __getattr__(self, name):
-        """ Attribute name is promoted to tag.
-
-            >>> tag.span('text', class_='b')
-            <span class="b">text</span>
-        """
-        return Tag(name)
 
 
 class WidgetFactory(object):
@@ -176,9 +150,12 @@ class WidgetFactory(object):
 
     def error(self, text=None):
         if text is None:
-            errors = self.errors.get('__ERROR__', None)
-            if errors:
+            errors = self.errors
+            if '__ERROR__' in errors:
+                errors = self.errors['__ERROR__']
                 text = errors[-1]
+            else:
+                return ''
         return self.info(text, class_=CSS_CLASS_ERROR_MESSAGE)
 
     def warning(self, text):
@@ -193,5 +170,4 @@ class WidgetFactory(object):
             return ''
 
 
-tag = TagFactory()
 widget = WidgetFactory
