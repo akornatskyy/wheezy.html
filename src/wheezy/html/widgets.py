@@ -15,7 +15,7 @@ def hidden(name, value, attrs=None):
         >>> hidden('pref', 'abc')
         <input type="hidden" name="pref" value="abc" />
     """
-    return Tag('input', attrs={
+    return Tag('input', None, {
             'name': name,
             'type': 'hidden',
             'value': value
@@ -50,7 +50,7 @@ def textbox(name, value, attrs=None):
     }
     if attrs:
         tag_attrs.update(attrs)
-    return Tag('input', attrs=tag_attrs)
+    return Tag('input', None, tag_attrs)
 
 
 def password(name, value, attrs=None):
@@ -69,7 +69,7 @@ def password(name, value, attrs=None):
     }
     if attrs:
         tag_attrs.update(attrs)
-    return Tag('input', attrs=tag_attrs)
+    return Tag('input', None, tag_attrs)
 
 
 def textarea(name, value, attrs):
@@ -122,7 +122,7 @@ def checkbox(name, checked, attrs):
         tag_attrs['checked'] = 'checked'
     if attrs:
         tag_attrs.update(attrs)
-    return Tag('input', attrs=tag_attrs)
+    return Tag('input', None, tag_attrs)
 
 
 def multiple_checkbox(name, value, attrs):
@@ -161,7 +161,7 @@ def multiple_checkbox(name, value, attrs):
         if attrs:
             tag_attrs.update(attrs)
         append(Tag('label',
-            Fragment((Tag('input', attrs=tag_attrs), text)), attrs=attrs))
+            Fragment((Tag('input', None, tag_attrs), text)), attrs))
     return Fragment(elements)
 
 
@@ -178,7 +178,7 @@ def label(name, value, attrs):
     }
     if attrs:
         tag_attrs.update(attrs)
-    return Tag('label', inner=value, attrs=tag_attrs)
+    return Tag('label', value, tag_attrs)
 
 
 def dropdown(name, value, attrs):
@@ -199,8 +199,8 @@ def dropdown(name, value, attrs):
             selected="selected" value="1">Yellow</option></select>
     """
     choices = attrs.pop('choices')
-    options = Fragment([])
-    append = options.tags.append
+    options = []
+    append = options.append
     for key, text in choices:
         if key == value:
             tag_attrs = {
@@ -211,14 +211,14 @@ def dropdown(name, value, attrs):
             tag_attrs = {
                     'value': key
             }
-        append(Tag('option', inner=text, attrs=tag_attrs))
+        append(Tag('option', text, tag_attrs))
     tag_attrs = {
             'id': id(name),
             'name': name
     }
     if attrs:
         tag_attrs.update(attrs)
-    return Tag('select', inner=options, attrs=tag_attrs)
+    return Tag('select', Fragment(options), tag_attrs)
 
 
 def listbox(name, value, attrs):
@@ -241,8 +241,8 @@ def listbox(name, value, attrs):
             selected="selected" value="1">Yellow</option></select>
     """
     choices = attrs.pop('choices')
-    options = Fragment([])
-    append = options.tags.append
+    options = []
+    append = options.append
     for key, text in choices:
         if key in value:
             tag_attrs = {
@@ -253,7 +253,7 @@ def listbox(name, value, attrs):
             tag_attrs = {
                     'value': key
             }
-        append(Tag('option', inner=text, attrs=tag_attrs))
+        append(Tag('option', text, tag_attrs))
     tag_attrs = {
             'id': id(name),
             'name': name,
@@ -261,7 +261,7 @@ def listbox(name, value, attrs):
     }
     if attrs:
         tag_attrs.update(attrs)
-    return Tag('select', inner=options, attrs=tag_attrs)
+    return Tag('select', Fragment(options), tag_attrs)
 
 
 def radio(name, value, attrs):
@@ -297,7 +297,7 @@ def radio(name, value, attrs):
         if attrs:
             tag_attrs.update(attrs)
         append(Tag('label',
-            Fragment((Tag('input', attrs=tag_attrs), text)), attrs=attrs))
+            Fragment((Tag('input', None, tag_attrs), text)), attrs))
     return Fragment(elements)
 
 default = {
