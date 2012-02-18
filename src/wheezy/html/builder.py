@@ -39,7 +39,7 @@ class Widget(object):
             value = self.value
         else:
             value = html_escape(value)
-        if self.errors:
+        if self.errors is not None:
             if 'class_' in attrs:
                 attrs['class_'] = CSS_CLASS_ERROR + ' ' + attrs['class_']
             else:
@@ -53,13 +53,13 @@ class WidgetBuilder(object):
 
         textbox
 
-        >>> errors = []
+        >>> errors = None
         >>> h = WidgetBuilder('age', '33', errors)
         >>> h.textbox(class_='b')
         <input class="b" type="text" id="age" value="33" name="age" />
         >>> h.error()
         ''
-        >>> errors.append('required')
+        >>> errors = ['required']
         >>> h = WidgetBuilder('age', '0', errors)
         >>> h.textbox()
         <input class="error" type="text" id="age" value="0" name="age" />
@@ -133,12 +133,11 @@ class WidgetBuilder(object):
                 self.errors)
 
     def error(self):
-        if self.errors:
-            return Tag('span', self.errors[-1], {
-                'class': CSS_CLASS_ERROR
-            })
-        else:
+        if self.errors is None:
             return ''
+        return Tag('span', self.errors[-1], {
+            'class': CSS_CLASS_ERROR
+        })
 
 
 str_format_provider = lambda value, format_string: str_type(value)
