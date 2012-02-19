@@ -12,7 +12,7 @@ class Tag(object):
     """
     __slots__ = ['name', 'inner', 'attrs']
 
-    def __init__(self, name, inner=None, attrs=None):
+    def __init__(self, name, inner, attrs):
         self.name = name
         self.inner = inner
         self.attrs = attrs
@@ -34,10 +34,7 @@ class Tag(object):
         """
         name = self.name
         attrs = self.attrs
-        if attrs is None:
-            t = '<' + name
-        else:
-            t = '<' + name + ' ' + ' '.join(
+        t = '<' + name + ' ' + ' '.join(
                     [k.rstrip('_') + '="' + attrs[k] + '"'
                         for k in attrs])
         inner = self.inner
@@ -46,33 +43,9 @@ class Tag(object):
         else:
             return t + '>' + str_type(inner) + '</' + name + '>'
 
-    if PY3:
+    if PY3:  # pragma: nocover
         __str__ = render
-    else:
-        __unicode__ = render
-
-
-class SelfClosingTag(object):
-    """ Represents object version of HTML self closing tag.
-    """
-    __slots__ = ['name', 'attrs']
-
-    def __init__(self, name, attrs):
-        self.name = name
-        self.attrs = attrs
-
-    def __repr__(self):
-        return str(self.render())
-
-    def render(self):
-        attrs = self.attrs
-        return self.name + ' '.join(
-                [k.rstrip('_') + '="' + attrs[k] + '"'
-                    for k in attrs]) + ' />'
-
-    if PY3:
-        __str__ = render
-    else:
+    else:  # pragma: nocover
         __unicode__ = render
 
 
