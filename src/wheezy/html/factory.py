@@ -140,12 +140,17 @@ class WidgetFactory(object):
         self.builders = {}
 
     def __getattr__(self, name):
-        if name in self.builders:
-            return self.builders[name]
+        builders = self.builders
+        if name in builders:
+            return builders[name]
         else:
             value = getattr(self.model, name)
-            builder = WidgetBuilder(name, value, self.errors.get(name, None))
-            self.builders[name] = builder
+            errors = self.errors
+            if name in errors:
+                builder = WidgetBuilder(name, value, errors[name])
+            else:
+                builder = WidgetBuilder(name, value, None)
+            builders[name] = builder
             return builder
 
     def error(self, text=None):
