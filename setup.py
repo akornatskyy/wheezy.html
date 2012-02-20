@@ -44,7 +44,7 @@ setup(
         'Topic :: Text Processing :: Markup :: HTML'
     ],
     keywords='html widget markup',
-    packages=['wheezy', 'wheezy.html'],
+    packages=['wheezy', 'wheezy.html', 'wheezy.html.ext'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],
 
