@@ -4,9 +4,7 @@
 
 from wheezy.html.markup import Fragment
 from wheezy.html.markup import Tag
-
-
-id = lambda name: name.replace('_', '-')
+from wheezy.html.utils import html_id
 
 
 def hidden(name, value, attrs=None):
@@ -43,7 +41,7 @@ def textbox(name, value, attrs=None):
             name="zip_code" />
     """
     tag_attrs = {
-            'id': id(name),
+            'id': html_id(name),
             'name': name,
             'type': 'text',
             'value': value
@@ -62,7 +60,7 @@ def password(name, value, attrs=None):
             name="passwd" />
     """
     tag_attrs = {
-            'id': id(name),
+            'id': html_id(name),
             'name': name,
             'type': 'password',
             'value': value
@@ -88,7 +86,7 @@ def textarea(name, value, attrs):
             id="message-text"></textarea>
     """
     tag_attrs = {
-            'id': id(name),
+            'id': html_id(name),
             'name': name,
             'rows': '9',
             'cols': '40'
@@ -113,7 +111,7 @@ def checkbox(name, checked, attrs):
             value="1" class="b" />
      """
     tag_attrs = {
-            'id': id(name),
+            'id': html_id(name),
             'name': name,
             'type': 'checkbox',
             'value': '1'
@@ -174,7 +172,7 @@ def label(name, value, attrs):
         <label class="inline" for="zip-code">Zip Code</label>
     """
     tag_attrs = {
-            'for': id(name)
+            'for': html_id(name)
     }
     if attrs:
         tag_attrs.update(attrs)
@@ -213,7 +211,7 @@ def dropdown(name, value, attrs):
             }
         append(Tag('option', text, tag_attrs))
     tag_attrs = {
-            'id': id(name),
+            'id': html_id(name),
             'name': name
     }
     if attrs:
@@ -255,7 +253,7 @@ def listbox(name, value, attrs):
             }
         append(Tag('option', text, tag_attrs))
     tag_attrs = {
-            'id': id(name),
+            'id': html_id(name),
             'name': name,
             'multiple': 'multiple'
     }

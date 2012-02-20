@@ -2,12 +2,9 @@
 """ ``builder`` module.
 """
 
-from datetime import date
-from datetime import datetime
-
-from wheezy.html.comp import str_type
 from wheezy.html.markup import Tag
 from wheezy.html.widgets import default
+from wheezy.html.utils import format_value
 from wheezy.html.utils import html_escape
 
 
@@ -79,43 +76,9 @@ class WidgetBuilder(object):
 
     def format(self, format_string=None, format_provider=None):
         """ Formats widget value.
-
-            ``format_provider`` - a callable of the following form::
-
-                def my_formatter(value, format_string):
-                    return value_formatted
-
-            >>> h = WidgetBuilder('date_of_birth', date(2012, 2, 6), None)
-            >>> h.format('%m-%d-%y').formatted
-            '02-06-12'
-            >>> h = WidgetBuilder('date_of_birth', date(2012, 2, 6), None)
-            >>> h.format(format_provider=lambda value, ignore:
-            ...         value.strftime('%m-%d-%y')).formatted
-            '02-06-12'
-            >>> h = WidgetBuilder('pref', [1, 2, 7], None)
-            >>> list(map(str, h.format().formatted))
-            ['1', '2', '7']
-            >>> h = WidgetBuilder('pref', [], None)
-            >>> h.format().formatted
-            ()
         """
         value = self.value
-        # TODO: probably there is better check since attribute check for
-        # __iter__ is not valid in python 3.2, str support it.
-        if isinstance(value, (list, tuple)):
-            try:
-                if format_provider is None:
-                    formatter_name = type(value[0]).__name__
-                    format_provider = format_providers[formatter_name]
-                self.formatted = tuple(format_provider(item, format_string)
-                        for item in value)
-            except IndexError:
-                self.formatted = tuple([])
-        else:
-            if format_provider is None:
-                formatter_name = type(value).__name__
-                format_provider = format_providers[formatter_name]
-            self.formatted = format_provider(self.value, format_string)
+        self.formatted = format_value(value, format_string, format_provider)
         return self
 
     def __repr__(self):
@@ -138,46 +101,3 @@ class WidgetBuilder(object):
         return Tag('span', self.errors[-1], {
             'class': CSS_CLASS_ERROR
         })
-
-
-str_format_provider = lambda value, format_string: str_type(value)
-
-
-def date_format_provider(value, format_string=None):
-    """ Default format provider for ``datetime.date``.
-
-        >>> date_format_provider(date.min)
-        ''
-        >>> date_format_provider(date(2012, 2, 6))
-        '2012/02/06'
-    """
-    if date.min == value:
-        return ''
-    return value.strftime(str(format_string or '%Y/%m/%d'))
-
-
-def datetime_format_provider(value, format_string=None):
-    """ Default format provider for ``datetime.datetime``.
-
-        >>> datetime_format_provider(datetime.min)
-        ''
-        >>> datetime_format_provider(datetime(2012, 2, 6, 15, 17))
-        '2012/02/06 15:17'
-    """
-    if datetime.min == value:
-        return ''
-    return value.strftime(str(format_string or '%Y/%m/%d %H:%M'))
-
-
-format_providers = {
-        'str': lambda value, format_string: html_escape(str_type(value)),
-        'unicode': lambda value, format_string: html_escape(value),
-        'int': str_format_provider,
-        'Decimal': str_format_provider,
-        'bool': str_format_provider,
-        'float': str_format_provider,
-        'date': date_format_provider,
-        'time': lambda value, format_string: value.strftime(
-            str(format_string or '%H:%M')),
-        'datetime': datetime_format_provider
-}
