@@ -6,8 +6,11 @@ Wheezy HTML
 Introduction
 ------------
 
-:ref:`wheezy.html` is a `python`_ package written in pure Python code. 
-It is a lightweight html widget library.
+:ref:`wheezy.html` is a `python`_ package written in pure Python code.
+It is a lightweight html widget library. Integrates with the following
+template systems:
+
+* `Mako Templates for Python <http://www.makotemplates.org>`_
 
 It is optimized for performance, well tested and documented.
 

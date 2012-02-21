@@ -92,7 +92,7 @@ Widget formatting can follow by actual widget that needs to be rendered::
 There are default format providers for built-in types. You can replace and
 extend it with your own by altering ``format_providers`` map::
 
-    from wheezy.html.builder import format_providers
+    from wheezy.html.utils import format_providers
 
     format_providers['my_type'] = my_format_provider
 
@@ -245,3 +245,56 @@ Now you should be able to use it::
 Since ``default_widgets`` is python dictionary you can manipulate it a way you
 like.
 
+Integration
+~~~~~~~~~~~
+
+:ref:`wheezy.html` integrates with the following template systems:
+
+* `Mako Templates for Python <http://www.makotemplates.org>`_
+
+Mako
+^^^^
+
+:ref:`wheezy.html` integration with ``Mako`` is provided via preprocessor
+feature. Here is how to add
+:py:meth:`~wheezy.html.ext.mako.widget_preprocessor` to your code::
+
+    from wheezy.html.ext.mako import widget_preprocessor
+
+    template_lookup = TemplateLookup(
+            ...
+            preprocessor=[widget_preprocessor])
+
+The only thing :py:meth:`~wheezy.html.ext.mako.widget_preprocessor` does is
+translation of widget code to adequate ``Mako`` code.
+
+Let demonstrate with by example::
+
+    ${model.remember_me.checkbox()}
+
+is translated to the following ``Mako`` code (during template compilation
+phase)::
+
+    <input id="remember-me" name="remember_me" type="checkbox" value="1"\
+    % if 'remember_me' in errors:
+     class="error"\
+    % endif
+    % if model.remember_me:
+     checked="checked"\
+    % endif
+     />
+
+which effectively renders the HTML at runtime::
+
+    <input id="remember-me" name="remember_me" type="checkbox" value="1" />
+
+Since widgets also decorate appropriate HTML tags in case of error, ``errors``
+dictionary must be available in ``Mako`` context::
+
+    template = template_lookup.get_template(template_name)
+    assert 'errors' in kwargs
+    template.render(
+                **kwargs
+    )
+
+See :py:mod:`wheezy.html.ext.mako` for more examples.

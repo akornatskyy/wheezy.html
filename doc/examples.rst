@@ -32,7 +32,7 @@ Here is what we can get in html template::
     >>> credential.username.label('Username:')
     <label for="username">Username:</label>
     >>> credential.username.textbox(autocomplete='off')
-    <input autocomplete="off" type="text" id="username" 
+    <input autocomplete="off" type="text" id="username"
       value="" name="username" />
     >>> credential.username.error()
 
@@ -43,17 +43,17 @@ Look how this changes in case of errors::
     >>> credential.username.label('Username:')
     <label class="error" for="username">Username:</label>
     >>> credential.username.textbox(autocomplete='off')
-    <input name="username" value="" autocomplete="off" 
+    <input name="username" value="" autocomplete="off"
        class="error" type="text" id="username" />
     >>> credential.username.error()
     <span class="error">Required field cannot be left blank.</span>
-   
+
 General error message::
 
-    >>> errors = {'__ERROR__': 'The username or password provided is incorrect.'}
+    >>> errors = {'__ERROR__': ['The username or password provided is incorrect.']}
     >>> credential = widget(credential, errors)
     >>> credential.error()
-    <span class="error-message">The username or password 
+    <span class="error-message">The username or password
       provided is incorrect.</span>
 
 

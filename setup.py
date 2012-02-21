@@ -43,7 +43,7 @@ setup(
         'Topic :: Software Development :: Widget Sets',
         'Topic :: Text Processing :: Markup :: HTML'
     ],
-    keywords='html widget markup',
+    keywords='html widget markup mako preprocessor',
     packages=['wheezy', 'wheezy.html', 'wheezy.html.ext'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],
