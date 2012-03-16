@@ -652,14 +652,15 @@ widgets = {
 }
 
 RE_WIDGETS = re.compile(
-        '(?<!##)\$\{((?P<expr>.+)\.(?P<widget>%s){1}\((?P<params>.*?)\)\s*'
-        '(?P<filter>(\|\s*[\w,\s]+|\s*)))\}'
+        '(?<!##)\$\{((?P<expr>.+?)\.(?P<widget>%s){1}\((?P<params>.*?)\)\s*'
+        '(?P<filter>(\|\s*[\w,\s]+?|\s*)))\}'
         % '|'.join(widgets))
 
 
 def widget_preprocessor(text, skip_imports=False):
     """
-        >>> t = "${credential.username.label('Username:')}"
+        >>> t = "${credential.username.label('Username:')}\
+${credential.username.textbox()}"
         >>> print(widget_preprocessor(t))
         <%!
         from wheezy.html.utils import format_value
@@ -667,14 +668,16 @@ def widget_preprocessor(text, skip_imports=False):
         % if 'username' in errors:
          class="error"\\
         % endif
-        >Username:</label>
+        >Username:</label><input id="username" name="username" type="text"\\
+        % if 'username' in errors:
+         class="error"\\
+        % endif
+         value="${credential.username}" />
     """
     result = []
     start = 0
     for m in RE_WIDGETS.finditer(text):
         result.append(text[start:m.start()])
-        #result.append('<!-- <%%text filter="h">\n%s\n</%%text>-->\n'
-        #        % m.group(0))
         start = m.end()
         parts = m.groupdict()
         widget = widgets[parts.pop('widget')]
