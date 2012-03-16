@@ -42,6 +42,7 @@ def multiple_hidden(expr, params, filter):
         >>> t = "${user.prefs.multiple_hidden()}"
         >>> mako_template = widget_preprocessor(t, skip_imports=True)
         >>> print(mako_template)
+        \\
         % for item in user.prefs:
         <input type="hidden" name="prefs" value="${item}" />\\
         % endfor
@@ -50,6 +51,7 @@ def multiple_hidden(expr, params, filter):
         >>> t = "${user.prefs.multiple_hidden()|h}"
         >>> mako_template = widget_preprocessor(t, skip_imports=True)
         >>> print(mako_template)
+        \\
         % for item in user.prefs:
         <input type="hidden" name="prefs" value="${item|h}" />\\
         % endfor
@@ -61,7 +63,7 @@ def multiple_hidden(expr, params, filter):
 /><input type="hidden" name="prefs" value="b" />', user=User())
     """
     name = parse_name(expr)
-    return """\
+    return """\\
 %% for item in %(value)s:
 <input type="hidden" name="%(name)s" value="${item%(filter)s}" />\\
 %% endfor
@@ -247,6 +249,7 @@ def multiple_checkbox(expr, params, filter):
         >>> t = "${model.scm.multiple_checkbox(choices=scm)|h}"
         >>> mako_template = widget_preprocessor(t, skip_imports=True)
         >>> print(mako_template)
+        \\
         % for key, text in scm:
         <label\\
         % if 'scm' in errors:
@@ -285,7 +288,7 @@ type="checkbox" value="1" checked="checked" />Mercurial</label>\
     args, kwargs = parse_params(params)
     choices = kwargs.pop('choices')
     class_ = kwargs.pop('class', None)
-    return """\
+    return """\\
 %% for key, text in %(choices)s:
 <label%(attrs)s%(class)s><input id="%(id)s" name="%(name)s" type="checkbox" \
 value="1"%(attrs)s%(class)s\
@@ -309,6 +312,7 @@ def radio(expr, params, filter):
 
         >>> t = "${account.account_type.radio(choices=account_types)}"
         >>> print(widget_preprocessor(t, skip_imports=True))
+        \\
         % for key, text in account_types:
         <label\\
         % if 'account_type' in errors:
@@ -346,7 +350,7 @@ name="scm" value="svn" />SVN</label>',
     args, kwargs = parse_params(params)
     class_ = kwargs.pop('class', None)
     choices = kwargs.pop('choices')
-    return """\
+    return """\\
 %% for key, text in %(choices)s:
 <label%(attrs)s%(class)s>\
 <input type="radio" name="%(name)s"%(attrs)s \
@@ -443,6 +447,7 @@ def error(expr, params, filter):
     """
         >>> t = "${model.error()|h}"
         >>> print(widget_preprocessor(t, skip_imports=True))
+        \\
         % if '__ERROR__' in errors:
         <span class="error-message">${errors['__ERROR__'][-1]|h}</span>\\
         % endif
@@ -458,6 +463,7 @@ def error(expr, params, filter):
 
         >>> t = "${credential.username.error()}"
         >>> print(widget_preprocessor(t, skip_imports=True))
+        \\
         % if 'username' in errors:
         <span class="error">${errors['username'][-1]}</span>\\
         % endif
@@ -478,7 +484,7 @@ def error(expr, params, filter):
         class_ = 'error-message'
     else:
         class_ = 'error'
-    return """\
+    return """\\
 %% if '%(name)s' in errors:
 <span class="%(class)s">${errors['%(name)s'][-1]%(filter)s}</span>\\
 %% endif""" % {
@@ -492,12 +498,14 @@ def info(expr, params, filter, class_):
     """
         >>> t = "${message.warning()}"
         >>> print(widget_preprocessor(t, skip_imports=True))
+        \\
         % if message:
         <span class="warning-message">${message}</span>\\
         % endif
 
         >>> t = "${message.info()}"
         >>> print(widget_preprocessor(t, skip_imports=True))
+        \\
         % if message:
         <span class="info-message">${message}</span>\\
         % endif
@@ -508,12 +516,14 @@ def info(expr, params, filter, class_):
 
         >>> t = "${user.name_status.warning()|h}"
         >>> print(widget_preprocessor(t, skip_imports=True))
+        \\
         % if user.name_status:
         <span class="warning">${user.name_status|h}</span>\\
         % endif
 
         >>> t = "${user.name_status.info()|h}"
         >>> print(widget_preprocessor(t, skip_imports=True))
+        \\
         % if user.name_status:
         <span class="info">${user.name_status|h}</span>\\
         % endif
@@ -528,7 +538,7 @@ def info(expr, params, filter, class_):
     args, kwargs = parse_params(params)
     if expr.startswith(name):
         class_ = class_ + '-message'
-    return """\
+    return """\\
 %% if %(value)s:
 <span class="%(class)s">%(info)s</span>\\
 %% endif""" % {
@@ -660,8 +670,9 @@ RE_WIDGETS = re.compile(
 def widget_preprocessor(text, skip_imports=False):
     """
         >>> t = "${credential.username.label('Username:')}\
-${credential.username.textbox()}"
-        >>> print(widget_preprocessor(t))
+${credential.username.textbox()}${credential.username.error()}"
+        >>> mako_template = widget_preprocessor(t)
+        >>> print(mako_template)
         <%!
         from wheezy.html.utils import format_value
         %><label for="username"\\
@@ -672,7 +683,10 @@ ${credential.username.textbox()}"
         % if 'username' in errors:
          class="error"\\
         % endif
-         value="${credential.username}" />
+         value="${credential.username}" />\\
+        % if 'username' in errors:
+        <span class="error">${errors['username'][-1]}</span>\\
+        % endif
     """
     result = []
     start = 0
