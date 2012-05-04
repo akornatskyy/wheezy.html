@@ -99,5 +99,6 @@ format_providers = {
         'date': date_format_provider,
         'time': lambda value, format_spec: value.strftime(
             str(format_spec or '%H:%M')),
-        'datetime': datetime_format_provider
+        'datetime': datetime_format_provider,
+        'NoneType': lambda value, format_spec: ''
 }
