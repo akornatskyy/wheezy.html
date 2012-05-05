@@ -12,7 +12,9 @@ RE_ARGS = re.compile(
 RE_KWARGS = re.compile(
     '\s*(?P<name>\w+)\s*=\s*(?P<expr>([\'"].*?[\'"]|.+?))\s*\,')
 RE_STR_VALUE = re.compile(
-    '[\'"](?P<value>.+)[\'"]$')
+    '^[\'"](?P<value>.+)[\'"]$')
+RE_INT_VALUE = re.compile(
+    '^(?P<value>(\d+))$')
 RE_FUNCTIONS = re.compile(
     '\.(%s)\(' % '|'.join(known_functions))
 RE_FUNCTION = re.compile(
@@ -40,23 +42,23 @@ def parse_name(expr):
 def parse_known_function(expr):
     """
         >>> parse_known_function("dob")
-        'dob'
+        ('dob', 'dob')
         >>> parse_known_function("dob.format()")
-        'format_value(dob, None)'
+        ('dob', 'format_value(dob, None)')
         >>> parse_known_function("user.dob.format(_('YYYY/MM/DD'))")
-        "format_value(user.dob, _('YYYY/MM/DD'))"
+        ('user.dob', "format_value(user.dob, _('YYYY/MM/DD'))")
         >>> parse_known_function("user.dob.format(\
 format_provider=lambda value, ignore: value.strftime('%m-%d-%y'))")
-        "format_value(user.dob, format_provider=lambda value, \
-ignore: value.strftime('%m-%d-%y'))"
+        ('user.dob', "format_value(user.dob, format_provider=lambda value, \
+ignore: value.strftime('%m-%d-%y'))")
     """
     m = RE_FUNCTION.search(expr)
     if not m:
-        return expr
+        return expr, expr
     context = m.group('context')
     name = m.group('name')
     args = m.group('args') or 'None'
-    return "%s_value(%s, %s)" % (name, context, args)
+    return context, "%s_value(%s, %s)" % (name, context, args)
 
 
 def parse_kwargs(text):

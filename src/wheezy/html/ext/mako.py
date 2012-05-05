@@ -4,6 +4,7 @@
 
 import re
 
+from wheezy.html.ext.lexer import RE_INT_VALUE
 from wheezy.html.ext.lexer import RE_STR_VALUE
 from wheezy.html.ext.lexer import parse_known_function
 from wheezy.html.ext.lexer import parse_name
@@ -32,9 +33,10 @@ def hidden(expr, params, filter):
         ... '<input type="hidden" name="pref" value="abc" />', user=User())
     """
     name = parse_name(expr)
-    return '<input type="hidden" name="%(name)s" value="%(value)s" />' % {
-            'name': name,
-            'value': expression(expr, filter)}
+    return """\
+<input type="hidden" name="%(name)s" value="%(value)s" />""" % {
+        'name': name,
+        'value': expression(expr, filter)}
 
 
 def multiple_hidden(expr, params, filter):
@@ -104,16 +106,32 @@ def label(expr, params, filter):
     name = parse_name(expr)
     args, kwargs = parse_params(params)
     class_ = kwargs.pop('class', None)
-    return '<label for="%(id)s"%(attrs)s%(class)s>%(value)s</label>' % {
-            'id': html_id(name),
-            'name': name,
-            'value': expression(args[0], filter),
-            'attrs': join_attrs(kwargs),
-            'class': error_class(name, class_)}
+    return """\
+<label for="%(id)s"%(attrs)s%(class)s>%(value)s</label>""" % {
+        'id': html_id(name),
+        'name': name,
+        'value': expression(args[0], filter),
+        'attrs': join_attrs(kwargs),
+        'class': error_class(name, class_)}
 
 
 def input(expr, params, filter, input_type):
     """ HTML element input of type input_type.
+
+        >>> t = "${transfer_spec.min_amount.emptybox(maxlength=5)}"
+        >>> mako_template = widget_preprocessor(t, skip_imports=True)
+        >>> print(mako_template)
+        <input id="min-amount" name="min_amount" type="text" \
+maxlength="5"\\
+        % if 'min_amount' in errors:
+         class="error"\\
+        % endif
+        % if transfer_spec.min_amount:
+         value="${transfer_spec.min_amount}" />\\
+        % else:
+         />\\
+        % endif
+        <BLANKLINE>
 
         >>> t = "${credential.password.password(autocomplete='off')|h}"
         >>> mako_template = widget_preprocessor(t, skip_imports=True)
@@ -123,7 +141,12 @@ autocomplete="off"\\
         % if 'password' in errors:
          class="error"\\
         % endif
-         value="${credential.password|h}" />
+        % if credential.password not in (None, ''):
+         value="${credential.password|h}" />\\
+        % else:
+         />\\
+        % endif
+        <BLANKLINE>
 
         >>> class Credential(object):
         ...     password = '<x'
@@ -143,8 +166,13 @@ autocomplete="off"\\
         % if 'date_of_birth' in errors:
          class="error"\\
         % endif
-         value="${format_value(registration.date_of_birth, _('YYYY/MM/DD'))}"\
- />
+        % if registration.date_of_birth not in (None, ''):
+         value="${format_value(registration.date_of_birth, \
+_('YYYY/MM/DD'))}" />\\
+        % else:
+         />\\
+        % endif
+        <BLANKLINE>
 
         >>> from datetime import date
         >>> class Registration(object):
@@ -158,14 +186,29 @@ name="date_of_birth" type="text" autocomplete="off" value="YYYY/MM/DD" />',
     name = parse_name(expr)
     args, kwargs = parse_params(params)
     class_ = kwargs.pop('class', None)
-    return """<input id="%(id)s" name="%(name)s" \
-type="%(type)s"%(attrs)s%(class)s value="%(value)s" />""" % {
-            'id': html_id(name),
-            'name': name,
-            'type': input_type,
-            'value': expression(parse_known_function(expr), filter),
-            'attrs': join_attrs(kwargs),
-            'class': error_class(name, class_)}
+    if input_type == 'empty':
+        input_type = 'text'
+        condition = ''
+    else:
+        condition = " not in (None, '')"
+    value, func = parse_known_function(expr)
+    return """\
+<input id="%(id)s" name="%(name)s" type="%(type)s"%(attrs)s%(class)s\
+%% if %(value)s%(condition)s:
+ value="${%(func)s%(filter)s}" />\\
+%% else:
+ />\\
+%% endif
+""" % {
+        'id': html_id(name),
+        'name': name,
+        'type': input_type,
+        'value': value,
+        'condition': condition,
+        'func': func,
+        'filter': filter,
+        'attrs': join_attrs(kwargs),
+        'class': error_class(name, class_)}
 
 
 def textarea(expr, params, filter):
@@ -193,13 +236,14 @@ abc</textarea>', user=User())
     kwargs.setdefault('rows', '"9"')
     kwargs.setdefault('cols', '"40"')
     class_ = kwargs.pop('class', None)
-    return '<textarea id="%(id)s" name="%(name)s"%(attrs)s%(class)s>\
-%(value)s</textarea>' % {
-            'id': html_id(name),
-            'name': name,
-            'value': expression(expr, filter),
-            'attrs': join_attrs(kwargs),
-            'class': error_class(name, class_)}
+    return """\
+<textarea id="%(id)s" name="%(name)s"%(attrs)s%(class)s>\
+%(value)s</textarea>""" % {
+        'id': html_id(name),
+        'name': name,
+        'value': expression(expr, filter),
+        'attrs': join_attrs(kwargs),
+        'class': error_class(name, class_)}
 
 
 def checkbox(expr, params, filter):
@@ -236,11 +280,11 @@ value="1"%(attrs)s%(class)s\
  checked="checked"\\
 %% endif
  />""" % {
-            'id': html_id(name),
-            'name': name,
-            'value': expr,
-            'attrs': join_attrs(kwargs),
-            'class': error_class(name, class_)}
+        'id': html_id(name),
+        'name': name,
+        'value': expr,
+        'attrs': join_attrs(kwargs),
+        'class': error_class(name, class_)}
 
 
 def multiple_checkbox(expr, params, filter):
@@ -298,13 +342,13 @@ value="1"%(attrs)s%(class)s\
  />${text%(filter)s}</label>\\
 %% endfor
 """ % {
-            'id': html_id(name),
-            'name': name,
-            'choices': choices,
-            'value': expr,
-            'filter': filter,
-            'attrs': join_attrs(kwargs),
-            'class': error_class(name, class_)}
+        'id': html_id(name),
+        'name': name,
+        'choices': choices,
+        'value': expr,
+        'filter': filter,
+        'attrs': join_attrs(kwargs),
+        'class': error_class(name, class_)}
 
 
 def radio(expr, params, filter):
@@ -327,6 +371,7 @@ def radio(expr, params, filter):
         % endif
          />${text}</label>\\
         % endfor
+        <BLANKLINE>
 
         >>> from operator import itemgetter
         >>> scm = sorted({
@@ -359,14 +404,15 @@ value="${key%(filter)s}"%(class)s\
  checked="checked"\\
 %% endif
  />${text%(filter)s}</label>\\
-%% endfor""" % {
-            'id': html_id(name),
-            'name': name,
-            'value': expr,
-            'filter': filter,
-            'attrs': join_attrs(kwargs),
-            'class': error_class(name, class_),
-            'choices': choices}
+%% endfor
+""" % {
+        'id': html_id(name),
+        'name': name,
+        'value': expr,
+        'filter': filter,
+        'attrs': join_attrs(kwargs),
+        'class': error_class(name, class_),
+        'choices': choices}
 
 
 def select(expr, params, filter, select_type):
@@ -433,14 +479,14 @@ value="svn">SVN</option></select>',
 >${text%(filter)s}</option>\\
 %% endfor
 </select>""" % {
-            'id': html_id(name),
-            'name': name,
-            'select_type': select_type,
-            'value': expr,
-            'filter': filter,
-            'attrs': join_attrs(kwargs),
-            'class': error_class(name, class_),
-            'choices': choices}
+        'id': html_id(name),
+        'name': name,
+        'select_type': select_type,
+        'value': expr,
+        'filter': filter,
+        'attrs': join_attrs(kwargs),
+        'class': error_class(name, class_),
+        'choices': choices}
 
 
 def error(expr, params, filter):
@@ -451,6 +497,7 @@ def error(expr, params, filter):
         % if '__ERROR__' in errors:
         <span class="error-message">${errors['__ERROR__'][-1]|h}</span>\\
         % endif
+        <BLANKLINE>
 
         >>> mako_template = widget_preprocessor(t, skip_imports=True)
         >>> assert_mako_equal(mako_template,
@@ -467,6 +514,7 @@ def error(expr, params, filter):
         % if 'username' in errors:
         <span class="error">${errors['username'][-1]}</span>\\
         % endif
+        <BLANKLINE>
 
         >>> mako_template = widget_preprocessor(t, skip_imports=True)
         >>> assert_mako_equal(mako_template,
@@ -487,11 +535,12 @@ def error(expr, params, filter):
     return """\\
 %% if '%(name)s' in errors:
 <span class="%(class)s">${errors['%(name)s'][-1]%(filter)s}</span>\\
-%% endif""" % {
-            'name': name,
-            'attrs': join_attrs(kwargs),
-            'class': class_,
-            'filter': filter}
+%% endif
+""" % {
+        'name': name,
+        'attrs': join_attrs(kwargs),
+        'class': class_,
+        'filter': filter}
 
 
 def info(expr, params, filter, class_):
@@ -502,6 +551,7 @@ def info(expr, params, filter, class_):
         % if message:
         <span class="warning-message">${message}</span>\\
         % endif
+        <BLANKLINE>
 
         >>> t = "${message.info()}"
         >>> print(widget_preprocessor(t, skip_imports=True))
@@ -509,6 +559,7 @@ def info(expr, params, filter, class_):
         % if message:
         <span class="info-message">${message}</span>\\
         % endif
+        <BLANKLINE>
 
         >>> mako_template = widget_preprocessor(t, skip_imports=True)
         >>> assert_mako_equal(mako_template,
@@ -520,6 +571,7 @@ def info(expr, params, filter, class_):
         % if user.name_status:
         <span class="warning">${user.name_status|h}</span>\\
         % endif
+        <BLANKLINE>
 
         >>> t = "${user.name_status.info()|h}"
         >>> print(widget_preprocessor(t, skip_imports=True))
@@ -527,6 +579,7 @@ def info(expr, params, filter, class_):
         % if user.name_status:
         <span class="info">${user.name_status|h}</span>\\
         % endif
+        <BLANKLINE>
 
         >>> class User(object):
         ...     name_status = 'Available'
@@ -541,10 +594,11 @@ def info(expr, params, filter, class_):
     return """\\
 %% if %(value)s:
 <span class="%(class)s">%(info)s</span>\\
-%% endif""" % {
-            'value': expr,
-            'info': expression(expr, filter),
-            'class': class_}
+%% endif
+""" % {
+        'value': expr,
+        'info': expression(expr, filter),
+        'class': class_}
 
 
 # region: helpers
@@ -557,6 +611,8 @@ def expression(text, filter=''):
         'Hello'
         >>> expression('"Hello"', '|h')
         'Hello'
+        >>> expression('100')
+        '100'
         >>> expression('model.username')
         '${model.username}'
         >>> expression('model.username', '|h')
@@ -566,7 +622,11 @@ def expression(text, filter=''):
     if m:
         return m.group('value')
     else:
-        return '${%s%s}' % (text, filter)
+        m = RE_INT_VALUE.match(text)
+        if m:
+            return m.group('value')
+        else:
+            return '${%s%s}' % (text, filter)
 
 
 def join_attrs(kwargs):
@@ -638,6 +698,8 @@ widgets = {
     'hidden': hidden,
     'multiple_hidden': multiple_hidden,
     'label': label,
+    'emptybox': lambda expr, params, filter: input(
+            expr, params, filter, 'empty'),
     'textbox': lambda expr, params, filter: input(
             expr, params, filter, 'text'),
     'password': lambda expr, params, filter: input(
@@ -662,20 +724,20 @@ widgets = {
 }
 
 RE_WIDGETS = re.compile(
-        '(?<!##)\$\{((?P<expr>.+?)\.(?P<widget>%s){1}\((?P<params>.*?)\)\s*'
-        '(?P<filter>(\|\s*[\w,\s]+?|\s*)))\}'
+        '(?<!##)\s*\$\{((?P<expr>.+?)\.(?P<widget>%s){1}\((?P<params>.*?)\)\s*'
+        '(?P<filter>(\|\s*[\w,\s]+?|\s*)))\}\s*'
         % '|'.join(widgets))
 
 
 def widget_preprocessor(text, skip_imports=False):
     """
-        >>> t = "${credential.username.label('Username:')}\
-${credential.username.textbox()}${credential.username.error()}"
+        >>> t = "&nbsp;   ${credential.username.label('Username:')}\
+${credential.username.textbox()}${credential.username.error()} &nbsp;"
         >>> mako_template = widget_preprocessor(t)
         >>> print(mako_template)
         <%!
         from wheezy.html.utils import format_value
-        %><label for="username"\\
+        %>&nbsp;<label for="username"\\
         % if 'username' in errors:
          class="error"\\
         % endif
@@ -683,10 +745,16 @@ ${credential.username.textbox()}${credential.username.error()}"
         % if 'username' in errors:
          class="error"\\
         % endif
+        % if credential.username not in (None, ''):
          value="${credential.username}" />\\
+        % else:
+         />\\
+        % endif
+        \\
         % if 'username' in errors:
         <span class="error">${errors['username'][-1]}</span>\\
         % endif
+        &nbsp;
     """
     result = []
     start = 0
