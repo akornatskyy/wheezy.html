@@ -41,6 +41,11 @@ def format_value(value, format_spec=None, format_provider=None):
         ['1', '2', '7']
         >>> format_value([])
         ()
+
+        If format provider is unknown apply str_type.
+
+        >>> str(format_value({}))
+        '{}'
     """
     # TODO: probably there is better check since attribute check for
     # __iter__ is not valid in python 3.2, str support it.
@@ -56,7 +61,10 @@ def format_value(value, format_spec=None, format_provider=None):
     else:
         if format_provider is None:
             formatter_name = type(value).__name__
-            format_provider = format_providers[formatter_name]
+            if formatter_name in format_providers:
+                format_provider = format_providers[formatter_name]
+            else:
+                return str_type(value)
         return format_provider(value, format_spec)
 
 
