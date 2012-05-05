@@ -32,8 +32,36 @@ def multiple_hidden(name, value, attrs=None):
     return Fragment([hidden(name, item) for item in value])
 
 
+def emptybox(name, value, attrs=None):
+    """ HTML element input of type text.
+
+        >>> emptybox('zip_code', '',
+        ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
+        <input class="error" type="text" id="zip-code" name="zip_code" />
+
+        >>> emptybox('zip_code', '79053',
+        ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
+        <input class="error" type="text" id="zip-code"
+            value="79053" name="zip_code" />
+    """
+    tag_attrs = {
+            'id': html_id(name),
+            'name': name,
+            'type': 'text'
+    }
+    if value:
+        tag_attrs['value'] = value
+    if attrs:
+        tag_attrs.update(attrs)
+    return Tag('input', None, tag_attrs)
+
+
 def textbox(name, value, attrs=None):
     """ HTML element input of type text.
+
+        >>> textbox('zip_code', '',
+        ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
+        <input class="error" type="text" id="zip-code" name="zip_code" />
 
         >>> textbox('zip_code', '79053',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
@@ -43,9 +71,10 @@ def textbox(name, value, attrs=None):
     tag_attrs = {
             'id': html_id(name),
             'name': name,
-            'type': 'text',
-            'value': value
+            'type': 'text'
     }
+    if value not in (None, ''):
+        tag_attrs['value'] = value
     if attrs:
         tag_attrs.update(attrs)
     return Tag('input', None, tag_attrs)
@@ -56,15 +85,20 @@ def password(name, value, attrs=None):
 
         >>> password('passwd', '',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
-        <input class="error" type="password" id="passwd" value=""
+        <input class="error" type="password" id="passwd" name="passwd" />
+
+        >>> password('passwd', 'x',
+        ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
+        <input class="error" type="password" id="passwd" value="x"
             name="passwd" />
     """
     tag_attrs = {
             'id': html_id(name),
             'name': name,
-            'type': 'password',
-            'value': value
+            'type': 'password'
     }
+    if value not in (None, ''):
+        tag_attrs['value'] = value
     if attrs:
         tag_attrs.update(attrs)
     return Tag('input', None, tag_attrs)
@@ -301,6 +335,7 @@ def radio(name, value, attrs):
 default = {
         'hidden': hidden,
         'multiple_hidden': multiple_hidden,
+        'emptybox': emptybox,
         'textbox': textbox,
         'password': password,
         'textarea': textarea,
