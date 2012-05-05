@@ -6,19 +6,26 @@ import re
 
 
 known_functions = ['format']
+whitespace_rules = [
+        (re.compile(r'>\s+<'),
+            r'><'),
+        (re.compile(r'^ \s+|\s+$', re.MULTILINE),
+            r'')
+]
+
 
 RE_ARGS = re.compile(
-    '\s*(?P<expr>((?:[\'"]).*?\1|.+?))\s*\,')
+    r'\s*(?P<expr>(([\'"]).*?\3|.+?))\s*\,')
 RE_KWARGS = re.compile(
-    '\s*(?P<name>\w+)\s*=\s*(?P<expr>([\'"].*?[\'"]|.+?))\s*\,')
+    r'\s*(?P<name>\w+)\s*=\s*(?P<expr>([\'"].*?[\'"]|.+?))\s*\,')
 RE_STR_VALUE = re.compile(
-    '^[\'"](?P<value>.+)[\'"]$')
+    r'^[\'"](?P<value>.+)[\'"]$')
 RE_INT_VALUE = re.compile(
-    '^(?P<value>(\d+))$')
+    r'^(?P<value>(\d+))$')
 RE_FUNCTIONS = re.compile(
-    '\.(%s)\(' % '|'.join(known_functions))
+    r'\.(%s)\(' % '|'.join(known_functions))
 RE_FUNCTION = re.compile(
-    '(?P<context>.+?)\.(?P<name>%s)\((?P<args>(|.+))\)'
+    r'(?P<context>.+?)\.(?P<name>%s)\((?P<args>(|.+))\)'
     % '|'.join(known_functions))
 
 
@@ -80,6 +87,10 @@ def parse_args(text):
 
         >>> parse_args('')
         []
+        >>> parse_args('10, "x"')
+        ['10', '"x"']
+        >>> parse_args("'x', 100")
+        ["'x'", '100']
         >>> parse_args('"Account Type:"')
         ['"Account Type:"']
     """

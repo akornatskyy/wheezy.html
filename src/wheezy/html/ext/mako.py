@@ -9,6 +9,7 @@ from wheezy.html.ext.lexer import RE_STR_VALUE
 from wheezy.html.ext.lexer import parse_known_function
 from wheezy.html.ext.lexer import parse_name
 from wheezy.html.ext.lexer import parse_params
+from wheezy.html.ext.lexer import whitespace_rules
 from wheezy.html.utils import html_id
 
 
@@ -788,3 +789,13 @@ except ImportError:  # pragma: nocover
 
     def assert_mako_equal(text, expected, **kwargs):
         pass
+
+
+def whitespace_preprocessor(text):
+    """
+        >>> whitespace_preprocessor('  > < ')
+        '><'
+    """
+    for r, s in whitespace_rules:
+        text = r.sub(s, text)
+    return text
