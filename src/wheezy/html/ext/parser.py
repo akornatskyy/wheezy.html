@@ -121,6 +121,14 @@ def parse_params(text):
 
 def parse_str_or_int(text):
     """ Interpretate ``text`` as string or int expression.
+
+        >>> parse_str_or_int('"Hello"')
+        'Hello'
+        >>> parse_str_or_int("'Hello'")
+        'Hello'
+        >>> parse_str_or_int('100')
+        '100'
+        >>> parse_str_or_int('model.username')
     """
     m = RE_STR_VALUE.match(text)
     if m:
