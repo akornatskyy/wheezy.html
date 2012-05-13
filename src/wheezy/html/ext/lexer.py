@@ -42,7 +42,8 @@ def parse_name(expr):
 
 
 def parse_known_function(expr):
-    """
+    """ Parses known functions.
+
         >>> parse_known_function("dob")
         ('dob', 'dob')
         >>> parse_known_function("dob.format()")
@@ -64,7 +65,8 @@ ignore: value.strftime('%m-%d-%y'))")
 
 
 def parse_kwargs(text):
-    """
+    """ Parses key-value type of parameters.
+
         >>> parse_kwargs('choices=account_types')
         {'choices': 'account_types'}
         >>> parse_kwargs('autocomplete="off", maxlength=12')
@@ -120,6 +122,8 @@ def parse_params(text):
 
 
 class Preprocessor(object):
+    """ Generic widget preprocessor.
+    """
 
     PREPEND = None
     EXPRESSION = '%(expr)s%(expr_filter)s'
@@ -185,6 +189,8 @@ class Preprocessor(object):
                 widgets_pattern % '|'.join(self.widgets))
 
     def __call__(self, text, **kwargs):
+        """ Preprocess input text.
+        """
         result = []
         start = 0
         for m in self.RE_WIDGETS.finditer(text):
@@ -241,13 +247,15 @@ class Preprocessor(object):
     # region: widgets
 
     def hidden(self, expr, params, expr_filter):
+        """ HTML element input hidden.
+        """
         name = parse_name(expr)
         return self.HIDDEN % {
                 'name': name,
                 'value': self.expression(expr, expr_filter)}
 
     def multiple_hidden(self, expr, params, expr_filter):
-        """
+        """ Multiple HTML element input of type hidden.
         """
         name = parse_name(expr)
         return self.MULTIPLE_HIDDEN % {
@@ -320,7 +328,7 @@ class Preprocessor(object):
             'class': self.error_class(name, class_)}
 
     def multiple_checkbox(self, expr, params, expr_filter):
-        """ HTML element input of type checkbox.
+        """ Multiple HTML element input of type checkbox.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
@@ -336,7 +344,7 @@ class Preprocessor(object):
             'class': self.error_class(name, class_)}
 
     def radio(self, expr, params, expr_filter):
-        """ A group of html input elements of type radio.
+        """ A group of HTML input elements of type radio.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
@@ -352,7 +360,7 @@ class Preprocessor(object):
             'choices': choices}
 
     def select(self, expr, params, expr_filter, select_type):
-        """
+        """ HTML element select.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
@@ -369,7 +377,7 @@ class Preprocessor(object):
             'choices': choices}
 
     def error(self, expr, params, expr_filter):
-        """
+        """ General error message or field error.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
@@ -385,7 +393,7 @@ class Preprocessor(object):
             'expr_filter': expr_filter}
 
     def info(self, expr, params, filter, class_):
-        """
+        """ General info message.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
@@ -398,6 +406,8 @@ class Preprocessor(object):
 
 
 class WhitespacePreprocessor(object):
+    """ Whitespace preprocessor.
+    """
 
     def __init__(self, rules):
         self.rules = rules
