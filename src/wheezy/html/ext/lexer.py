@@ -4,10 +4,10 @@
 
 import re
 
+from wheezy.html.ext.parser import parse_known_function
 from wheezy.html.ext.parser import parse_name
 from wheezy.html.ext.parser import parse_params
 from wheezy.html.ext.parser import parse_str_or_int
-from wheezy.html.ext.parser import parse_known_function
 from wheezy.html.utils import html_id
 
 
