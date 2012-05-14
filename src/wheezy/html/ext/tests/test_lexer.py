@@ -409,7 +409,8 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = model.username
             info = model.username|f
             attrs =  cursor="auto" class="warning x"
-        """ == self.p.warning('model.username', 'class="x", cursor="auto"', '|f')
+        """ == self.p.warning('model.username',
+                'class="x", cursor="auto"', '|f')
         assert """
             value = model
             info = model|f

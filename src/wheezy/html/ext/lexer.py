@@ -305,7 +305,7 @@ class Preprocessor(object):
             class_ = ' ' + self.expression(class_)
         if expr.startswith(name):
             class_ = '-message' + class_
-        kwargs['class'] = msg_class + class_
+        kwargs['class'] = '"' + msg_class + class_ + '"'
         return self.MESSAGE % {
             'value': expr,
             'info': self.expression(expr, expr_filter),
