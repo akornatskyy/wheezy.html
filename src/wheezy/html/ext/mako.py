@@ -108,11 +108,6 @@ value="${key%(expr_filter)s}"%(class)s\
 
 
 widget_preprocessor = MakoPreprocessor()
-
-""" TODO
-    >>> whitespace_preprocessor('  > < ')
-    '><'
-"""
 whitespace_preprocessor = WhitespacePreprocessor(rules=[
         (re.compile(r'^ \s+|\s+$', re.MULTILINE),
             r''),

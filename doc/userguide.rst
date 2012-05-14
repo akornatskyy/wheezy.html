@@ -158,7 +158,7 @@ Single value widgets:
 
 * :py:meth:`~wheezy.html.widgets.hidden` - html element input of type hidden.
 * :py:meth:`~wheezy.html.widgets.emptybox` - html element input of type text,
-  value is rendered only if evaluated to boolean True..
+  value is rendered only if evaluated to boolean True.
 * :py:meth:`~wheezy.html.widgets.textbox` - html element input of type text,
   value is rendered only if it is not None or ''.
 * :py:meth:`~wheezy.html.widgets.password` - html element input of type
@@ -310,7 +310,7 @@ Tenjin
 feature. Here is how to add
 :py:meth:`~wheezy.html.ext.tenjin.widget_preprocessor` to your code::
 
-    from wheezy.html.ext.mako import widget_preprocessor
+    from wheezy.html.ext.tenjin import widget_preprocessor
 
     engine = tenjin.Engine(
             ...
@@ -338,8 +338,7 @@ phase)::
 
 which effectively renders the HTML at runtime::
 
-    <input id="remember-me" name="remember_me" type="checkbox"
-        value="1" class="i" />
+    <input id="remember-me" name="remember_me" type="checkbox" value="1" class="i" />
 
 Since widgets also decorate appropriate HTML tags in case of error, ``errors``
 dictionary must be available in ``Tenjin`` context::

@@ -106,13 +106,6 @@ value="%(expr_filter)s{key}"%(class)s
 
 
 widget_preprocessor = TenjinPreprocessor()
-
-""" TODO
-    >>> whitespace_preprocessor('  > < ')
-    '><'
-    >>> whitespace_preprocessor('  ?> <? ')
-    '?> <?'
-"""
 whitespace_preprocessor = WhitespacePreprocessor(rules=[
         (re.compile(r'^ \s+|\s+$', re.MULTILINE),
             r''),
