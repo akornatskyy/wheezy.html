@@ -43,6 +43,20 @@ class MakoPreprocessorTestCase(unittest.TestCase, PreprocessorMixin):
     WARNING = "${model.user_info.warning()}"
     GENERAL_WARNING = "${message.warning()|h}"
 
+
+class MakoWhitespacePreprocessorTestCase(unittest.TestCase):
+    """ Test the ``whitespace_preprocessor``.
+    """
+
+    def test_whitespace(self):
+        """
+        """
+        from wheezy.html.ext.mako import whitespace_preprocessor
+        assert 'x' == whitespace_preprocessor('  \n x \n  ')
+        assert 'x' == whitespace_preprocessor('  x')
+        assert 'x' == whitespace_preprocessor('x  ')
+        assert '><' == whitespace_preprocessor('  > < ')
+
 try:
     # from mako.template import Template
     Template = __import__('mako.template', None, None,

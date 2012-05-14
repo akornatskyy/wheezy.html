@@ -114,7 +114,8 @@ widget_preprocessor = TenjinPreprocessor()
     '?> <?'
 """
 whitespace_preprocessor = WhitespacePreprocessor(rules=[
+        (re.compile(r'^ \s+|\s+$', re.MULTILINE),
+            r''),
         (re.compile(r'(?<!\?)>\s+<(?!\?)'),
             r'><'),
-        (re.compile(r'^ \s+|\s+$', re.MULTILINE),
-            r'')])
+])

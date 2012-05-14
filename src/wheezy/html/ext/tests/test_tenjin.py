@@ -44,7 +44,25 @@ class TenjinPreprocessorTestCase(unittest.TestCase, PreprocessorMixin):
     GENERAL_WARNING = "${message.warning()}"
 
 
+class TenjinWhitespacePreprocessorTestCase(unittest.TestCase):
+    """ Test the ``whitespace_preprocessor``.
+    """
+
+    def test_whitespace(self):
+        """
+        """
+        from wheezy.html.ext.tenjin import whitespace_preprocessor
+        assert 'x' == whitespace_preprocessor('  \n x \n  ')
+        assert 'x' == whitespace_preprocessor('  x')
+        assert 'x' == whitespace_preprocessor('x  ')
+        assert '><' == whitespace_preprocessor('  > < ')
+        assert '>  <?' == whitespace_preprocessor('  >  <? ')
+        assert '?>  <' == whitespace_preprocessor('  ?>  < ')
+        assert '?> <?' == whitespace_preprocessor('  ?> <? ')
+
+
 try:
+    # from tenjin import Template
     Template = __import__('tenjin', None, None,
             ['Template']).Template
 
@@ -52,7 +70,6 @@ try:
     assert escape, to_str
 
     def assert_tenjin_equal(text, expected, **kwargs):
-        #print(text)
         template = Template(input=text)
         value = template.render(kwargs)
         assert expected == value
