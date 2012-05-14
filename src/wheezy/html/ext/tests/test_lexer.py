@@ -25,7 +25,8 @@ class PreprocessorInitTestCase(unittest.TestCase):
         assert 'checkbox|dropdown|emptybox|error|hidden|info|'\
                 'label|listbox|multiple_checkbox|multiple_hidden|'\
                 'multiple_select|password|radio|select|textarea|'\
-                'textbox|warning' == p.RE_WIDGETS.pattern
+                'textbox|warning' == '|'.join(
+                        sorted(p.RE_WIDGETS.pattern.split('|')))
 
 
 class PreprocessorHelpersTestCase(unittest.TestCase):

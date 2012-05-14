@@ -56,7 +56,7 @@ class Preprocessor(object):
         }
         assert '%(widgets)s' in widgets_pattern
         self.RE_WIDGETS = re.compile(widgets_pattern % {
-            'widgets': '|'.join(sorted(self.widgets.keys()))})
+            'widgets': '|'.join(self.widgets.keys())})
 
     def __call__(self, text, **kwargs):
         """ Preprocess input text.
