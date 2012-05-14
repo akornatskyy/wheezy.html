@@ -29,8 +29,8 @@ class Preprocessor(object):
     PREPEND = None
     RADIO = None
     SELECT = None
-    TEXTAREA = '<textarea id="%(id)s" name="%(name)s"%(attrs)s%(class)s>\
-            %(value)s</textarea>'
+    TEXTAREA = '<textarea id="%(id)s" name="%(name)s"%(attrs)s%(class)s>' \
+            '%(value)s</textarea>'
 
     # region: preprocessing
 
