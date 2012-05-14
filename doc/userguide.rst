@@ -157,9 +157,12 @@ generally divided into two categories with support of a single value
 Single value widgets:
 
 * :py:meth:`~wheezy.html.widgets.hidden` - html element input of type hidden.
-* :py:meth:`~wheezy.html.widgets.textbox` - html element input of type text.
+* :py:meth:`~wheezy.html.widgets.emptybox` - html element input of type text,
+  value is rendered only if evaluated to boolean True..
+* :py:meth:`~wheezy.html.widgets.textbox` - html element input of type text,
+  value is rendered only if it is not None or ''.
 * :py:meth:`~wheezy.html.widgets.password` - html element input of type
-  password.
+  password, value is rendered only if it is not None or ''.
 * :py:meth:`~wheezy.html.widgets.textarea` - html element textarea.
 * :py:meth:`~wheezy.html.widgets.checkbox` - html element input of type
   checkbox.
@@ -251,6 +254,7 @@ Integration
 :ref:`wheezy.html` integrates with the following template systems:
 
 * `Mako Templates for Python <http://www.makotemplates.org>`_
+* `Tenjin Templates for Python <http://www.kuwata-lab.com/tenjin/>`_
 
 Mako
 ^^^^
@@ -298,3 +302,51 @@ dictionary must be available in ``Mako`` context::
     )
 
 See :py:mod:`wheezy.html.ext.mako` for more examples.
+
+Tenjin
+^^^^^^
+
+:ref:`wheezy.html` integration with ``Tenjin`` is provided via preprocessor
+feature. Here is how to add
+:py:meth:`~wheezy.html.ext.tenjin.widget_preprocessor` to your code::
+
+    from wheezy.html.ext.mako import widget_preprocessor
+
+    engine = tenjin.Engine(
+            ...
+            pp=[widget_preprocessor])
+
+The only thing :py:meth:`~wheezy.html.ext.mako.widget_preprocessor` does is
+translation of widget code to adequate ``Tenjin`` code.
+
+Let demonstrate with by example::
+
+    ${model.remember_me.checkbox(class_='i')}
+
+is translated to the following ``Tenjin`` code (during template compilation
+phase)::
+
+    <input id="remember-me" name="remember_me" type="checkbox" value="1"<?py #pass ?>
+    <?py if 'remember_me' in errors: ?>
+     class="error i"<?py #pass ?>
+    <?py else: ?>
+     class="i"<?py #pass ?>
+    <?py #endif ?><?py if model.remember_me: ?>
+     checked="checked"<?py #pass ?>
+    <?py #endif ?>
+     />
+
+which effectively renders the HTML at runtime::
+
+    <input id="remember-me" name="remember_me" type="checkbox"
+        value="1" class="i" />
+
+Since widgets also decorate appropriate HTML tags in case of error, ``errors``
+dictionary must be available in ``Tenjin`` context::
+
+    assert 'errors' in kwargs
+    engine.render('page.html',
+                **kwargs
+    )
+
+See :py:mod:`wheezy.html.ext.tenjin` for more examples.

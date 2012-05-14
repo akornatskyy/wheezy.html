@@ -11,6 +11,7 @@ It is a lightweight html widget library. Integrates with the following
 template systems:
 
 * `Mako Templates for Python <http://www.makotemplates.org>`_
+* `Tenjin Templates for Python <http://www.kuwata-lab.com/tenjin/>`_
 
 It is optimized for performance, well tested and documented.
 

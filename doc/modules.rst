@@ -43,8 +43,20 @@ wheezy.html.ext.lexer
 .. automodule:: wheezy.html.ext.lexer
    :members:
 
+wheezy.html.ext.parser
+----------------------
+
+.. automodule:: wheezy.html.ext.parser
+   :members:
+
 wheezy.html.ext.mako
----------------------
+--------------------
 
 .. automodule:: wheezy.html.ext.mako
+   :members:
+
+wheezy.html.ext.tenjin
+----------------------
+
+.. automodule:: wheezy.html.ext.tenjin
    :members:

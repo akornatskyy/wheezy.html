@@ -55,12 +55,3 @@ General error message::
     >>> credential.error()
     <span class="error-message">The username or password
       provided is incorrect.</span>
-
-
-
-
-
-
-
-
-

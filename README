@@ -1,8 +1,9 @@
 `wheezy.html`_ is a `python`_ package written in pure Python
-code. It is a lightweight html widget library. Integrates with 
+code. It is a lightweight html widget library. Integrates with
 the following template systems:
 
 * `Mako Templates for Python <http://www.makotemplates.org>`_
+* `Tenjin Templates for Python <http://www.kuwata-lab.com/tenjin/>`_
 
 It is optimized for performance, well tested and documented.
 
@@ -17,15 +18,21 @@ Install
 -------
 
 `wheezy.html`_ requires `python`_ version 2.4 to 2.7 or 3.2.
-It is independent of operating system. You can install it from `pypi`_ 
+It is independent of operating system. You can install it from `pypi`_
 site using `setuptools`_::
 
     $ easy_install wheezy.html
-    
+
 If you are using `virtualenv`_::
 
     $ virtualenv env
     $ env/bin/easy_install wheezy.html
+
+If you would like take a benefit of template preprocessing for Mako
+or Tenjin engines specify extra requirements::
+
+    $ env/bin/easy_install wheezy.html[mako]
+    $ env/bin/easy_install wheezy.html[tenjin]
 
 If you run into any issue or have comments, go ahead and add on
 `bitbucket`_.
