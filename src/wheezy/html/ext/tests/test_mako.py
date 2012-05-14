@@ -31,7 +31,7 @@ class MakoPreprocessorTestCase(unittest.TestCase, PreprocessorMixin):
     TEXTBOX = "${model.username.textbox(autocomplete='off')|h}"
     PASSWORD = "${model.pwd.password()|h}"
     TEXTAREA = "${model.comment.textarea()|h}"
-    CHECKBOX = "${model.accepts.checkbox()}"
+    CHECKBOX = "${model.remember_me.checkbox()}"
     MULTIPLE_CHECKBOX = "${model.scm.multiple_checkbox(choices=scm)}"
     RADIO = "${model.scm.radio(choices=scm)}"
     DROPDOWN = "${model.scm.dropdown(choices=scm)}"

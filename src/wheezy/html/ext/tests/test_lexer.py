@@ -526,17 +526,25 @@ class PreprocessorMixin(object):
                 '<textarea id="comment" name="comment" '
                 'rows="9" cols="40" class="error">x</textarea>')
 
+    def test_checkbox(self):
+        """ checkbox widget.
+        """
+        self.m.remember_me = True
+        self.render(self.CHECKBOX,
+                '<input id="remember-me" name="remember_me" '
+                'type="checkbox" value="1" checked="checked" />')
+        self.m.remember_me = False
+        self.render(self.CHECKBOX,
+                '<input id="remember-me" name="remember_me" '
+                'type="checkbox" value="1" />')
+        self.e['remember_me'] = 'Error'
+        self.render(self.CHECKBOX,
+                '<input id="remember-me" name="remember_me" '
+                'type="checkbox" value="1" class="error" />')
+
     def test_multiple_checkbox(self):
         """ multiple_checkbox widget.
         """
-        self.m.scm = []
-        self.render(self.MULTIPLE_CHECKBOX,
-                '<label><input id="scm" name="scm" type="checkbox" '
-                'value="1" />Git</label>'
-                '<label><input id="scm" name="scm" type="checkbox" '
-                'value="1" />Mercurial</label>'
-                '<label><input id="scm" name="scm" type="checkbox" '
-                'value="1" />SVN</label>')
         self.m.scm = ['hg', 'git']
         self.render(self.MULTIPLE_CHECKBOX,
                 '<label><input id="scm" name="scm" type="checkbox" '
@@ -545,6 +553,22 @@ class PreprocessorMixin(object):
                 'value="1" checked="checked" />Mercurial</label>'
                 '<label><input id="scm" name="scm" type="checkbox" '
                 'value="1" />SVN</label>')
+        self.m.scm = []
+        self.render(self.MULTIPLE_CHECKBOX,
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" />Git</label>'
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" />Mercurial</label>'
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" />SVN</label>')
+        self.e['scm'] = 'Error'
+        self.render(self.MULTIPLE_CHECKBOX,
+                '<label class="error"><input id="scm" name="scm" '
+                'type="checkbox" value="1" class="error" />Git</label>'
+                '<label class="error"><input id="scm" name="scm" '
+                'type="checkbox" value="1" class="error" />Mercurial</label>'
+                '<label class="error"><input id="scm" name="scm" '
+                'type="checkbox" value="1" class="error" />SVN</label>')
 
     def test_radio(self):
         """ radio widget.
