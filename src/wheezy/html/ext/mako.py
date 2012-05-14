@@ -13,7 +13,7 @@ class MakoPreprocessor(Preprocessor):
     def __init__(self, skip_imports=False):
         super(MakoPreprocessor, self).__init__(
             r'(?<!##)\s*\$\{((?P<expr>.+?)\.'
-            r'(?P<widget>%s){1}\((?P<params>.*?)\)\s*'
+            r'(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*'
             r'(?P<expr_filter>(\|\s*[\w,\s]+?|\s*)))\}\s*')
 
     PREPEND = """\
@@ -100,7 +100,7 @@ value="${key%(expr_filter)s}"%(class)s\
 %% endif
 """
 
-    INFO = """\\
+    MESSAGE = """\\
 %% if %(value)s:
 <span class="%(class)s">%(info)s</span>\\
 %% endif

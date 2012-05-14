@@ -79,7 +79,7 @@ doctest-cover:
 test-cover:
 	$(PYTEST) -q --cov wheezy.html \
 		--cov-report term-missing \
-		src/wheezy/html/tests
+		src/wheezy/html
 
 doc:
 	$(SPHINX) -a -b html doc/ doc/_build/

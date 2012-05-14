@@ -15,68 +15,47 @@ class Preprocessor(object):
     """ Generic widget preprocessor.
     """
 
+    CHECKBOX = None
+    ERROR = None
+    ERROR_CLASS0 = None
+    ERROR_CLASS1 = None
+    EXPRESSION = None
+    HIDDEN = '<input type="hidden" name="%(name)s" value="%(value)s" />'
+    INPUT = None
+    LABEL = '<label for="%(id)s"%(attrs)s%(class)s>%(value)s</label>'
+    MESSAGE = None
+    MULTIPLE_CHECKBOX = None
+    MULTIPLE_HIDDEN = None
     PREPEND = None
-    EXPRESSION = '%(expr)s%(expr_filter)s'
-    ERROR_CLASS0 = """\
-"""
-    ERROR_CLASS1 = """\
-"""
-    HIDDEN = """\
-<input type="hidden" name="%(name)s" value="%(value)s" />"""
-    MULTIPLE_HIDDEN = """\
-"""
-    LABEL = """\
-<label for="%(id)s"%(attrs)s%(class)s>%(value)s</label>"""
-    INPUT = """\
-"""
-    TEXTAREA = """\
-"""
-    CHECKBOX = """\
-"""
-    MULTIPLE_CHECKBOX = """\
-"""
-    RADIO = """\
-"""
-    SELECT = """\
-"""
-    ERROR = """\
-"""
-    INFO = """\
-"""
+    RADIO = None
+    SELECT = None
+    TEXTAREA = None
 
     # region: preprocessing
 
     def __init__(self, widgets_pattern):
         self.widgets = {
-            'hidden': self.hidden,
-            'multiple_hidden': self.multiple_hidden,
-            'label': self.label,
-            'emptybox': lambda expr, params, expr_filter: self.input(
-                    expr, params, expr_filter, 'empty'),
-            'textbox': lambda expr, params, expr_filter: self.input(
-                    expr, params, expr_filter, 'text'),
-            'password': lambda expr, params, expr_filter: self.input(
-                    expr, params, expr_filter, 'password'),
-            'textarea': self.textarea,
             'checkbox': self.checkbox,
-            'multiple_checkbox': self.multiple_checkbox,
-            'radio': self.radio,
-            'dropdown': lambda expr, params, expr_filter: self.select(
-                    expr, params, expr_filter, ''),
-            'select': lambda expr, params, expr_filter: self.select(
-                    expr, params, expr_filter, ''),
-            'listbox': lambda expr, params, expr_filter: self.select(
-                    expr, params, expr_filter, ' multiple="multiple"'),
-            'multiple_select': lambda expr, params, expr_filter: self.select(
-                    expr, params, expr_filter, ' multiple="multiple"'),
+            'dropdown': self.dropdown,
+            'emptybox': self.emptybox,
             'error': self.error,
-            'info': lambda expr, params, expr_filter: self.info(
-                    expr, params, expr_filter, 'info'),
-            'warning': lambda expr, params, expr_filter: self.info(
-                    expr, params, expr_filter, 'warning')
+            'hidden': self.hidden,
+            'info': self.info,
+            'label': self.label,
+            'listbox': self.listbox,
+            'multiple_checkbox': self.multiple_checkbox,
+            'multiple_hidden': self.multiple_hidden,
+            'multiple_select': self.listbox,
+            'password': self.password,
+            'radio': self.radio,
+            'select': self.dropdown,
+            'textarea': self.textarea,
+            'textbox': self.textbox,
+            'warning': self.warning,
         }
-        self.RE_WIDGETS = re.compile(
-                widgets_pattern % '|'.join(self.widgets))
+        assert '%(widgets)s' in widgets_pattern
+        self.RE_WIDGETS = re.compile(widgets_pattern % {
+            'widgets': '|'.join(sorted(self.widgets.keys()))})
 
     def __call__(self, text, **kwargs):
         """ Preprocess input text.
@@ -159,7 +138,25 @@ class Preprocessor(object):
             'attrs': self.join_attrs(kwargs),
             'class': self.error_class(name, class_)}
 
-    def input(self, expr, params, expr_filter, input_type):
+    def emptybox(self, expr, params, expr_filter):
+        """ HTML element input of type text. Value is rendered
+            only if evaluated to boolean True.
+        """
+        return self.input_helper(expr, params, expr_filter, 'empty')
+
+    def textbox(self, expr, params, expr_filter):
+        """ HTML element input of type text. Value is rendered
+            only if it is not None or ''.
+        """
+        return self.input_helper(expr, params, expr_filter, 'text')
+
+    def password(self, expr, params, expr_filter):
+        """ HTML element input of type password. Value is rendered
+            only if it is not None or ''.
+        """
+        return self.input_helper(expr, params, expr_filter, 'password')
+
+    def input_helper(self, expr, params, expr_filter, input_type):
         """ HTML element input of type input_type.
         """
         name = parse_name(expr)
@@ -236,13 +233,24 @@ class Preprocessor(object):
         return self.RADIO % {
             'id': html_id(name),
             'name': name,
+            'choices': choices,
             'value': expr,
             'expr_filter': expr_filter,
             'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_),
-            'choices': choices}
+            'class': self.error_class(name, class_)}
 
-    def select(self, expr, params, expr_filter, select_type):
+    def dropdown(self, expr, params, expr_filter):
+        """
+        """
+        return self.select_helper(expr, params, expr_filter, '')
+
+    def listbox(self, expr, params, expr_filter):
+        """
+        """
+        return self.select_helper(
+                expr, params, expr_filter, ' multiple="multiple"')
+
+    def select_helper(self, expr, params, expr_filter, select_type):
         """ HTML element select.
         """
         name = parse_name(expr)
@@ -253,11 +261,11 @@ class Preprocessor(object):
             'id': html_id(name),
             'name': name,
             'select_type': select_type,
+            'choices': choices,
             'value': expr,
             'expr_filter': expr_filter,
             'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_),
-            'choices': choices}
+            'class': self.error_class(name, class_)}
 
     def error(self, expr, params, expr_filter):
         """ General error message or field error.
@@ -275,16 +283,26 @@ class Preprocessor(object):
             'class': class_,
             'expr_filter': expr_filter}
 
-    def info(self, expr, params, filter, class_):
+    def info(self, expr, params, expr_filter):
+        """ General info message.
+        """
+        return self.message_helper(expr, params, expr_filter, 'info')
+
+    def warning(self, expr, params, expr_filter):
+        """ General warning message.
+        """
+        return self.message_helper(expr, params, expr_filter, 'warning')
+
+    def message_helper(self, expr, params, expr_filter, class_):
         """ General info message.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         if expr.startswith(name):
             class_ = class_ + '-message'
-        return self.INFO % {
+        return self.MESSAGE % {
             'value': expr,
-            'info': self.expression(expr, filter),
+            'info': self.expression(expr, expr_filter),
             'class': class_}
 
 
