@@ -96,13 +96,13 @@ value="${key%(expr_filter)s}"%(class)s\
 
     ERROR = """\\
 %% if '%(name)s' in errors:
-<span class="%(class)s">${errors['%(name)s'][-1]%(expr_filter)s}</span>\\
+<span%(attrs)s>${errors['%(name)s'][-1]%(expr_filter)s}</span>\\
 %% endif
 """
 
     MESSAGE = """\\
 %% if %(value)s:
-<span class="%(class)s">%(info)s</span>\\
+<span%(attrs)s>%(info)s</span>\\
 %% endif
 """
 

@@ -85,7 +85,7 @@ value="%(expr_filter)s{key}"%(class)s
     ERROR = """\
 <?py #pass ?>
 <?py if '%(name)s' in errors: ?>
-<span class="%(class)s">%(expr_filter)s{errors['%(name)s'][-1]}</span>\
+<span%(attrs)s>%(expr_filter)s{errors['%(name)s'][-1]}</span>\
 <?py #pass ?>
 <?py #endif ?>"""
 

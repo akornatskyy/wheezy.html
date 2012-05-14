@@ -29,7 +29,8 @@ class Preprocessor(object):
     PREPEND = None
     RADIO = None
     SELECT = None
-    TEXTAREA = None
+    TEXTAREA = '<textarea id="%(id)s" name="%(name)s"%(attrs)s%(class)s>\
+            %(value)s</textarea>'
 
     # region: preprocessing
 
@@ -65,10 +66,9 @@ class Preprocessor(object):
         for m in self.RE_WIDGETS.finditer(text):
             result.append(text[start:m.start()])
             start = m.end()
-            parts = m.groupdict()
-            widget = self.widgets[parts.pop('widget')]
-            widget = widget(**parts)
-            result.append(widget)
+            args = m.groupdict()
+            widget = self.widgets[args.pop('widget')]
+            result.append(widget(**args))
         if start > 0 and self.PREPEND:
             result.insert(0, self.PREPEND)
         result.append(text[start:])
@@ -272,15 +272,17 @@ class Preprocessor(object):
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
+        class_ = kwargs.pop('class', '')
+        if class_:
+            class_ = ' ' + self.expression(class_)
         if expr.startswith(name):
             name = '__ERROR__'
-            class_ = 'error-message'
+            kwargs['class'] = '"error-message' + class_ + '"'
         else:
-            class_ = 'error'
+            kwargs['class'] = '"error' + class_ + '"'
         return self.ERROR % {
             'name': name,
             'attrs': self.join_attrs(kwargs),
-            'class': class_,
             'expr_filter': expr_filter}
 
     def info(self, expr, params, expr_filter):
@@ -293,17 +295,21 @@ class Preprocessor(object):
         """
         return self.message_helper(expr, params, expr_filter, 'warning')
 
-    def message_helper(self, expr, params, expr_filter, class_):
+    def message_helper(self, expr, params, expr_filter, msg_class):
         """ General info message.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
+        class_ = kwargs.pop('class', '')
+        if class_:
+            class_ = ' ' + self.expression(class_)
         if expr.startswith(name):
-            class_ = class_ + '-message'
+            class_ = '-message' + class_
+        kwargs['class'] = msg_class + class_
         return self.MESSAGE % {
             'value': expr,
             'info': self.expression(expr, expr_filter),
-            'class': class_}
+            'attrs': self.join_attrs(kwargs)}
 
 
 class WhitespacePreprocessor(object):
