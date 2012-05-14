@@ -33,7 +33,11 @@ class TenjinPreprocessor(Preprocessor):
 <?py #endif ?>"""
 
     MULTIPLE_HIDDEN = """\
-"""
+<?py #pass ?>
+<?py for item in %(value)s: ?>
+<input type="hidden" name="%(name)s" value="%(expr_filter)s{item}" />\
+<?py #pass ?>
+<?py #endfor ?>"""
 
     INPUT = """\
 <input id="%(id)s" name="%(name)s" type="%(type)s"%(attrs)s%(class)s\
@@ -42,9 +46,6 @@ class TenjinPreprocessor(Preprocessor):
 <?py else: ?>
  /><?py #pass ?>
 <?py #endif ?>"""
-
-    TEXTAREA = """\
-"""
 
     CHECKBOX = """\
 <input id="%(id)s" name="%(name)s" type="checkbox" \
@@ -55,7 +56,15 @@ value="1"%(attrs)s%(class)s\
  />"""
 
     MULTIPLE_CHECKBOX = """\
-"""
+<?py #pass ?>
+<?py for key, text in %(choices)s: ?>
+<label%(attrs)s%(class)s><input id="%(id)s" name="%(name)s" type="checkbox" \
+value="1"%(attrs)s%(class)s<?py #pass ?>
+<?py if key in %(value)s: ?>
+ checked="checked"<?py #pass ?>
+<?py #endif ?>
+ />%(expr_filter)s{text}</label><?py #pass ?>
+<?py #endfor ?>"""
 
     RADIO = """\
 <?py #pass ?>
@@ -90,7 +99,10 @@ value="%(expr_filter)s{key}"%(class)s
 <?py #endif ?>"""
 
     MESSAGE = """\
-"""
+<?py #pass ?>
+<?py if %(value)s: ?>
+<span%(attrs)s>%(info)s</span><?py #pass ?>
+<?py #endif ?>"""
 
 
 widget_preprocessor = TenjinPreprocessor()
