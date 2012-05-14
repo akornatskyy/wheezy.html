@@ -43,7 +43,7 @@ setup(
         'Topic :: Software Development :: Widget Sets',
         'Topic :: Text Processing :: Markup :: HTML'
     ],
-    keywords='html widget markup mako preprocessor',
+    keywords='html widget markup mako tenjin preprocessor',
     packages=['wheezy', 'wheezy.html', 'wheezy.html.ext'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],
@@ -58,7 +58,12 @@ setup(
             'pytest',
             'pytest-pep8',
             'pytest-cov',
-            'mako'
+        ],
+        'mako': [
+            'mako>=0.7.0'
+        ],
+        'tenjin': [
+            'tenjin>=1.1.0'
         ]
     },
 
