@@ -421,3 +421,253 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             info = model|f
             attrs =  cursor="auto" class="warning-message x"
         """ == self.p.warning('model', 'class="x", cursor="auto"', '|f')
+
+
+class PreprocessorMixin(object):
+    """ Test the ``Preprocessor``.
+    """
+    from operator import itemgetter
+
+    p = None
+    m = None
+    e = None
+    scm = sorted({
+        'git': 'Git', 'hg': 'Mercurial', 'svn': 'SVN'
+        }.items(), key=itemgetter(1))
+
+    def assert_render_equal(self, template, expected, **kwargs):
+        pass
+
+    def render(self, widget, html):
+        """ hidden widget.
+        """
+        self.assert_render_equal(self.p(widget), html,
+                model=self.m,
+                errors=self.e,
+                scm=self.scm,
+                message=(hasattr(self.m, 'message') and self.m.message or ''))
+
+    def test_hidden(self):
+        """ hidden widget.
+        """
+        self.m.pref = 'ab<c>'
+        self.render(self.HIDDEN,
+                '<input type="hidden" name="pref" value="ab&lt;c&gt;" />')
+
+    def test_multiple_hidden(self):
+        """ multiple_hidden widget.
+        """
+        self.m.prefs = ['a', 'b']
+        self.render(self.MULTIPLE_HIDDEN,
+                '<input type="hidden" name="prefs" value="a" />'
+                '<input type="hidden" name="prefs" value="b" />')
+
+    def test_label(self):
+        """ label widget.
+        """
+        self.m.username = ''
+        self.render(self.LABEL,
+                '<label for="username"><i>*</i>Username:</label>')
+        self.e['username'] = 'Error'
+        self.render(self.LABEL,
+                '<label for="username" class="error">'
+                '<i>*</i>Username:</label>')
+
+    def test_emptybox(self):
+        """ emptybox widget.
+        """
+        self.m.amount = 10
+        self.render(self.EMPTYBOX,
+                '<input id="amount" name="amount" type="text" class="x" '
+                'value="10" />')
+        self.m.amount = 0
+        self.render(self.EMPTYBOX,
+                '<input id="amount" name="amount" type="text" class="x" />')
+        self.e['amount'] = 'Error'
+        self.render(self.EMPTYBOX,
+                '<input id="amount" name="amount" type="text"'
+                ' class="error x" />')
+
+    def test_textbox(self):
+        """ textbox widget.
+        """
+        self.m.username = 'John'
+        self.render(self.TEXTBOX,
+                '<input id="username" name="username" type="text" '
+                'autocomplete="off" value="John" />')
+        self.m.username = ''
+        self.render(self.TEXTBOX,
+                '<input id="username" name="username" type="text" '
+                'autocomplete="off" />')
+        self.e['username'] = 'Error'
+        self.render(self.TEXTBOX,
+                '<input id="username" name="username" type="text" '
+                'autocomplete="off" class="error" />')
+
+    def test_password(self):
+        """ password widget.
+        """
+        self.m.pwd = ''
+        self.render(self.PASSWORD,
+                '<input id="pwd" name="pwd" type="password" />')
+        self.e['pwd'] = 'Error'
+        self.render(self.PASSWORD,
+                '<input id="pwd" name="pwd" type="password" class="error" />')
+
+    def test_textarea(self):
+        """ textarea widget.
+        """
+        self.m.comment = 'x'
+        self.render(self.TEXTAREA,
+                '<textarea id="comment" name="comment" '
+                'rows="9" cols="40">x</textarea>')
+        self.e['comment'] = 'Error'
+        self.render(self.TEXTAREA,
+                '<textarea id="comment" name="comment" '
+                'rows="9" cols="40" class="error">x</textarea>')
+
+    def test_multiple_checkbox(self):
+        """ multiple_checkbox widget.
+        """
+        self.m.scm = []
+        self.render(self.MULTIPLE_CHECKBOX,
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" />Git</label>'
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" />Mercurial</label>'
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" />SVN</label>')
+        self.m.scm = ['hg', 'git']
+        self.render(self.MULTIPLE_CHECKBOX,
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" checked="checked" />Git</label>'
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" checked="checked" />Mercurial</label>'
+                '<label><input id="scm" name="scm" type="checkbox" '
+                'value="1" />SVN</label>')
+
+    def test_radio(self):
+        """ radio widget.
+        """
+        self.m.scm = 'hg'
+        self.render(self.RADIO,
+                '<label><input type="radio" name="scm" value="git" />'
+                'Git</label>'
+                '<label><input type="radio" name="scm" value="hg" '
+                'checked="checked" />Mercurial</label>'
+                '<label><input type="radio" name="scm" value="svn" />'
+                'SVN</label>')
+        self.m.scm = ''
+        self.render(self.RADIO,
+                '<label><input type="radio" name="scm" value="git" />'
+                'Git</label>'
+                '<label><input type="radio" name="scm" value="hg" />'
+                'Mercurial</label>'
+                '<label><input type="radio" name="scm" value="svn" />'
+                'SVN</label>')
+        self.e['scm'] = 'Error'
+        self.render(self.RADIO,
+                '<label class="error"><input type="radio" name="scm" '
+                'value="git" class="error" />Git</label>'
+                '<label class="error"><input type="radio" name="scm" '
+                'value="hg" class="error" />Mercurial</label>'
+                '<label class="error"><input type="radio" name="scm" '
+                'value="svn" class="error" />SVN</label>')
+
+    def test_dropdown(self):
+        """ dropdown widget.
+        """
+        self.m.scm = 'hg'
+        self.render(self.DROPDOWN,
+                '<select id="scm" name="scm">'
+                '<option value="git">Git</option>'
+                '<option value="hg" selected="selected">Mercurial</option>'
+                '<option value="svn">SVN</option>'
+                '</select>')
+        self.m.scm = ''
+        self.render(self.DROPDOWN,
+                '<select id="scm" name="scm">'
+                '<option value="git">Git</option>'
+                '<option value="hg">Mercurial</option>'
+                '<option value="svn">SVN</option>'
+                '</select>')
+        self.e['scm'] = 'Error'
+        self.render(self.DROPDOWN,
+                '<select id="scm" name="scm" class="error">'
+                '<option value="git">Git</option>'
+                '<option value="hg">Mercurial</option>'
+                '<option value="svn">SVN</option>'
+                '</select>')
+
+    def test_listbox(self):
+        """ listbox widget.
+        """
+        self.m.scm = 'hg'
+        self.render(self.LISTBOX,
+                '<select id="scm" name="scm" multiple="multiple" class="x">'
+                '<option value="git">Git</option>'
+                '<option value="hg" selected="selected">Mercurial</option>'
+                '<option value="svn">SVN</option>'
+                '</select>')
+        self.m.scm = ''
+        self.render(self.LISTBOX,
+                '<select id="scm" name="scm" multiple="multiple" class="x">'
+                '<option value="git">Git</option>'
+                '<option value="hg">Mercurial</option>'
+                '<option value="svn">SVN</option>'
+                '</select>')
+        self.e['scm'] = 'Error'
+        self.render(self.LISTBOX,
+                '<select id="scm" name="scm" multiple="multiple" '
+                'class="error x">'
+                '<option value="git">Git</option>'
+                '<option value="hg">Mercurial</option>'
+                '<option value="svn">SVN</option>'
+                '</select>')
+
+    def test_attribute_error(self):
+        """ attribute error widget.
+        """
+        self.render(self.ERROR, '')
+        self.e['username'] = ['Error1', 'Error2']
+        self.render(self.ERROR, '<span class="error">Error2</span>')
+
+    def test_general_error(self):
+        """ general error widget.
+        """
+        self.render(self.GENERAL_ERROR, '')
+        self.e['__ERROR__'] = ['Error1', 'Error2']
+        self.render(self.GENERAL_ERROR,
+                '<span class="error-message">Error2</span>')
+
+    def test_attribute_info(self):
+        """ attribute info widget.
+        """
+        self.m.user_info = None
+        self.render(self.INFO, '')
+        self.m.user_info = 'Info'
+        self.render(self.INFO, '<span class="info">Info</span>')
+
+    def test_general_info(self):
+        """ general info widget.
+        """
+        self.render(self.GENERAL_INFO, '')
+        self.m.message = 'Message'
+        self.render(self.GENERAL_INFO,
+                '<span class="info-message">Message</span>')
+
+    def test_attribute_warning(self):
+        """ attribute warning widget.
+        """
+        self.m.user_info = None
+        self.render(self.WARNING, '')
+        self.m.user_info = 'Warn'
+        self.render(self.WARNING, '<span class="warning">Warn</span>')
+
+    def test_general_warning(self):
+        """ general warning widget.
+        """
+        self.render(self.GENERAL_WARNING, '')
+        self.m.message = 'Message'
+        self.render(self.GENERAL_WARNING,
+                '<span class="warning-message">Message</span>')
