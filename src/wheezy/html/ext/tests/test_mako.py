@@ -7,19 +7,9 @@ import unittest
 from wheezy.html.ext.tests.test_lexer import PreprocessorMixin
 
 
-class Dummy(object):
-    pass
-
-
-class MakoPreprocessorTestCase(unittest.TestCase, PreprocessorMixin):
+class MakoPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
     """ Test the ``MakoPreprocessor``.
     """
-
-    def setUp(self):
-        from wheezy.html.ext.mako import widget_preprocessor
-        self.p = widget_preprocessor
-        self.m = Dummy()
-        self.e = {}
 
     def assert_render_equal(self, template, expected, **kwargs):
         assert_mako_equal(template, expected, **kwargs)
@@ -61,9 +51,11 @@ try:
     # from mako.template import Template
     Template = __import__('mako.template', None, None,
             ['Template']).Template
+    from wheezy.html.ext.mako import widget_preprocessor
 
     def assert_mako_equal(text, expected, **kwargs):
-        template = Template(text)
+        template = Template(text, preprocessor=[
+            widget_preprocessor])
         value = template.render(**kwargs)
         assert expected == value
 

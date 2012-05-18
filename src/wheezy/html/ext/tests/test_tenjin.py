@@ -1,5 +1,5 @@
 
-""" Unit tests for ``wheezy.html.ext.mako``.
+""" Unit tests for ``wheezy.html.ext.tenjin``.
 """
 
 import unittest
@@ -7,19 +7,9 @@ import unittest
 from wheezy.html.ext.tests.test_lexer import PreprocessorMixin
 
 
-class Dummy(object):
-    pass
-
-
-class TenjinPreprocessorTestCase(unittest.TestCase, PreprocessorMixin):
+class TenjinPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
     """ Test the ``TenjinPreprocessor``.
     """
-
-    def setUp(self):
-        from wheezy.html.ext.tenjin import widget_preprocessor
-        self.p = widget_preprocessor
-        self.m = Dummy()
-        self.e = {}
 
     def assert_render_equal(self, template, expected, **kwargs):
         assert_tenjin_equal(template, expected, **kwargs)
@@ -68,9 +58,10 @@ try:
 
     from tenjin.helpers import escape, to_str
     assert escape, to_str
+    from wheezy.html.ext.tenjin import widget_preprocessor
 
     def assert_tenjin_equal(text, expected, **kwargs):
-        template = Template(input=text)
+        template = Template(input=widget_preprocessor(text))
         value = template.render(kwargs)
         assert expected == value
 

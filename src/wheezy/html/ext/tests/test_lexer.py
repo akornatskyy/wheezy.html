@@ -429,12 +429,16 @@ class PreprocessorMixin(object):
     """
     from operator import itemgetter
 
-    p = None
-    m = None
-    e = None
+    class Dummy(object):
+        pass
+
     scm = sorted({
         'git': 'Git', 'hg': 'Mercurial', 'svn': 'SVN'
         }.items(), key=itemgetter(1))
+
+    def setUp(self):
+        self.m = PreprocessorMixin.Dummy()
+        self.e = {}
 
     def assert_render_equal(self, template, expected, **kwargs):
         pass
@@ -442,7 +446,7 @@ class PreprocessorMixin(object):
     def render(self, widget, html):
         """ hidden widget.
         """
-        self.assert_render_equal(self.p(widget), html,
+        self.assert_render_equal(widget, html,
                 model=self.m,
                 errors=self.e,
                 scm=self.scm,
