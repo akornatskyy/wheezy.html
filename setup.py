@@ -64,6 +64,9 @@ setup(
         ],
         'tenjin': [
             'tenjin>=1.1.0'
+        ],
+        'jinja2': [
+            'jinja2>=2.6'
         ]
     },
 
