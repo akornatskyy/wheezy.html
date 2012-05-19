@@ -42,6 +42,7 @@ class TenjinWhitespacePreprocessorTestCase(unittest.TestCase):
         """
         """
         from wheezy.html.ext.tenjin import whitespace_preprocessor
+        assert ' x' == whitespace_preprocessor(' x')
         assert 'x' == whitespace_preprocessor('  \n x \n  ')
         assert 'x' == whitespace_preprocessor('  x')
         assert 'x' == whitespace_preprocessor('x  ')
