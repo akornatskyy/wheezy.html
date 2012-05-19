@@ -253,8 +253,57 @@ Integration
 
 :ref:`wheezy.html` integrates with the following template systems:
 
-* `Mako Templates for Python <http://www.makotemplates.org>`_
-* `Tenjin Templates for Python <http://www.kuwata-lab.com/tenjin/>`_
+* `Jinja2 Templates <http://jinja.pocoo.org>`_
+* `Mako Templates <http://www.makotemplates.org>`_
+* `Tenjin Templates <http://www.kuwata-lab.com/tenjin/>`_
+
+Jinja2
+^^^^^^
+
+:ref:`wheezy.html` integration with ``Jinja2`` is provided via extension
+feature. Here is how to add
+:py:meth:`~wheezy.html.ext.jinja2.WidgetExtension` to your code::
+
+    from wheezy.html.ext.jinja2 import WidgetExtension
+
+    env = Environment(
+            ...
+            extensions=[WidgetExtension])
+
+The only thing :py:meth:`~wheezy.html.ext.jinja2.WidgetExtension` does is
+translation of widget code to adequate ``Jinja2`` code.
+
+Let demonstrate with by example::
+
+    {{ model.remember_me.checkbox() }}
+
+is translated to the following ``Jinja2`` code (during template compilation
+phase)::
+
+    <input id="remember-me" name="remember_me" type="checkbox"
+    value="1"
+    {% if 'remember_me' in errors: %}
+     class="error"
+    {% endif %}
+    {% if  model.remember_me: %}
+     checked="checked"
+    {% endif %} />
+
+which effectively renders the HTML at runtime::
+
+    <input id="remember-me" name="remember_me" type="checkbox" value="1" />
+
+Since widgets also decorate appropriate HTML tags in case of error, ``errors``
+dictionary must be available in ``Jinja2`` context::
+
+    template = env.get_template(template_name)
+    assert 'errors' in kwargs
+    template.render(
+                **kwargs
+    )
+
+See :py:mod:`wheezy.html.ext.mako` for more examples.
+
 
 Mako
 ^^^^

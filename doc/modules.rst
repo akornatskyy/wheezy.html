@@ -49,6 +49,12 @@ wheezy.html.ext.parser
 .. automodule:: wheezy.html.ext.parser
    :members:
 
+wheezy.html.ext.jinja2
+----------------------
+
+.. automodule:: wheezy.html.ext.jinja2
+   :members:
+
 wheezy.html.ext.mako
 --------------------
 

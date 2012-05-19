@@ -16,9 +16,10 @@ If you are using `virtualenv`_::
     $ virtualenv env
     $ env/bin/easy_install wheezy.html
 
-If you would like take a benefit of template preprocessing for Mako
-or Tenjin engines specify extra requirements::
+If you would like take a benefit of template preprocessing for
+Jinja2, Mako or Tenjin engines specify extra requirements::
 
+    $ env/bin/easy_install wheezy.html[jinja2]
     $ env/bin/easy_install wheezy.html[mako]
     $ env/bin/easy_install wheezy.html[tenjin]
 
