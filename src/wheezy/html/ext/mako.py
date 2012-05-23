@@ -4,6 +4,7 @@
 
 import re
 
+from wheezy.html.ext.lexer import InlinePreprocessor
 from wheezy.html.ext.lexer import Preprocessor
 from wheezy.html.ext.lexer import WhitespacePreprocessor
 
@@ -114,3 +115,27 @@ whitespace_preprocessor = WhitespacePreprocessor(rules=[
         (re.compile(r'>\s+<'),
             r'><'),
 ])
+
+
+RE_INLINE = re.compile(r'<%inline\s+file=("|\')(?P<path>.+?)\1\s*/>',
+        re.MULTILINE)
+
+
+def inline_preprocessor(directories, enabled=True):
+    """ Inline preprocessor. Rewrite <%inline file="..." /> tag with
+        file content. If enable is ``False`` fallback to include.
+
+        >>> t = '1 <%inline file="master.html"/> 2'
+        >>> m = RE_INLINE.search(t)
+        >>> m.group('path')
+        'master.html'
+        >>> t[:m.start()], t[m.end():]
+        ('1 ', ' 2')
+        >>> m = RE_INLINE.search(' <%inline file="shared/footer.html"/>')
+        >>> m.group('path')
+        'shared/footer.html'
+    """
+    return InlinePreprocessor(
+            RE_INLINE,
+            lambda path: '<%include file="' + path + '"/>',
+            directories, enabled)
