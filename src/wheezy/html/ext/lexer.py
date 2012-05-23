@@ -3,6 +3,9 @@
 """
 
 import re
+import os.path
+
+from warnings import warn
 
 from wheezy.html.ext.parser import parse_known_function
 from wheezy.html.ext.parser import parse_name
@@ -323,3 +326,40 @@ class WhitespacePreprocessor(object):
         for r, s in self.rules:
             text = r.sub(s, text)
         return text
+
+
+class InlinePreprocessor(object):
+    """ Inline rreprocessor
+    """
+
+    def __init__(self, pattern, fallback_strategy, directories, enabled=True):
+        self.pattern = pattern
+        self.directories = directories
+        if not enabled:
+            self.strategy = fallback_strategy
+
+    def __call__(self, text, **kwargs):
+        result = []
+        start = 0
+        for m in self.pattern.finditer(text):
+            result.append(text[start:m.start()])
+            start = m.end()
+            path = m.group('path')
+            result.append(self.strategy(path))
+        result.append(text[start:])
+        return ''.join(result)
+
+    def strategy(self, path):
+        path = path.lstrip('/')
+        for d in self.directories:
+            abspath = os.path.abspath(os.path.join(d, path))
+            if os.path.exists(abspath) and os.path.isfile(abspath):
+                f = open(abspath, 'r')
+                try:
+                    return f.read()
+                finally:
+                    f.close()
+            else:
+                msg = 'InlinePreprocessor: "%s" not found.' % path
+                warn(msg)
+                return ''
