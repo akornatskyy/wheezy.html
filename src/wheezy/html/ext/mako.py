@@ -121,9 +121,10 @@ RE_INLINE = re.compile(r'<%inline\s+file=("|\')(?P<path>.+?)\1\s*/>',
         re.MULTILINE)
 
 
-def inline_preprocessor(directories, enabled=True):
+def inline_preprocessor(directories, fallback=False):
     """ Inline preprocessor. Rewrite <%inline file="..." /> tag with
-        file content. If enable is ``False`` fallback to include.
+        file content. If fallback is ``True`` rewrite to
+        <%include file="..." /> tag.
 
         >>> t = '1 <%inline file="master.html"/> 2'
         >>> m = RE_INLINE.search(t)
@@ -135,7 +136,6 @@ def inline_preprocessor(directories, enabled=True):
         >>> m.group('path')
         'shared/footer.html'
     """
-    return InlinePreprocessor(
-            RE_INLINE,
-            lambda path: '<%include file="' + path + '"/>',
-            directories, enabled)
+    strategy = fallback and (
+            lambda path: '<%include file="' + path + '"/>') or None
+    return InlinePreprocessor(RE_INLINE, directories, strategy)
