@@ -9,6 +9,7 @@ import re
 Extension = __import__('jinja2.ext', None, None,
             ['Extension']).Extension
 
+from wheezy.html.ext.lexer import InlinePreprocessor
 from wheezy.html.ext.lexer import Preprocessor
 from wheezy.html.ext.lexer import WhitespacePreprocessor
 
@@ -146,6 +147,40 @@ class WhitespaceExtension(Extension):
                     r'%\}\s+<'.replace('%\}', re.escape(block_end_string))),
                     r'%}<'.replace('%}', block_end_string)),
             ])
+
+    def preprocess(self, source, name, filename=None):
+        return self.preprocessor(source)
+
+
+RE_INLINE = re.compile(r'{%\sinline\s+("|\')(?P<path>.+?)\1\s*%}',
+        re.MULTILINE)
+
+
+class InlineExtension(Extension):
+    """ Inline preprocessor. Rewrite {% inline "..." %} tag with
+        file content. If fallback is ``True`` rewrite to
+        {% include "..." %} tag.
+
+        >>> t = '1 {% inline "master.html" %} 2'
+        >>> m = RE_INLINE.search(t)
+        >>> m.group('path')
+        'master.html'
+        >>> t[:m.start()], t[m.end():]
+        ('1 ', ' 2')
+        >>> m = RE_INLINE.search(' {% inline "shared/footer.html" %}')
+        >>> m.group('path')
+        'shared/footer.html'
+    """
+
+    def __init__(self, searchpath, fallback=False):
+        strategy = fallback and (
+            lambda path: '{% include "' + path + '" %}') or None
+        self.preprocessor = InlinePreprocessor(
+                RE_INLINE, searchpath, strategy)
+
+    def __call__(self, environment):
+        super(InlineExtension, self).__init__(environment)
+        return self
 
     def preprocess(self, source, name, filename=None):
         return self.preprocessor(source)
