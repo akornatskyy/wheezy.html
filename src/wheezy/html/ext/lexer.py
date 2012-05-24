@@ -329,14 +329,14 @@ class WhitespacePreprocessor(object):
 
 
 class InlinePreprocessor(object):
-    """ Inline rreprocessor
+    """ Inline preprocessor
     """
 
-    def __init__(self, pattern, fallback_strategy, directories, enabled=True):
+    def __init__(self, pattern, directories, strategy=None):
         self.pattern = pattern
         self.directories = directories
-        if not enabled:
-            self.strategy = fallback_strategy
+        if strategy:
+            self.strategy = strategy
 
     def __call__(self, text, **kwargs):
         result = []
@@ -345,9 +345,12 @@ class InlinePreprocessor(object):
             result.append(text[start:m.start()])
             start = m.end()
             path = m.group('path')
-            result.append(self.strategy(path))
-        result.append(text[start:])
-        return ''.join(result)
+            result.append(self(self.strategy(path)))
+        if start:
+            result.append(text[start:])
+            return ''.join(result)
+        else:
+            return text
 
     def strategy(self, path):
         path = path.lstrip('/')
