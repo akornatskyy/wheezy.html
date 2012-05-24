@@ -152,7 +152,7 @@ class WhitespaceExtension(Extension):
         return self.preprocessor(source)
 
 
-RE_INLINE = re.compile(r'{%\sinline\s+("|\')(?P<path>.+?)\1\s*%}',
+RE_INLINE = re.compile(r'{%\s*inline\s+("|\')(?P<path>.+?)\1\s*%}',
         re.MULTILINE)
 
 
