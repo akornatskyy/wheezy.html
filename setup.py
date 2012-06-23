@@ -67,6 +67,9 @@ setup(
         ],
         'jinja2': [
             'jinja2>=2.6'
+        ],
+        'wheezy.template': [
+            'wheezy.template>=0.1.31'
         ]
     },
 
