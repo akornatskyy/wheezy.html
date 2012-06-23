@@ -61,6 +61,12 @@ wheezy.html.ext.mako
 .. automodule:: wheezy.html.ext.mako
    :members:
 
+wheezy.html.ext.template
+------------------------
+
+.. automodule:: wheezy.html.ext.template
+   :members:
+
 wheezy.html.ext.tenjin
 ----------------------
 

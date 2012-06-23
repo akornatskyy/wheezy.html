@@ -43,7 +43,8 @@ setup(
         'Topic :: Software Development :: Widget Sets',
         'Topic :: Text Processing :: Markup :: HTML'
     ],
-    keywords='html widget markup mako tenjin preprocessor',
+    keywords='html widget markup mako jinja2 tenjin wheezy.template '
+             'preprocessor',
     packages=['wheezy', 'wheezy.html', 'wheezy.html.ext'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],

@@ -17,11 +17,12 @@ If you are using `virtualenv`_::
     $ env/bin/easy_install wheezy.html
 
 If you would like take a benefit of template preprocessing for
-Jinja2, Mako or Tenjin engines specify extra requirements::
+Jinja2, Mako, Tenjin or Wheezy.Template engines specify extra requirements::
 
     $ env/bin/easy_install wheezy.html[jinja2]
     $ env/bin/easy_install wheezy.html[mako]
     $ env/bin/easy_install wheezy.html[tenjin]
+    $ env/bin/easy_install wheezy.html[wheezy.template]
 
 Develop
 -------

@@ -256,6 +256,7 @@ Integration
 * `Jinja2 Templates <http://jinja.pocoo.org>`_
 * `Mako Templates <http://www.makotemplates.org>`_
 * `Tenjin Templates <http://www.kuwata-lab.com/tenjin/>`_
+* `Wheezy Templates <http://pypi.python.org/pypi/wheezy.template/>`_
 
 Jinja2
 ^^^^^^
@@ -398,3 +399,59 @@ dictionary must be available in ``Tenjin`` context::
     )
 
 See :py:mod:`wheezy.html.ext.tenjin` for more examples.
+
+Wheezy Template
+^^^^^^^^^^^^^^^
+
+:ref:`wheezy.html` integration with ``wheezy.template`` is provided via preprocessor
+feature. Here is how to add
+:py:meth:`~wheezy.html.ext.template.WidgetExtension` to your code::
+
+    from wheezy.html.ext.template import WidgetExtension
+    from wheezy.html.utils import html_escape
+    from wheezy.html.utils import format_value
+
+    engine = Engine(
+            ...
+            extensions=[
+                WidgetExtension
+    ])
+    engine.global_vars.update({
+        'format_value': format_value,
+        'h': html_escape
+    })
+
+The only thing
+:py:meth:`~wheezy.html.ext.template.WidgetExtension` does is
+translation of widget code to adequate ``wheezy.template`` code.
+
+Let demonstrate with by example::
+
+    @model.remember_me.checkbox(class_='i')
+
+is translated to the following ``wheezy.template`` code (during template compilation
+phase)::
+
+    <input id="remember-me" name="remember_me" type="checkbox" value="1"
+    @if 'remember_me' in errors:
+     class="error i"
+    @else:
+     class="i"
+    @if model.remember_me:
+     checked="checked"
+    @end
+     />
+
+which effectively renders the HTML at runtime::
+
+    <input id="remember-me" name="remember_me" type="checkbox" value="1" class="i" />
+
+Since widgets also decorate appropriate HTML tags in case of error, ``errors``
+dictionary must be available in ``wheezy.template`` context::
+
+    assert 'errors' in kwargs
+    engine.render('page.html',
+                **kwargs
+    )
+
+See :py:mod:`wheezy.html.ext.template` for more examples.
