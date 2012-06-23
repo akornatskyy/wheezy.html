@@ -45,9 +45,10 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
     def test_whitespace(self):
         """
         """
-        assert '><' == self.preprocess('  >  <')
+        assert '><' == self.preprocess('  >  < ')
         assert '' == self.preprocess('  ')
         assert 'x' == self.preprocess('  x')
+        assert 'x' == self.preprocess('x  ')
         assert '>' == self.preprocess('>  ')
         assert '>\\\n@def' == self.preprocess('>\n@def')
         assert '>\\\n@end' == self.preprocess('>\n@end')
