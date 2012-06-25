@@ -16,8 +16,8 @@ def html_escape(s):
         >>> html_escape('&<>"\\'')
         "&amp;&lt;&gt;&quot;\'"
     """
-    return s.replace('&', '&amp;').replace('<', '&lt;'
-            ).replace('>', '&gt;').replace('"', '&quot;')
+    return s.replace('&', '&amp;').replace('<', '&lt;').replace(
+        '>', '&gt;').replace('"', '&quot;')
 
 
 html_id = lambda name: name.replace('_', '-')
@@ -55,7 +55,7 @@ def format_value(value, format_spec=None, format_provider=None):
                 formatter_name = type(value[0]).__name__
                 format_provider = format_providers[formatter_name]
             return tuple(format_provider(item, format_spec)
-                    for item in value)
+                         for item in value)
         except IndexError:
             return tuple([])
     else:
@@ -98,15 +98,15 @@ def datetime_format_provider(value, format_spec=None):
 
 
 format_providers = {
-        'str': lambda value, format_spec: html_escape(str_type(value)),
-        'unicode': lambda value, format_spec: html_escape(value),
-        'int': str_format_provider,
-        'Decimal': str_format_provider,
-        'bool': str_format_provider,
-        'float': str_format_provider,
-        'date': date_format_provider,
-        'time': lambda value, format_spec: value.strftime(
-            str(format_spec or '%H:%M')),
-        'datetime': datetime_format_provider,
-        'NoneType': lambda value, format_spec: ''
+    'str': lambda value, format_spec: html_escape(str_type(value)),
+    'unicode': lambda value, format_spec: html_escape(value),
+    'int': str_format_provider,
+    'Decimal': str_format_provider,
+    'bool': str_format_provider,
+    'float': str_format_provider,
+    'date': date_format_provider,
+    'time': lambda value, format_spec: value.strftime(
+        str(format_spec or '%H:%M')),
+    'datetime': datetime_format_provider,
+    'NoneType': lambda value, format_spec: ''
 }

@@ -13,8 +13,8 @@ class Jinja2PreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
 
     def assert_render_equal(self, template, expected, **kwargs):
         assert_jinja2_equal({
-                'variable_start_string': '{{',
-                'variable_end_string': '}}'
+            'variable_start_string': '{{',
+            'variable_end_string': '}}'
         }, template, expected, **kwargs)
 
     HIDDEN = '{{ model.pref.hidden()|e }}'
@@ -43,8 +43,8 @@ class Jinja2PreprocessorTestCase2(PreprocessorMixin, unittest.TestCase):
 
     def assert_render_equal(self, template, expected, **kwargs):
         assert_jinja2_equal({
-                'variable_start_string': '${',
-                'variable_end_string': '}'
+            'variable_start_string': '${',
+            'variable_end_string': '}'
         }, template, expected, **kwargs)
 
     HIDDEN = '${model.pref.hidden()|e}'
@@ -88,9 +88,9 @@ class Jinja2WhitespaceExtensionTestCase(unittest.TestCase):
         assert 'x' == self.preprocess('x  ')
         assert '><' == self.preprocess('  > < ')
         assert '>' + self.block_start_string == self.preprocess(
-                '>  ' + self.block_start_string)
+            '>  ' + self.block_start_string)
         assert self.block_end_string + '<' == self.preprocess(
-                self.block_end_string + '  <')
+            self.block_end_string + '  <')
 
 
 class Jinja2WhitespaceExtensionTestCase2(Jinja2WhitespaceExtensionTestCase):
@@ -104,13 +104,13 @@ class Jinja2WhitespaceExtensionTestCase2(Jinja2WhitespaceExtensionTestCase):
 try:
     # from jinja2 import Environment
     Environment = __import__('jinja2', None, None,
-            ['Environment']).Environment
+                             ['Environment']).Environment
     from wheezy.html.ext.jinja2 import WidgetExtension
 
     def assert_jinja2_equal(options, text, expected, **kwargs):
         template = Environment(
-                extensions=[WidgetExtension],
-                **options
+            extensions=[WidgetExtension],
+            **options
         ).from_string(text)
         value = template.render(kwargs)
         assert expected == value

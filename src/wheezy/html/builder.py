@@ -93,7 +93,7 @@ class WidgetBuilder(object):
         if self.formatted is None:
             self.format()
         return Widget(tag_name, self.name, self.formatted,
-                self.errors)
+                      self.errors)
 
     def error(self):
         if self.errors is None:

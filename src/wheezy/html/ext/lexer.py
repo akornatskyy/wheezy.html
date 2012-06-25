@@ -33,7 +33,7 @@ class Preprocessor(object):
     RADIO = None
     SELECT = None
     TEXTAREA = '<textarea id="%(id)s" name="%(name)s"%(attrs)s%(class)s>' \
-            '%(value)s</textarea>'
+        '%(value)s</textarea>'
 
     # region: preprocessing
 
@@ -85,8 +85,8 @@ class Preprocessor(object):
         """
         value = parse_str_or_int(text)
         return value or self.EXPRESSION % {
-                        'expr': text,
-                        'expr_filter': expr_filter}
+            'expr': text,
+            'expr_filter': expr_filter}
 
     def join_attrs(self, kwargs):
         """ Joins ``kwargs`` as html attributes.
@@ -103,11 +103,11 @@ class Preprocessor(object):
         """
         if class_:
             return self.ERROR_CLASS1 % {
-                    'name': name,
-                    'class': self.expression(class_)}
+                'name': name,
+                'class': self.expression(class_)}
         else:
             return self.ERROR_CLASS0 % {
-                    'name': name}
+                'name': name}
 
     # region: widgets
 
@@ -116,8 +116,8 @@ class Preprocessor(object):
         """
         name = parse_name(expr)
         return self.HIDDEN % {
-                'name': name,
-                'value': self.expression(expr, expr_filter)}
+            'name': name,
+            'value': self.expression(expr, expr_filter)}
 
     def multiple_hidden(self, expr, params, expr_filter):
         """ Multiple HTML element input of type hidden.
@@ -251,7 +251,7 @@ class Preprocessor(object):
         """
         """
         return self.select_helper(
-                expr, params, expr_filter, ' multiple="multiple"')
+            expr, params, expr_filter, ' multiple="multiple"')
 
     def select_helper(self, expr, params, expr_filter, select_type):
         """ HTML element select.

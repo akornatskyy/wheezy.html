@@ -108,15 +108,15 @@ value="%(expr_filter)s{key}"%(class)s
 
 widget_preprocessor = TenjinPreprocessor()
 whitespace_preprocessor = WhitespacePreprocessor(rules=[
-        (re.compile(r'^ \s+|\s+$', re.MULTILINE),
-            r''),
-        (re.compile(r'(?<!\?)>\s+<(?!\?)'),
-            r'><'),
+    (re.compile(r'^ \s+|\s+$', re.MULTILINE),
+     r''),
+    (re.compile(r'(?<!\?)>\s+<(?!\?)'),
+     r'><'),
 ])
 
 
 RE_INLINE = re.compile(r'<\?py\s+inline\(("|\')(?P<path>.+?)\1\)\s*\?>',
-        re.MULTILINE)
+                       re.MULTILINE)
 
 
 def inline_preprocessor(directories, fallback=False):
@@ -135,5 +135,5 @@ def inline_preprocessor(directories, fallback=False):
         'shared/footer.html'
     """
     strategy = fallback and (
-            lambda path: '<?py include("' + path + '") ?>') or None
+        lambda path: '<?py include("' + path + '") ?>') or None
     return InlinePreprocessor(RE_INLINE, directories, strategy)

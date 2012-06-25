@@ -50,8 +50,7 @@ class MakoWhitespacePreprocessorTestCase(unittest.TestCase):
 
 try:
     # from mako.template import Template
-    Template = __import__('mako.template', None, None,
-            ['Template']).Template
+    Template = __import__('mako.template', None, None, ['Template']).Template
     from wheezy.html.ext.mako import widget_preprocessor
 
     def assert_mako_equal(text, expected, **kwargs):

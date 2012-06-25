@@ -54,9 +54,7 @@ class TenjinWhitespacePreprocessorTestCase(unittest.TestCase):
 
 try:
     # from tenjin import Template
-    Template = __import__('tenjin', None, None,
-            ['Template']).Template
-
+    Template = __import__('tenjin', None, None, ['Template']).Template
     from tenjin.helpers import escape, to_str
     assert escape, to_str
     from wheezy.html.ext.tenjin import widget_preprocessor

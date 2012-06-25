@@ -64,9 +64,9 @@ try:
 
     def assert_template_equal(text, expected, **kwargs):
         engine = Engine(
-                loader=DictLoader({
-                    'x': "@require(model, errors, message, scm)\n" + text}),
-                extensions=[CoreExtension, WidgetExtension])
+            loader=DictLoader({
+                'x': "@require(model, errors, message, scm)\n" + text}),
+            extensions=[CoreExtension, WidgetExtension])
         engine.global_vars.update({'h': html_escape})
         template = engine.get_template('x')
         value = template.render(kwargs)

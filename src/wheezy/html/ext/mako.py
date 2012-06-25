@@ -110,15 +110,15 @@ value="${key%(expr_filter)s}"%(class)s\
 
 widget_preprocessor = MakoPreprocessor()
 whitespace_preprocessor = WhitespacePreprocessor(rules=[
-        (re.compile(r'^ \s+|\s+$', re.MULTILINE),
-            r''),
-        (re.compile(r'>\s+<'),
-            r'><'),
+    (re.compile(r'^ \s+|\s+$', re.MULTILINE),
+     r''),
+    (re.compile(r'>\s+<'),
+     r'><'),
 ])
 
 
 RE_INLINE = re.compile(r'<%inline\s+file=("|\')(?P<path>.+?)\1\s*/>',
-        re.MULTILINE)
+                       re.MULTILINE)
 
 
 def inline_preprocessor(directories, fallback=False):
@@ -137,5 +137,5 @@ def inline_preprocessor(directories, fallback=False):
         'shared/footer.html'
     """
     strategy = fallback and (
-            lambda path: '<%include file="' + path + '"/>') or None
+        lambda path: '<%include file="' + path + '"/>') or None
     return InlinePreprocessor(RE_INLINE, directories, strategy)

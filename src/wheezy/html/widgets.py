@@ -14,9 +14,9 @@ def hidden(name, value, attrs=None):
         <input type="hidden" name="pref" value="abc" />
     """
     return Tag('input', None, {
-            'name': name,
-            'type': 'hidden',
-            'value': value
+        'name': name,
+        'type': 'hidden',
+        'value': value
     })
 
 
@@ -45,9 +45,9 @@ def emptybox(name, value, attrs=None):
             value="79053" name="zip_code" />
     """
     tag_attrs = {
-            'id': html_id(name),
-            'name': name,
-            'type': 'text'
+        'id': html_id(name),
+        'name': name,
+        'type': 'text'
     }
     if value:
         tag_attrs['value'] = value
@@ -69,9 +69,9 @@ def textbox(name, value, attrs=None):
             name="zip_code" />
     """
     tag_attrs = {
-            'id': html_id(name),
-            'name': name,
-            'type': 'text'
+        'id': html_id(name),
+        'name': name,
+        'type': 'text'
     }
     if value not in (None, ''):
         tag_attrs['value'] = value
@@ -93,9 +93,9 @@ def password(name, value, attrs=None):
             name="passwd" />
     """
     tag_attrs = {
-            'id': html_id(name),
-            'name': name,
-            'type': 'password'
+        'id': html_id(name),
+        'name': name,
+        'type': 'password'
     }
     if value not in (None, ''):
         tag_attrs['value'] = value
@@ -120,10 +120,10 @@ def textarea(name, value, attrs):
             id="message-text"></textarea>
     """
     tag_attrs = {
-            'id': html_id(name),
-            'name': name,
-            'rows': '9',
-            'cols': '40'
+        'id': html_id(name),
+        'name': name,
+        'rows': '9',
+        'cols': '40'
     }
     if attrs:
         tag_attrs.update(attrs)
@@ -145,10 +145,10 @@ def checkbox(name, checked, attrs):
             value="1" class="b" />
      """
     tag_attrs = {
-            'id': html_id(name),
-            'name': name,
-            'type': 'checkbox',
-            'value': '1'
+        'id': html_id(name),
+        'name': name,
+        'type': 'checkbox',
+        'value': '1'
     }
     if checked == 'True':
         tag_attrs['checked'] = 'checked'
@@ -184,16 +184,16 @@ def multiple_checkbox(name, value, attrs):
     append = elements.append
     for key, text in choices:
         tag_attrs = {
-                'name': name,
-                'type': 'checkbox',
-                'value': key
+            'name': name,
+            'type': 'checkbox',
+            'value': key
         }
         if key in value:
             tag_attrs['checked'] = 'checked'
         if attrs:
             tag_attrs.update(attrs)
         append(Tag('label',
-            Fragment((Tag('input', None, tag_attrs), text)), attrs))
+                   Fragment((Tag('input', None, tag_attrs), text)), attrs))
     return Fragment(elements)
 
 
@@ -206,7 +206,7 @@ def label(name, value, attrs):
         <label class="inline" for="zip-code">Zip Code</label>
     """
     tag_attrs = {
-            'for': html_id(name)
+        'for': html_id(name)
     }
     if attrs:
         tag_attrs.update(attrs)
@@ -236,17 +236,17 @@ def dropdown(name, value, attrs):
     for key, text in choices:
         if key == value:
             tag_attrs = {
-                    'value': key,
-                    'selected': 'selected'
+                'value': key,
+                'selected': 'selected'
             }
         else:
             tag_attrs = {
-                    'value': key
+                'value': key
             }
         append(Tag('option', text, tag_attrs))
     tag_attrs = {
-            'id': html_id(name),
-            'name': name
+        'id': html_id(name),
+        'name': name
     }
     if attrs:
         tag_attrs.update(attrs)
@@ -278,18 +278,18 @@ def listbox(name, value, attrs):
     for key, text in choices:
         if key in value:
             tag_attrs = {
-                    'value': key,
-                    'selected': 'selected'
+                'value': key,
+                'selected': 'selected'
             }
         else:
             tag_attrs = {
-                    'value': key
+                'value': key
             }
         append(Tag('option', text, tag_attrs))
     tag_attrs = {
-            'id': html_id(name),
-            'name': name,
-            'multiple': 'multiple'
+        'id': html_id(name),
+        'name': name,
+        'multiple': 'multiple'
     }
     if attrs:
         tag_attrs.update(attrs)
@@ -320,31 +320,31 @@ def radio(name, value, attrs):
     append = elements.append
     for key, text in choices:
         tag_attrs = {
-                'name': name,
-                'type': 'radio',
-                'value': key
+            'name': name,
+            'type': 'radio',
+            'value': key
         }
         if key == value:
             tag_attrs['checked'] = 'checked'
         if attrs:
             tag_attrs.update(attrs)
         append(Tag('label',
-            Fragment((Tag('input', None, tag_attrs), text)), attrs))
+                   Fragment((Tag('input', None, tag_attrs), text)), attrs))
     return Fragment(elements)
 
 default = {
-        'hidden': hidden,
-        'multiple_hidden': multiple_hidden,
-        'emptybox': emptybox,
-        'textbox': textbox,
-        'password': password,
-        'textarea': textarea,
-        'checkbox': checkbox,
-        'multiple_checkbox': multiple_checkbox,
-        'label': label,
-        'dropdown': dropdown,
-        'select': dropdown,
-        'listbox': listbox,
-        'multiple_select': listbox,
-        'radio': radio
+    'hidden': hidden,
+    'multiple_hidden': multiple_hidden,
+    'emptybox': emptybox,
+    'textbox': textbox,
+    'password': password,
+    'textarea': textarea,
+    'checkbox': checkbox,
+    'multiple_checkbox': multiple_checkbox,
+    'label': label,
+    'dropdown': dropdown,
+    'select': dropdown,
+    'listbox': listbox,
+    'multiple_select': listbox,
+    'radio': radio
 }
