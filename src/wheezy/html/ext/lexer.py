@@ -319,10 +319,27 @@ class WhitespacePreprocessor(object):
     """ Whitespace preprocessor.
     """
 
-    def __init__(self, rules):
+    def __init__(self, rules, ignore_rules=None):
         self.rules = rules
+        self.ignore_rules = ignore_rules
 
     def __call__(self, text, **kwargs):
+        if self.ignore_rules:
+            for ignore_rule in self.ignore_rules:
+                start = 0
+                result = []
+                for m in ignore_rule.finditer(text):
+                    result.append(self.cleanup(text[start:m.start()]))
+                    result.append(m.group())
+                    start = m.end()
+                else:
+                    result.append(self.cleanup(text[start:]))
+                text = ''.join(result)
+            return text
+        else:
+            return self.cleanup(text)
+
+    def cleanup(self, text):
         for r, s in self.rules:
             text = r.sub(s, text)
         return text
