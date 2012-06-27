@@ -6,6 +6,7 @@
 import re
 
 
+from wheezy.html.comp import xrange
 from wheezy.html.ext.lexer import Preprocessor
 from wheezy.html.ext.lexer import WhitespacePreprocessor
 
