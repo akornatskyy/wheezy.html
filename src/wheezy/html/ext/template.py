@@ -6,7 +6,6 @@
 import re
 
 
-from wheezy.html.ext.lexer import InlinePreprocessor
 from wheezy.html.ext.lexer import Preprocessor
 from wheezy.html.ext.lexer import WhitespacePreprocessor
 
@@ -112,7 +111,7 @@ class WidgetExtension(object):
 
 whitespace_preprocessor = WhitespacePreprocessor(
     rules=[
-        (re.compile(r'^[ \t]+', re.MULTILINE),
+        (re.compile(r'^ [ \t]+', re.MULTILINE),
             r''),
         (re.compile(r'>\s*<', re.MULTILINE),
             r'><'),
