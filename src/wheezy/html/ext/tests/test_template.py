@@ -40,7 +40,10 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
 
     def setUp(self):
         from wheezy.html.ext.template import WhitespaceExtension
-        self.preprocess = WhitespaceExtension.preprocessors[0]
+        from wheezy.html.ext.template import whitespace_preprocessor
+        whitespace_preprocessor1 = WhitespaceExtension.preprocessors[0]
+        self.preprocess = lambda text: whitespace_preprocessor(
+            whitespace_preprocessor1(text))
 
     def test_whitespace(self):
         """
@@ -49,11 +52,9 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
         assert '' == self.preprocess('  ')
         assert 'x' == self.preprocess('  x')
         assert 'x' == self.preprocess('x  ')
-        assert '>' == self.preprocess('>  ')
-        assert '>\\\n@def' == self.preprocess('>\n@def')
-        assert '>\\\n@end' == self.preprocess('>\n@end')
-        assert ':\n@end' == self.preprocess(':\n@end')
-        assert 'x\\\n@end' == self.preprocess('x\\\n@end')
+        assert '<code>\n 1\n 2 </code>' == self.preprocess(
+            '  <code> \n 1 \n 2 </code> ')
+        assert '<pre>\n </pre>' == self.preprocess('  <pre> \n </pre> ')
 
 try:
     from wheezy.html.ext.template import WidgetExtension

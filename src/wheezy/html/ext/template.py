@@ -110,19 +110,32 @@ class WidgetExtension(object):
     preprocessors = [WheezyPreprocessor()]
 
 
+whitespace_preprocessor = WhitespacePreprocessor(
+    rules=[
+        (re.compile(r'^[ \t]+', re.MULTILINE),
+            r''),
+        (re.compile(r'>\s*<', re.MULTILINE),
+            r'><'),
+        (re.compile(r'\s*(?<!\\)\n', re.MULTILINE),
+            r'\\\n'),
+    ],
+    ignore_rules=[
+        re.compile(r'<(pre|code).*?>.*?</\1>', re.DOTALL)
+    ])
+
+
+def whitespace_postprocessor(tokens):
+    for i in xrange(len(tokens)):
+        lineno, token, value = tokens[i]
+        if token == 'markup':
+            value = whitespace_preprocessor(value)
+            tokens[i] = (lineno, token, value)
+
+
 class WhitespaceExtension(object):
 
     preprocessors = [WhitespacePreprocessor(rules=[
-        (re.compile(r'>\s+<'),
-            r'><'),
-        (re.compile(r'^\s*$', re.MULTILINE),
-            r''),
-        (re.compile(r'^ \s+', re.MULTILINE),
-            r''),
-        (re.compile(r'\s+$', re.MULTILINE),
-            r''),
-        (re.compile(r'>\n@def'),
-            r'>\\\n@def'),
-        (re.compile(r'(?<!:|\\)\n@end'),
-            r'\\\n@end'),
+        (re.compile(r'\s+$', re.MULTILINE), r'')
     ])]
+
+    postprocessors = [whitespace_postprocessor]
