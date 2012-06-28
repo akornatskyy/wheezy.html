@@ -7,6 +7,7 @@ import re
 
 
 from wheezy.html.comp import xrange
+from wheezy.html.ext.lexer import InlinePreprocessor
 from wheezy.html.ext.lexer import Preprocessor
 from wheezy.html.ext.lexer import WhitespacePreprocessor
 
@@ -139,3 +140,30 @@ class WhitespaceExtension(object):
     ])]
 
     postprocessors = [whitespace_postprocessor]
+
+
+RE_INLINE = re.compile(r'@inline\(("|\')(?P<path>.+?)\1\)',
+                       re.MULTILINE)
+
+
+class InlineExtension(object):
+    """ Inline preprocessor. Rewrite @inline("...") tag with
+        file content. If fallback is ``True`` rewrite to
+        @include("...") tag.
+
+        >>> t = '1 @inline("master.html") 2'
+        >>> m = RE_INLINE.search(t)
+        >>> m.group('path')
+        'master.html'
+        >>> t[:m.start()], t[m.end():]
+        ('1 ', ' 2')
+        >>> m = RE_INLINE.search(' @inline("shared/footer.html")')
+        >>> m.group('path')
+        'shared/footer.html'
+    """
+
+    def __init__(self, searchpath, fallback=False):
+        strategy = fallback and (
+            lambda path: '@include("' + path + '")') or None
+        self.preprocessors = [InlinePreprocessor(
+            RE_INLINE, searchpath, strategy)]
