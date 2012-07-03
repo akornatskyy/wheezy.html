@@ -1,11 +1,58 @@
 #!/usr/bin/env python
 
 import os
+import platform
+import sys
+
+extra = {}
+can_build_ext = getattr(platform, 'python_implementation', lambda: None
+                   )() != 'PyPy' and 'java' not in sys.platform
+sources = [os.path.join('src', 'wheezy', 'html', 'boost.c')]
 
 try:
-    from setuptools import setup
-except:
-    from distutils.core import setup
+    from setuptools import setup, Extension, Feature
+    from setuptools.command.build_ext import build_ext
+except ImportError:
+    from distutils.core import setup, Extension
+    from distutils.command.build_ext import build_ext
+    if can_build_ext:
+        extra['ext_modules'] = [Extension('wheezy.html.boost', sources)]
+else:
+    if can_build_ext:
+        extra['features'] = {
+            'boost': Feature(
+                'code optimizations',
+                standard=True,
+                ext_modules=[Extension('wheezy.html.boost', sources)])
+        }
+
+
+if can_build_ext:
+
+    class build_ext_optional(build_ext):
+
+        def run(self):
+            from distutils.errors import DistutilsPlatformError
+            try:
+                build_ext.run(self)
+            except DistutilsPlatformError, e:
+                self.warn(e)
+
+        def build_extension(self, ext):
+            from distutils.errors import CCompilerError
+            from distutils.errors import DistutilsExecError
+            try:
+                build_ext.build_extension(self, ext)
+            except (CCompilerError, DistutilsExecError), e:
+                self.warn(e)
+
+        def warn(self, e):
+            print(' WARNING '.center(44, '*'))
+            print('An optional extension could not be compiled.')
+            print(e)
+
+    extra['cmdclass'] = {'build_ext': build_ext_optional}
+
 
 README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 
@@ -74,5 +121,6 @@ setup(
         ]
     },
 
-    platforms='any'
+    platforms='any',
+    **extra
 )

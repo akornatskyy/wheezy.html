@@ -8,16 +8,21 @@ from datetime import datetime
 from wheezy.html.comp import str_type
 
 
-def html_escape(s):
-    """ Escapes a string so it is valid within HTML.
+try:
+    from wheezy.html.boost import escape_html
+    html_escape = escape_html
+except ImportError:
+    def escape_html(s):
+        """ Escapes a string so it is valid within HTML.
 
-        >>> html_escape('abc')
-        'abc'
-        >>> html_escape('&<>"\\'')
-        "&amp;&lt;&gt;&quot;\'"
-    """
-    return s.replace('&', '&amp;').replace('<', '&lt;').replace(
-        '>', '&gt;').replace('"', '&quot;')
+            >>> html_escape('abc')
+            'abc'
+            >>> escape_html('&<>"\\'')
+            "&amp;&lt;&gt;&quot;\'"
+        """
+        return s.replace('&', '&amp;').replace('<', '&lt;').replace(
+            '>', '&gt;').replace('"', '&quot;')
+    html_escape = escape_html
 
 
 html_id = lambda name: name.replace('_', '-')
@@ -31,7 +36,7 @@ def format_value(value, format_spec=None, format_provider=None):
             def my_formatter(value, format_spec):
                 return value_formatted
 
-        >>> format_value(date(2012, 2, 6), '%m-%d-%y')
+        >>> str(format_value(date(2012, 2, 6), '%m-%d-%y'))
         '02-06-12'
         >>> format_value(date(2012, 2, 6),
         ...         format_provider=lambda value, ignore:
@@ -69,32 +74,33 @@ def format_value(value, format_spec=None, format_provider=None):
 
 
 str_format_provider = lambda value, format_spec: str_type(value)
+EMPTY_STR = str_type('')
 
 
 def date_format_provider(value, format_spec=None):
     """ Default format provider for ``datetime.date``.
 
-        >>> date_format_provider(date.min)
+        >>> str(date_format_provider(date.min))
         ''
-        >>> date_format_provider(date(2012, 2, 6))
+        >>> str(date_format_provider(date(2012, 2, 6)))
         '2012/02/06'
     """
     if date.min == value:
-        return ''
-    return value.strftime(str(format_spec or '%Y/%m/%d'))
+        return EMPTY_STR
+    return str_type(value.strftime(format_spec or '%Y/%m/%d'))
 
 
 def datetime_format_provider(value, format_spec=None):
     """ Default format provider for ``datetime.datetime``.
 
-        >>> datetime_format_provider(datetime.min)
+        >>> str(datetime_format_provider(datetime.min))
         ''
-        >>> datetime_format_provider(datetime(2012, 2, 6, 15, 17))
+        >>> str(datetime_format_provider(datetime(2012, 2, 6, 15, 17)))
         '2012/02/06 15:17'
     """
     if datetime.min == value:
-        return ''
-    return value.strftime(str(format_spec or '%Y/%m/%d %H:%M'))
+        return EMPTY_STR
+    return str_type(value.strftime(format_spec or '%Y/%m/%d %H:%M'))
 
 
 format_providers = {
@@ -105,8 +111,7 @@ format_providers = {
     'bool': str_format_provider,
     'float': str_format_provider,
     'date': date_format_provider,
-    'time': lambda value, format_spec: value.strftime(
-        str(format_spec or '%H:%M')),
+    'time': lambda value, format_spec: value.strftime(format_spec or '%H:%M'),
     'datetime': datetime_format_provider,
-    'NoneType': lambda value, format_spec: ''
+    'NoneType': lambda value, format_spec: EMPTY_STR
 }
