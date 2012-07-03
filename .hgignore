@@ -7,4 +7,5 @@ src/*.egg-info/
 .coverage
 *.pyc
 *.pyo
+*.so
 doc/_build
