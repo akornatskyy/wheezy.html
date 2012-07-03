@@ -35,21 +35,20 @@ if can_build_ext:
             from distutils.errors import DistutilsPlatformError
             try:
                 build_ext.run(self)
-            except DistutilsPlatformError, e:
-                self.warn(e)
+            except DistutilsPlatformError:
+                self.warn()
 
         def build_extension(self, ext):
             from distutils.errors import CCompilerError
             from distutils.errors import DistutilsExecError
             try:
                 build_ext.build_extension(self, ext)
-            except (CCompilerError, DistutilsExecError), e:
-                self.warn(e)
+            except (CCompilerError, DistutilsExecError):
+                self.warn()
 
-        def warn(self, e):
+        def warn(self):
             print(' WARNING '.center(44, '*'))
             print('An optional extension could not be compiled.')
-            print(e)
 
     extra['cmdclass'] = {'build_ext': build_ext_optional}
 
