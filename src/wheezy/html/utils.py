@@ -74,33 +74,36 @@ def format_value(value, format_spec=None, format_provider=None):
 
 
 str_format_provider = lambda value, format_spec: str_type(value)
-EMPTY_STR = str_type('')
 
 
 def date_format_provider(value, format_spec=None):
     """ Default format provider for ``datetime.date``.
 
-        >>> str(date_format_provider(date.min))
+        >>> date_format_provider(date.min)
         ''
-        >>> str(date_format_provider(date(2012, 2, 6)))
+        >>> date_format_provider(date(2012, 2, 6))
         '2012/02/06'
     """
     if date.min == value:
-        return EMPTY_STR
-    return str_type(value.strftime(format_spec or '%Y/%m/%d'))
+        return ''
+    # Python 2.4, 2.5
+    # TypeError: strftime() argument 1 must be str, not unicode
+    return value.strftime(str(format_spec or '%Y/%m/%d'))
 
 
 def datetime_format_provider(value, format_spec=None):
     """ Default format provider for ``datetime.datetime``.
 
-        >>> str(datetime_format_provider(datetime.min))
+        >>> datetime_format_provider(datetime.min)
         ''
-        >>> str(datetime_format_provider(datetime(2012, 2, 6, 15, 17)))
+        >>> datetime_format_provider(datetime(2012, 2, 6, 15, 17))
         '2012/02/06 15:17'
     """
     if datetime.min == value:
-        return EMPTY_STR
-    return str_type(value.strftime(format_spec or '%Y/%m/%d %H:%M'))
+        return ''
+    # Python 2.4, 2.5
+    # TypeError: strftime() argument 1 must be str, not unicode
+    return value.strftime(str(format_spec or '%Y/%m/%d %H:%M'))
 
 
 format_providers = {
@@ -111,7 +114,8 @@ format_providers = {
     'bool': str_format_provider,
     'float': str_format_provider,
     'date': date_format_provider,
-    'time': lambda value, format_spec: value.strftime(format_spec or '%H:%M'),
+    'time': lambda value, format_spec: value.strftime(
+        str(format_spec or '%H:%M')),
     'datetime': datetime_format_provider,
-    'NoneType': lambda value, format_spec: EMPTY_STR
+    'NoneType': lambda value, format_spec: ''
 }
