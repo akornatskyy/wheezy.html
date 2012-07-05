@@ -69,8 +69,7 @@ try:
                 'x': "@require(model, errors, message, scm)\n" + text}),
             extensions=[CoreExtension(), WidgetExtension()])
         engine.global_vars.update({'h': html_escape})
-        template = engine.get_template('x')
-        value = template.render(kwargs)
+        value = engine.render('x', kwargs, {}, {})
         assert expected == value
 
 except ImportError:  # pragma: nocover
