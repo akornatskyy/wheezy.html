@@ -63,11 +63,13 @@ upload:
 		$(PYTHON) env/bin/sphinx-build -D release=0.1.$$REV \
 			-a -b html doc/ doc/_build/;\
 		python setup.py upload_docs; \
-	fi; \
-	$(PYTHON) setup.py -q egg_info --tag-build .$$REV \
-		bdist_egg --dist-dir=$(DIST_DIR) \
-		rotate --match=$(VERSION).egg --keep=1 --dist-dir=$(DIST_DIR) \
-		upload;
+	fi
+	# Do not uploads eggs when there is C extensions.
+	# Prefer build on client.
+	#$(PYTHON) setup.py -q egg_info --tag-build .$$REV \
+	#	bdist_egg --dist-dir=$(DIST_DIR) \
+	#	rotate --match=$(VERSION).egg --keep=1 --dist-dir=$(DIST_DIR) \
+	#	upload;
 
 test:
 	$(PYTEST) -q -x --pep8 --doctest-modules \
