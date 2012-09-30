@@ -94,7 +94,7 @@ class Preprocessor(object):
         if kwargs:
             return ' ' + ' '.join([
                 '%s="%s"' % (k, self.expression(kwargs[k]))
-                for k in kwargs])
+                for k in sorted(kwargs.keys())])
         else:
             return ''
 

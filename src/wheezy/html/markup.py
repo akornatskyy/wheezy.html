@@ -35,7 +35,8 @@ class Tag(object):
         name = self.name
         attrs = self.attrs
         t = '<' + name + ' ' + ' '.join(
-            [k.rstrip('_') + '="' + attrs[k] + '"' for k in attrs])
+            [k.rstrip('_') + '="' + attrs[k] + '"'
+                for k in sorted(attrs.keys())])
         inner = self.inner
         if inner is None:
             return t + ' />'

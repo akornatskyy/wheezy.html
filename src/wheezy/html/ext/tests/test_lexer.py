@@ -211,7 +211,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             id = comment
             name = comment
             value = model.comment|f
-            attrs =  autocomplete="off" rows="9" cols="40"
+            attrs =  autocomplete="off" cols="40" rows="9"
             class = comment x
         """ == self.p.textarea('model.comment',
                                'class="x", autocomplete="off"', '|f')
@@ -344,25 +344,25 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         """
         assert """
             name = user_name
-            attrs =  cursor="auto" class="error"
+            attrs =  class="error" cursor="auto"
             expr_filter = |f
         """ == self.p.error('model.user_name',
                             'cursor="auto"', '|f')
         assert """
             name = user_name
-            attrs =  cursor="auto" class="error x"
+            attrs =  class="error x" cursor="auto"
             expr_filter = |f
         """ == self.p.error('model.user_name',
                             'class="x", cursor="auto"', '|f')
         assert """
             name = __ERROR__
-            attrs =  cursor="auto" class="error-message"
+            attrs =  class="error-message" cursor="auto"
             expr_filter = |f
         """ == self.p.error('model',
                             'cursor="auto"', '|f')
         assert """
             name = __ERROR__
-            attrs =  cursor="auto" class="error-message x"
+            attrs =  class="error-message x" cursor="auto"
             expr_filter = |f
         """ == self.p.error('model',
                             'class="x", cursor="auto"', '|f')
@@ -378,22 +378,22 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         assert """
             value = model.username
             info = model.username|f
-            attrs =  cursor="auto" class="info"
+            attrs =  class="info" cursor="auto"
         """ == self.p.info('model.username', 'cursor="auto"', '|f')
         assert """
             value = model.username
             info = model.username|f
-            attrs =  cursor="auto" class="info x"
+            attrs =  class="info x" cursor="auto"
         """ == self.p.info('model.username', 'class="x", cursor="auto"', '|f')
         assert """
             value = model
             info = model|f
-            attrs =  cursor="auto" class="info-message"
+            attrs =  class="info-message" cursor="auto"
         """ == self.p.info('model', 'cursor="auto"', '|f')
         assert """
             value = model
             info = model|f
-            attrs =  cursor="auto" class="info-message x"
+            attrs =  class="info-message x" cursor="auto"
         """ == self.p.info('model', 'class="x", cursor="auto"', '|f')
 
     def test_warning(self):
@@ -407,23 +407,23 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         assert """
             value = model.username
             info = model.username|f
-            attrs =  cursor="auto" class="warning"
+            attrs =  class="warning" cursor="auto"
         """ == self.p.warning('model.username', 'cursor="auto"', '|f')
         assert """
             value = model.username
             info = model.username|f
-            attrs =  cursor="auto" class="warning x"
+            attrs =  class="warning x" cursor="auto"
         """ == self.p.warning('model.username',
                               'class="x", cursor="auto"', '|f')
         assert """
             value = model
             info = model|f
-            attrs =  cursor="auto" class="warning-message"
+            attrs =  class="warning-message" cursor="auto"
         """ == self.p.warning('model', 'cursor="auto"', '|f')
         assert """
             value = model
             info = model|f
-            attrs =  cursor="auto" class="warning-message x"
+            attrs =  class="warning-message x" cursor="auto"
         """ == self.p.warning('model', 'class="x", cursor="auto"', '|f')
 
 
@@ -528,11 +528,11 @@ class PreprocessorMixin(object):
         self.m.comment = 'x'
         self.render(self.TEXTAREA,
                     '<textarea id="comment" name="comment" '
-                    'rows="9" cols="40">x</textarea>')
+                    'cols="40" rows="9">x</textarea>')
         self.e['comment'] = 'Error'
         self.render(self.TEXTAREA,
                     '<textarea id="comment" name="comment" '
-                    'rows="9" cols="40" class="error">x</textarea>')
+                    'cols="40" rows="9" class="error">x</textarea>')
 
     def test_checkbox(self):
         """ checkbox widget.

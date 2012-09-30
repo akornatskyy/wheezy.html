@@ -11,7 +11,7 @@ def hidden(name, value, attrs=None):
     """ HTML element input of type hidden.
 
         >>> hidden('pref', 'abc')
-        <input type="hidden" name="pref" value="abc" />
+        <input name="pref" type="hidden" value="abc" />
     """
     return Tag('input', None, {
         'name': name,
@@ -26,8 +26,8 @@ def multiple_hidden(name, value, attrs=None):
 
         >>> items = ('a', 'b')
         >>> multiple_hidden('pref', items)  #doctest: +NORMALIZE_WHITESPACE
-        <input type="hidden" name="pref" value="a" /><input
-            type="hidden" name="pref" value="b" />
+        <input name="pref" type="hidden" value="a" /><input name="pref"
+            type="hidden" value="b" />
     """
     return Fragment([hidden(name, item) for item in value])
 
@@ -37,12 +37,12 @@ def emptybox(name, value, attrs=None):
 
         >>> emptybox('zip_code', '',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
-        <input class="error" type="text" id="zip-code" name="zip_code" />
+        <input class="error" id="zip-code" name="zip_code" type="text" />
 
         >>> emptybox('zip_code', '79053',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
-        <input class="error" type="text" id="zip-code"
-            value="79053" name="zip_code" />
+        <input class="error" id="zip-code" name="zip_code" type="text"
+            value="79053" />
     """
     tag_attrs = {
         'id': html_id(name),
@@ -61,12 +61,12 @@ def textbox(name, value, attrs=None):
 
         >>> textbox('zip_code', '',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
-        <input class="error" type="text" id="zip-code" name="zip_code" />
+        <input class="error" id="zip-code" name="zip_code" type="text" />
 
         >>> textbox('zip_code', '79053',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
-        <input class="error" type="text" id="zip-code" value="79053"
-            name="zip_code" />
+        <input class="error" id="zip-code" name="zip_code" type="text"
+            value="79053" />
     """
     tag_attrs = {
         'id': html_id(name),
@@ -85,12 +85,12 @@ def password(name, value, attrs=None):
 
         >>> password('passwd', '',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
-        <input class="error" type="password" id="passwd" name="passwd" />
+        <input class="error" id="passwd" name="passwd" type="password" />
 
         >>> password('passwd', 'x',
         ...         attrs={'class': 'error'})  #doctest: +NORMALIZE_WHITESPACE
-        <input class="error" type="password" id="passwd" value="x"
-            name="passwd" />
+        <input class="error" id="passwd" name="passwd" type="password"
+            value="x" />
     """
     tag_attrs = {
         'id': html_id(name),
@@ -108,16 +108,16 @@ def textarea(name, value, attrs):
     """ HTML element textarea.
 
         >>> textarea('message_text', 'x', {})  #doctest: +NORMALIZE_WHITESPACE
-        <textarea rows="9" cols="40" id="message-text"
-            name="message_text">x</textarea>
+        <textarea cols="40" id="message-text" name="message_text"
+            rows="9">x</textarea>
 
         ``value`` is empty.
 
         >>> textarea('message_text', '', attrs={
         ...    'class': 'error', 'rows': '10'
         ... })  #doctest: +NORMALIZE_WHITESPACE
-        <textarea rows="10" name="message_text" class="error" cols="40"
-            id="message-text"></textarea>
+        <textarea class="error" cols="40" id="message-text"
+            name="message_text" rows="10"></textarea>
     """
     tag_attrs = {
         'id': html_id(name),
@@ -134,15 +134,15 @@ def checkbox(name, checked, attrs):
     """ HTML element input of type checkbox.
 
         >>> checkbox('accept', 'True', {})  #doctest: +NORMALIZE_WHITESPACE
-        <input checked="checked" type="checkbox" id="accept" value="1"
-            name="accept" />
+        <input checked="checked" id="accept" name="accept" type="checkbox"
+            value="1" />
         >>> checkbox('accept', 'False', {})  #doctest: +NORMALIZE_WHITESPACE
-        <input type="checkbox" id="accept" value="1" name="accept" />
+        <input id="accept" name="accept" type="checkbox" value="1" />
 
         >>> checkbox('accept', 'True',
         ...         attrs={'class': 'b'})  #doctest: +NORMALIZE_WHITESPACE
-        <input checked="checked" name="accept" type="checkbox" id="accept"
-            value="1" class="b" />
+        <input checked="checked" class="b" id="accept" name="accept"
+            type="checkbox" value="1" />
      """
     tag_attrs = {
         'id': html_id(name),
@@ -172,12 +172,12 @@ def multiple_checkbox(name, value, attrs):
         >>> multiple_checkbox('scm', ['hg', 'git'], attrs={
         ...     'choices': scm, 'class': 'error'
         ... })  #doctest: +NORMALIZE_WHITESPACE
-        <label class="error"><input checked="checked" type="checkbox"
-            name="scm" value="git" class="error" />Git</label><label
-            class="error"><input checked="checked" type="checkbox"
-            name="scm" value="hg" class="error" />Mercurial</label><label
-            class="error"><input type="checkbox" name="scm" value="svn"
-            class="error" />SVN</label>
+        <label class="error"><input checked="checked" class="error"
+            name="scm" type="checkbox" value="git" />Git</label><label
+            class="error"><input checked="checked" class="error" name="scm"
+            type="checkbox" value="hg" />Mercurial</label><label
+            class="error"><input class="error" name="scm" type="checkbox"
+            value="svn" />SVN</label>
     """
     choices = attrs.pop('choices')
     elements = []
@@ -267,7 +267,7 @@ def listbox(name, value, attrs):
         ...     'choices': colors,
         ...     'class': 'error'
         ... })  #doctest: +NORMALIZE_WHITESPACE
-        <select class="error" multiple="multiple" id="favorite-color"
+        <select class="error" id="favorite-color" multiple="multiple"
             name="favorite_color"><option selected="selected"
             value="3">Blue</option><option value="2">Red</option><option
             selected="selected" value="1">Yellow</option></select>
@@ -310,10 +310,10 @@ def radio(name, value, attrs):
         >>> radio('scm', 'hg', attrs={
         ...     'choices': scm, 'class': 'error'
         ... })  #doctest: +NORMALIZE_WHITESPACE
-        <label class="error"><input type="radio" name="scm" value="git"
-            class="error" />Git</label><label class="error"><input
-            checked="checked" type="radio" name="scm" value="hg"
-            class="error" />Mercurial</label>
+        <label class="error"><input class="error" name="scm" type="radio"
+            value="git" />Git</label><label class="error"><input
+            checked="checked" class="error" name="scm" type="radio"
+            value="hg" />Mercurial</label>
     """
     choices = attrs.pop('choices')
     elements = []

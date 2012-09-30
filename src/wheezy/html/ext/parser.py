@@ -67,8 +67,8 @@ def parse_kwargs(text):
 
         >>> parse_kwargs('choices=account_types')
         {'choices': 'account_types'}
-        >>> parse_kwargs('autocomplete="off", maxlength=12')
-        {'autocomplete': '"off"', 'maxlength': '12'}
+        >>> sorted(parse_kwargs('autocomplete="off", maxlength=12').items())
+        [('autocomplete', '"off"'), ('maxlength', '12')]
     """
     kwargs = {}
     for m in RE_KWARGS.finditer(text + ','):

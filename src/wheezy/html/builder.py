@@ -53,15 +53,15 @@ class WidgetBuilder(object):
         >>> errors = None
         >>> h = WidgetBuilder('age', '33', errors)
         >>> h.textbox(class_='b')
-        <input class="b" type="text" id="age" value="33" name="age" />
+        <input class="b" id="age" name="age" type="text" value="33" />
         >>> h.error()
         ''
         >>> errors = ['required']
         >>> h = WidgetBuilder('age', '0', errors)
         >>> h.textbox()
-        <input class="error" type="text" id="age" value="0" name="age" />
+        <input class="error" id="age" name="age" type="text" value="0" />
         >>> h.textbox(class_='b')
-        <input class="error b" type="text" id="age" value="0" name="age" />
+        <input class="error b" id="age" name="age" type="text" value="0" />
         >>> h.error()
         <span class="error">required</span>
     """

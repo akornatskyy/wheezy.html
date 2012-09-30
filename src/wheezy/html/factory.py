@@ -44,24 +44,24 @@ class WidgetFactory(object):
         HTML tags
 
         >>> user.id.hidden()
-        <input type="hidden" name="id" value="12345" />
+        <input name="id" type="hidden" value="12345" />
 
         >>> user.name.textbox(maxlength='30')  #doctest: +NORMALIZE_WHITESPACE
-        <input maxlength="30" type="text" id="name"
-            value="John" name="name" />
+        <input id="name" maxlength="30" name="name" type="text"
+            value="John" />
 
         >>> user.name.textarea(rows='10')  #doctest: +NORMALIZE_WHITESPACE
-        <textarea rows="10" cols="40" id="name"
-            name="name">John</textarea>
+        <textarea cols="40" id="name" name="name"
+            rows="10">John</textarea>
 
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input type="checkbox" id="accept" value="1" name="accept" />
+        <input id="accept" name="accept" type="checkbox" value="1" />
 
         >>> user = widget(model, errors)  # widget builders are cached
         >>> user.model.accept = True
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input checked="checked" type="checkbox" id="accept" value="1"
-            name="accept" />
+        <input checked="checked" id="accept" name="accept" type="checkbox"
+            value="1" />
 
         >>> user.favorite_color.label('Color:')
         <label for="favorite-color">Color:</label>
@@ -92,14 +92,14 @@ class WidgetFactory(object):
         HTML tags got class ``error``.
 
         >>> user.name.textbox(class_='x')  #doctest: +NORMALIZE_WHITESPACE
-        <input class="error x" type="text" id="name" value="John"
-            name="name" />
+        <input class="error x" id="name" name="name" type="text"
+            value="John" />
         >>> user.name.textarea()  #doctest: +NORMALIZE_WHITESPACE
-        <textarea class="error" rows="9" cols="40" id="name"
-            name="name">John</textarea>
+        <textarea class="error" cols="40" id="name" name="name"
+            rows="9">John</textarea>
         >>> user.accept.checkbox()  #doctest: +NORMALIZE_WHITESPACE
-        <input checked="checked" name="accept" type="checkbox" id="accept"
-            value="1" class="error" />
+        <input checked="checked" class="error" id="accept" name="accept"
+            type="checkbox" value="1" />
         >>> user.favorite_color.label('Color:')
         <label class="error" for="favorite-color">Color:</label>
 
