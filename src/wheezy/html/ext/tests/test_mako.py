@@ -61,5 +61,5 @@ try:
 
 except ImportError:  # pragma: nocover
 
-    def assert_mako_equal(text, expected, **kwargs):
+    def assert_mako_equal(text, expected, **kwargs):  # noqa
         pass

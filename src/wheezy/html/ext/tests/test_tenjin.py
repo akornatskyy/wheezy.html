@@ -66,5 +66,5 @@ try:
 
 except ImportError:  # pragma: nocover
 
-    def assert_tenjin_equal(text, expected, **kwargs):
+    def assert_tenjin_equal(text, expected, **kwargs):  # noqa
         pass

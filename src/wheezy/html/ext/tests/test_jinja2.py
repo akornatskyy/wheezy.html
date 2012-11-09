@@ -117,5 +117,5 @@ try:
 
 except ImportError:  # pragma: nocover
 
-    def assert_jinja2_equal(text, expected, **kwargs):
+    def assert_jinja2_equal(text, expected, **kwargs):  # noqa
         pass

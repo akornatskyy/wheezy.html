@@ -74,5 +74,5 @@ try:
 
 except ImportError:  # pragma: nocover
 
-    def assert_template_equal(text, expected, **kwargs):
+    def assert_template_equal(text, expected, **kwargs):  # noqa
         pass

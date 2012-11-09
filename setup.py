@@ -5,16 +5,18 @@ import platform
 import sys
 
 extra = {}
-can_build_ext = getattr(platform, 'python_implementation', lambda: None
-                   )() != 'PyPy' and 'java' not in sys.platform
+can_build_ext = getattr(
+    platform, 'python_implementation',
+    lambda: None
+)() != 'PyPy' and 'java' not in sys.platform
 sources = [os.path.join('src', 'wheezy', 'html', 'boost.c')]
 
 try:
     from setuptools import setup, Extension, Feature
     from setuptools.command.build_ext import build_ext
 except ImportError:
-    from distutils.core import setup, Extension
-    from distutils.command.build_ext import build_ext
+    from distutils.core import setup, Extension  # noqa
+    from distutils.command.build_ext import build_ext  # noqa
     if can_build_ext:
         extra['ext_modules'] = [Extension('wheezy.html.boost', sources)]
 else:
