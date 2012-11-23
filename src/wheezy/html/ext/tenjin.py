@@ -13,9 +13,9 @@ class TenjinPreprocessor(Preprocessor):
 
     def __init__(self):
         super(TenjinPreprocessor, self).__init__(
-            r'\s*(?P<expr_filter>[#\$])\{((?P<expr>.+?)\.'
+            r'(?P<expr_filter>[#\$])\{((?P<expr>.+?)\.'
             r'(?P<widget>%(widgets)s){1}'
-            r'\((?P<params>.*?)\)\s*)\}\s*')
+            r'\((?P<params>.*?)\)\s*)\}')
 
     EXPRESSION = '%(expr_filter)s{%(expr)s}'
 

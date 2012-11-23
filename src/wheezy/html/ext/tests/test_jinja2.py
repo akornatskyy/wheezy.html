@@ -11,6 +11,8 @@ class Jinja2PreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
     """ Test the ``Jinja2Preprocessor``.
     """
 
+    WHITE_SPACE_PATTERNS = ['%(w)s', ' %(w)s', '%(w)s ', ' %(w)s ']
+
     def assert_render_equal(self, template, expected, **kwargs):
         assert_jinja2_equal({
             'variable_start_string': '{{',
@@ -40,6 +42,8 @@ class Jinja2PreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
 class Jinja2PreprocessorTestCase2(PreprocessorMixin, unittest.TestCase):
     """ Test the ``Jinja2Preprocessor``.
     """
+
+    WHITE_SPACE_PATTERNS = ['%(w)s', ' %(w)s', '%(w)s ', ' %(w)s ']
 
     def assert_render_equal(self, template, expected, **kwargs):
         assert_jinja2_equal({

@@ -11,6 +11,8 @@ class TenjinPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
     """ Test the ``TenjinPreprocessor``.
     """
 
+    WHITE_SPACE_PATTERNS = ['%(w)s', '[ %(w)s', '%(w)s ', '[ %(w)s ']
+
     def assert_render_equal(self, template, expected, **kwargs):
         assert_tenjin_equal(template, expected, **kwargs)
 

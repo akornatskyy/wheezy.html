@@ -17,8 +17,8 @@ class WheezyPreprocessor(Preprocessor):
     def __init__(self):
         super(WheezyPreprocessor, self).__init__(
             r'@((?P<expr>.+?)\.'
-            r'(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*'
-            r'(?P<expr_filter>((?<!!)!\w+(!\w+)*|\s*)))(\s|$)')
+            r'(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*?'
+            r'(?P<expr_filter>((?<!!)!\w+(!\w+)*|)))(?=\s|$)')
 
     EXPRESSION = '@%(expr)s%(expr_filter)s'
 

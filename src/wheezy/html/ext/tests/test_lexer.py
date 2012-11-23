@@ -5,6 +5,13 @@
 import unittest
 
 
+def generate_white_space_patterns():
+    for t in ['x', ' x', 'x ', ' x ', '[ x', 'x ]', '[ x ]', 'xx', 'x x']:
+        for s in [' ', '\t', '\n', ' \t', ' \n', '\n ']:
+            for n in [1, 3]:
+                yield t.replace(' ', s * n).replace('x', '%(w)s')
+
+
 class PreprocessorInitTestCase(unittest.TestCase):
     """ Test the ``Preprocessor.__init__``.
     """
@@ -432,6 +439,8 @@ class PreprocessorMixin(object):
     """
     from operator import itemgetter
 
+    WHITE_SPACE_PATTERNS = ['%(w)s']
+
     class Dummy(object):
         pass
 
@@ -449,9 +458,12 @@ class PreprocessorMixin(object):
     def render(self, widget, html):
         """ hidden widget.
         """
-        self.assert_render_equal(
-            widget, html, model=self.m, errors=self.e, scm=self.scm,
-            message=(hasattr(self.m, 'message') and self.m.message or ''))
+        for wsp in self.WHITE_SPACE_PATTERNS:
+            self.assert_render_equal(
+                wsp % {'w': widget},
+                wsp % {'w': html},
+                model=self.m, errors=self.e, scm=self.scm,
+                message=(hasattr(self.m, 'message') and self.m.message or ''))
 
     def test_hidden(self):
         """ hidden widget.

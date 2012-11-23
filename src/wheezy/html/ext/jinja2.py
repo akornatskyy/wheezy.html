@@ -18,9 +18,9 @@ class Jinja2Preprocessor(Preprocessor):
     def __init__(self,
                  variable_start_string=None,
                  variable_end_string=None):
-        pattern = r'\s*\{\{((?P<expr>.+?)\.'\
+        pattern = r'\{\{((?P<expr>.+?)\.'\
             r'(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*'\
-            r'(?P<expr_filter>(\|\s*[\w,\s]+?|\s*)))\}\}\s*'
+            r'(?P<expr_filter>(\|\s*[\w,\s]+?|\s*)))\}\}'
         if variable_start_string:
             pattern = pattern.replace('\{\{',
                                       re.escape(variable_start_string))
@@ -56,8 +56,7 @@ class Jinja2Preprocessor(Preprocessor):
     MULTIPLE_HIDDEN = """\
 {%% for item in %(value)s: %%}\
 <input type="hidden" name="%(name)s" value="{{ item%(expr_filter)s }}" />\
-{%% endfor %%}
-"""
+{%% endfor %%}"""
 
     INPUT = """\
 <input id="%(id)s" name="%(name)s" type="%(type)s"%(attrs)s%(class)s\

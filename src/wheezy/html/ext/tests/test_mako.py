@@ -11,6 +11,8 @@ class MakoPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
     """ Test the ``MakoPreprocessor``.
     """
 
+    WHITE_SPACE_PATTERNS = ['%(w)s', ' %(w)s', '%(w)s ', ' %(w)s ']
+
     def assert_render_equal(self, template, expected, **kwargs):
         assert_mako_equal(template, expected, **kwargs)
 
