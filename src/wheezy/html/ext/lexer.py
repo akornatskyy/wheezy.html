@@ -243,12 +243,12 @@ class Preprocessor(object):
             'class': self.error_class(name, class_)}
 
     def dropdown(self, expr, params, expr_filter):
-        """
+        """ HTML element select.
         """
         return self.select_helper(expr, params, expr_filter, '')
 
     def listbox(self, expr, params, expr_filter):
-        """
+        """ HTML element select of type multiple.
         """
         return self.select_helper(
             expr, params, expr_filter, ' multiple="multiple"')
@@ -278,7 +278,7 @@ class Preprocessor(object):
         class_ = kwargs.pop('class', '')
         if class_:
             class_ = ' ' + self.expression(class_)
-        if expr.startswith(name):
+        if '.' not in expr:
             name = '__ERROR__'
             kwargs['class'] = '"error-message' + class_ + '"'
         else:
@@ -301,12 +301,11 @@ class Preprocessor(object):
     def message_helper(self, expr, params, expr_filter, msg_class):
         """ General info message.
         """
-        name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop('class', '')
         if class_:
             class_ = ' ' + self.expression(class_)
-        if expr.startswith(name):
+        if '.' not in expr:
             class_ = '-message' + class_
         kwargs['class'] = '"' + msg_class + class_ + '"'
         return self.MESSAGE % {
