@@ -55,7 +55,7 @@ if can_build_ext:
     extra['cmdclass'] = {'build_ext': build_ext_optional}
 
 
-README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
+README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
 setup(
     name='wheezy.html',
