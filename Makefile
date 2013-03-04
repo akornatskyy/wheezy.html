@@ -82,7 +82,7 @@ test:
 	$(PYTHON) setup.py -q build ; \
 	$(PYTHON) setup.py -q develop ; \
 	$(PYTEST) -q -x --pep8 --doctest-modules \
-		src/wheezy/html/tests
+		src/wheezy/html
 
 doctest-cover:
 	$(NOSE) --stop --with-doctest --detailed-errors \
