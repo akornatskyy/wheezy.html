@@ -5,6 +5,9 @@
 typedef int Py_ssize_t;
 #endif
 
+#if PY_VERSION_HEX < 0x02060000
+#define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
+#endif
 
 static PyObject*
 escape_html_unicode(PyUnicodeObject *s)
@@ -178,14 +181,32 @@ escape_html(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    if (PyUnicode_Check(s))
+    if (PyUnicode_CheckExact(s))
     {
         return escape_html_unicode((PyUnicodeObject*)s);
     }
-    else
+
+#if PY_MAJOR_VERSION < 3
+    if (PyString_CheckExact(s))
+#else
+    if (PyBytes_CheckExact(s))
+#endif
     {
         return escape_html_string(s);
     }
+
+    if (s == Py_None) {
+#if PY_MAJOR_VERSION < 3
+        return PyString_FromStringAndSize(NULL, 0);
+#else
+        return PyUnicode_FromStringAndSize(NULL, 0);
+#endif
+    }
+
+    PyErr_Format(PyExc_TypeError,
+                 "expected string or unicode object, %s found",
+                 Py_TYPE(s)->tp_name);
+    return NULL;
 }
 
 

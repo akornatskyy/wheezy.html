@@ -8,20 +8,31 @@ from datetime import datetime
 from wheezy.html.comp import str_type
 
 
+def escape_html(s):
+    """ Escapes a string so it is valid within HTML. Converts `None`
+        to an empty string. Raises TypeError is `s` is not a string
+        or unicode object.
+
+        >>> html_escape(None)
+        ''
+
+        >>> escape_html('&<>"\\'')
+        "&amp;&lt;&gt;&quot;\'"
+    """
+    if s is None:
+        return ''
+    try:
+        return s.replace('&', '&amp;').replace('<', '&lt;').replace(
+            '>', '&gt;').replace('"', '&quot;')
+    except AttributeError:
+        raise TypeError("expected string or unicode object, "
+                        "%s found" % s.__class__.__name__)
+escape_html_native = escape_html
+
 try:
     from wheezy.html.boost import escape_html
     html_escape = escape_html
 except ImportError:
-    def escape_html(s):
-        """ Escapes a string so it is valid within HTML.
-
-            >>> html_escape('abc')
-            'abc'
-            >>> escape_html('&<>"\\'')
-            "&amp;&lt;&gt;&quot;\'"
-        """
-        return s.replace('&', '&amp;').replace('<', '&lt;').replace(
-            '>', '&gt;').replace('"', '&quot;')
     html_escape = escape_html
 
 
