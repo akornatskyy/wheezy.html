@@ -85,17 +85,23 @@ def format_value(value, format_spec=None, format_provider=None):
 
 
 str_format_provider = lambda value, format_spec: str_type(value)
+min_date = date(1900, 1, 1)
+min_datetime = datetime(1900, 1, 1)
 
 
 def date_format_provider(value, format_spec=None):
     """ Default format provider for ``datetime.date``.
 
+        Requires year >= 1900, otherwise returns an empty string.
+
         >>> date_format_provider(date.min)
         ''
+        >>> date_format_provider(min_date)
+        '1900/01/01'
         >>> date_format_provider(date(2012, 2, 6))
         '2012/02/06'
     """
-    if date.min == value:
+    if value < min_date:
         return ''
     # Python 2.4, 2.5
     # TypeError: strftime() argument 1 must be str, not unicode
@@ -105,12 +111,16 @@ def date_format_provider(value, format_spec=None):
 def datetime_format_provider(value, format_spec=None):
     """ Default format provider for ``datetime.datetime``.
 
+        Requires year >= 1900, otherwise returns an empty string.
+
         >>> datetime_format_provider(datetime.min)
         ''
+        >>> datetime_format_provider(min_datetime)
+        '1900/01/01 00:00'
         >>> datetime_format_provider(datetime(2012, 2, 6, 15, 17))
         '2012/02/06 15:17'
     """
-    if datetime.min == value:
+    if value < min_datetime:
         return ''
     # Python 2.4, 2.5
     # TypeError: strftime() argument 1 must be str, not unicode
