@@ -56,6 +56,14 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
             '  <code> \n 1 \n 2 </code> ')
         assert '<pre>\n </pre>' == self.preprocess('  <pre> \n </pre> ')
 
+    def test_preserve_whitespace(self):
+        # single space is preserved at the beginning of line
+        assert ' x' == self.preprocess(' x')
+        assert 'a\\\n b' == self.preprocess('a\n b')
+        # whitespace is preserved at the end of line
+        assert 'b  \\' == self.preprocess('  b  \\\n  ')
+        assert 'a \\\nb' == self.preprocess('  a \\\n  b  ')
+
 try:
     from wheezy.html.ext.template import WidgetExtension
     from wheezy.html.utils import html_escape
