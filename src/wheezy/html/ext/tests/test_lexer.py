@@ -62,9 +62,9 @@ class PreprocessorHelpersTestCase(unittest.TestCase):
         self.p.EXPRESSION = '%(expr)s%(expr_filter)s'
         assert ' autocomplete="off" disabled="${disabled}" ' \
             'maxlength="100"' == self.p.join_attrs({
-            'autocomplete': 'off',
-            'maxlength': '100',
-            'disabled': '${disabled}'})
+                'autocomplete': 'off',
+                'maxlength': '100',
+                'disabled': '${disabled}'})
 
     def test_error_class_no_class(self):
         """ Substitute ``name`` in case ``class_`` is undefined.
