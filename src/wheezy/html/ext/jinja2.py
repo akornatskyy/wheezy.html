@@ -35,9 +35,10 @@ class Jinja2Preprocessor(Preprocessor):
         ]
         c = self.__class__.__dict__
         for attr in attrs:
-            self.__dict__[attr] = c[attr].replace(
-                '{{', variable_start_string).replace(
-                '}}', variable_end_string)
+            t = c[attr]
+            t = t.replace('{{', variable_start_string)
+            t = t.replace('}}', variable_end_string)
+            self.__dict__[attr] = t
 
     EXPRESSION = '{{ %(expr)s%(expr_filter)s }}'
 
