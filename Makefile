@@ -23,10 +23,13 @@ debian:
 		python-shpinx mercurial
 
 env:
-	PYTHON_EXE=/usr/local/bin/python$(VERSION); \
+	PYTHON_EXE=/usr/local/bin/python$(VERSION) ; \
 	if [ ! -x $$PYTHON_EXE ]; then \
-		PYTHON_EXE=/usr/bin/python$(VERSION); \
-	fi;\
+		PYTHON_EXE=/opt/local/bin/python$(VERSION) ; \
+		if [ ! -x $$PYTHON_EXE ]; then \
+			PYTHON_EXE=/usr/bin/python$(VERSION) ; \
+		fi ; \
+	fi ; \
 	VIRTUALENV_USE_SETUPTOOLS=1; \
 	export VIRTUALENV_USE_SETUPTOOLS; \
 	virtualenv --python=$$PYTHON_EXE \
