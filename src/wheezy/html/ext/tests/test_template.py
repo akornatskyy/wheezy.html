@@ -49,6 +49,7 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
         """
         """
         assert '><' == self.preprocess('  >  < ')
+        assert '>\\\na' == self.preprocess('  >\n  a')
         assert '' == self.preprocess('  ')
         assert 'x' == self.preprocess('  x')
         assert 'x' == self.preprocess('x  ')
@@ -60,9 +61,11 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
         # single space is preserved at the beginning of line
         assert ' x' == self.preprocess(' x')
         assert 'a\\\n b' == self.preprocess('a\n b')
+        assert '>\\\n a' == self.preprocess('>\n a')
         # whitespace is preserved at the end of line
         assert 'b  \\' == self.preprocess('  b  \\\n  ')
         assert 'a \\\nb' == self.preprocess('  a \\\n  b  ')
+        assert 'a \\\nb' == self.preprocess('a\n  b')
 
 try:
     from wheezy.html.ext.template import WidgetExtension

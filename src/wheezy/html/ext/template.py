@@ -115,8 +115,10 @@ whitespace_preprocessor = WhitespacePreprocessor(
     rules=[
         (re.compile(r'^ [ \t]+', re.MULTILINE),
             r''),
-        (re.compile(r'>\s*<', re.MULTILINE),
+        (re.compile(r'>\s+<', re.MULTILINE),
             r'><'),
+        (re.compile(r'(?<![>\\])\n(?=\w)', re.MULTILINE),
+            r' \\\n'),
         (re.compile(r'\s*(?<!\\)\n', re.MULTILINE),
             r'\\\n'),
     ],
