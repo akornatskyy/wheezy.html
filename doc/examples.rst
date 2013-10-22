@@ -3,7 +3,7 @@ Examples
 ========
 
 We start with a simple credential validation example. Before we proceed
-let setup `virtualenv`_ environment::
+let's setup a `virtualenv`_ environment::
 
     $ virtualenv env
     $ env/bin/easy_install wheezy.html
@@ -14,8 +14,8 @@ let setup `virtualenv`_ environment::
 Signin Widget
 -------------
 
-Suppose we need add user credential input to HTML form. In case of error would
-be good display it next to each input. Domain model looks like this::
+Suppose we need to add user credential input to an HTML form. In case of error it would
+be good to display it next to each input. Domain model looks like this::
 
     class Credential(object):
 

@@ -3,7 +3,8 @@ User Guide
 ==========
 
 Core feature of :ref:`wheezy.html`
-is :py:class:`~wheezy.html.factory.WidgetFactory`. This class has shortcut
+is the :py:class:`~wheezy.html.factory.WidgetFactory`. This class has
+a shortcut:
 ``widget``. You instantiate :py:class:`~wheezy.html.factory.WidgetFactory`
 and pass the following arguments:
 
@@ -11,7 +12,7 @@ and pass the following arguments:
 * ``errors`` - dictionary contains all errors reported; ``key`` corresponds to
   attribute name, while ``value`` is a list of errors.
 
-Let declare our domain model::
+Let's declare our domain model::
 
     class Credential(object):
 
@@ -19,7 +20,7 @@ Let declare our domain model::
             self.username = ''
             self.password = ''
 
-This way we get HTML widget::
+This way we get an HTML widget::
 
     from wheezy.html import widget
 
@@ -30,20 +31,20 @@ This way we get HTML widget::
 Widget Name
 ~~~~~~~~~~~
 
-Each attribute in widget corresponds to appropriate attribute in ``model``.
-Attribute name becomes ``name`` in html element. Convention for html ``id``
-is replace underscope with dash. So attribute ``confirm_password`` remains
+Each attribute in widget corresponds to an appropriate attribute in ``model``.
+Attribute name becomes ``name`` in the html element. By convention in html ``id``
+underscore is replaced with dash. So attribute ``confirm_password`` remains
 unchanged in html name, however id will be ``confirm-password``.
 
 Widget Rendering
 ~~~~~~~~~~~~~~~~
 
-Once we know name of html widget, next pass control to appropriate
+Once we know the name of the html widget, next we pass control to the appropriate
 widget for rendering::
 
     credential.username.textbox(autocomplete='off')
 
-Let explain this single line:
+Let's explain this single line:
 
 * ``credential`` - an instance of
   :py:class:`~wheezy.html.factory.WidgetFactory` that wraps ``model`` and
@@ -60,9 +61,9 @@ Once that code is executed we get the following::
 Value Formatting
 ~~~~~~~~~~~~~~~~
 
-You can format model value before it is passed to widget for rendering.
+You can the format model value before it is passed to widget for rendering.
 
-Let declare our domain model::
+Let's declare our domain model::
 
     from datetime import date
 
@@ -80,7 +81,7 @@ or this way::
     registration.date_of_birth.format(
             format_provider=lambda value, ignore: value.strftime('%m-%d-%y'))
 
-Widget formatting can follow by actual widget that needs to be rendered::
+Widget formatting can followed by the actual widget that needs to be rendered::
 
     registration.date_of_birth.format('%Y/%m/%d').textbox()
 
@@ -90,20 +91,20 @@ Widget formatting can follow by actual widget that needs to be rendered::
         return value_formatted
 
 There are default format providers for built-in types. You can replace and
-extend it with your own by altering ``format_providers`` map::
+extend them with your own, by altering ``format_providers`` map::
 
     from wheezy.html.utils import format_providers
 
     format_providers['my_type'] = my_format_provider
 
-Default implementation for date/time types formats it minimal value to empty
+Default implementation for date/time types formats its minimal value to an empty
 string.
 
 Model Error
 ~~~~~~~~~~~
 
-Since ``widget`` is initialized with model and errors, it capable to
-decorate html widget with attributes specific to errors. Let see this
+Since ``widget`` is initialized with model and errors, it is capable of
+decorating html widgets with attributes specific to errors. Let's see this
 in the following example::
 
     errors = {'username': ['Required field cannot be left blank.']}
@@ -115,8 +116,8 @@ decorated with class error::
        class="error" type="text" id="username" />
 
 So I can apply appropriate css style to draw a border around input, or what
-ever else since in html I have distinguished situation between input with
-error and with valid input.
+ever else, since in html I have distinguished between input with
+error and valid input.
 
 Now let display error::
 
@@ -129,9 +130,9 @@ Read above as render error message for username, here is what we get::
 General Error
 ~~~~~~~~~~~~~
 
-General error is not related to certain model attribute but to operation
-related instead. If ``errors`` dictionary contains an element with __ERROR__
-key than that one is used as general error::
+General error is not related to certain model attribute but is operation
+related instead. If ``errors`` dictionary contains an element with key __ERROR__
+than that one is used as a general error::
 
     errors = {'__ERROR__': 'The username or password provided is incorrect.'}
 
@@ -139,7 +140,7 @@ You can display it this way::
 
     credential.error()
 
-It renders the following html element only if __ERROR__ key exists::
+It renders the following html element only if the __ERROR__ key exists::
 
     <span class="error-message">The username or password
       provided is incorrect.</span>
@@ -151,8 +152,8 @@ Widgets
 ~~~~~~~
 
 :ref:`wheezy.html` comes with a number of built-in widgets. They can be
-generally divided into two categories with support of a single value
-(``string``, ``int``, ``datetime``, etc) or multiple (``list`` or ``tuple``).
+generally divided into two categories: supporting a single value
+(``string``, ``int``, ``datetime``, etc) or supporting multiple values (``list`` or ``tuple``).
 
 Single value widgets:
 
@@ -183,7 +184,7 @@ Widgets that support multiple values:
   multiple (there is also synonym ``multiple_select``). Attribute
   ``choices`` is a list of html options.
 
-Several widgets support ``choinces`` attribute, it is an iteratable of tuple
+Several widgets support a ``choices`` attribute, it is an iteratable of a tuple
 of two::
 
     account_types = (('u', 'User'), ('b', 'Business'))
@@ -196,7 +197,7 @@ It renders the following html::
     <label><input type="radio" name="account_type"
         value="2" />Business</label>
 
-It is sometimes more convinient to operate with dictionary::
+It is sometimes more convenient to operate with a dictionary::
 
     >>> from operator import itemgetter
     >>> account_types = sorted({'u': 'User', 'b': 'Business'}.items(),
@@ -208,7 +209,7 @@ It is sometimes more convinient to operate with dictionary::
 Custom Widgets
 ~~~~~~~~~~~~~~
 
-It is easy to provide own widgets. A widget is any callable of the following
+It is easy to provide your own widgets. A widget is any callable of the following
 contract::
 
     from wheezy.html.markup import Tag
@@ -229,7 +230,7 @@ Here is a description of each attribute:
 
 Your custom widget must return an instance of
 :py:class:`~wheezy.html.markup.Tag` or
-:py:class:`~wheezy.html.markup.Fragment`. In case of field error html element
+:py:class:`~wheezy.html.markup.Fragment`. In case of field errors, the html element
 is decorated with css class ``error``.
 
 Registration
@@ -245,7 +246,7 @@ Now you should be able to use it::
 
     credential.username.my_widget()
 
-Since ``default_widgets`` is python dictionary you can manipulate it a way you
+Since ``default_widgets`` is python dictionary you can manipulate it any way you
 like.
 
 Integration
@@ -261,7 +262,7 @@ Integration
 Jinja2
 ^^^^^^
 
-:ref:`wheezy.html` integration with ``Jinja2`` is provided via extension
+:ref:`wheezy.html` integration with ``Jinja2`` is provided via the extension
 feature. Here is how to add
 :py:meth:`~wheezy.html.ext.jinja2.WidgetExtension` to your code::
 
@@ -274,7 +275,7 @@ feature. Here is how to add
 The only thing :py:meth:`~wheezy.html.ext.jinja2.WidgetExtension` does is
 translation of widget code to adequate ``Jinja2`` code.
 
-Let demonstrate with by example::
+Let's demonstrate this with an example::
 
     {{ model.remember_me.checkbox() }}
 
@@ -294,8 +295,8 @@ which effectively renders the HTML at runtime::
 
     <input id="remember-me" name="remember_me" type="checkbox" value="1" />
 
-Since widgets also decorate appropriate HTML tags in case of error, ``errors``
-dictionary must be available in ``Jinja2`` context::
+Since widgets also decorate appropriate HTML tags in case of error, the ``errors``
+dictionary must be available in the ``Jinja2`` context::
 
     template = env.get_template(template_name)
     assert 'errors' in kwargs
@@ -303,13 +304,13 @@ dictionary must be available in ``Jinja2`` context::
                 **kwargs
     )
 
-See :py:mod:`wheezy.html.ext.mako` for more examples.
+See :py:mod:`wheezy.html.ext.jinja2` for more examples.
 
 
 Mako
 ^^^^
 
-:ref:`wheezy.html` integration with ``Mako`` is provided via preprocessor
+:ref:`wheezy.html` integration with ``Mako`` is provided via the preprocessor
 feature. Here is how to add
 :py:meth:`~wheezy.html.ext.mako.widget_preprocessor` to your code::
 
@@ -322,7 +323,7 @@ feature. Here is how to add
 The only thing :py:meth:`~wheezy.html.ext.mako.widget_preprocessor` does is
 translation of widget code to adequate ``Mako`` code.
 
-Let demonstrate with by example::
+Let's demonstrate this with an example::
 
     ${model.remember_me.checkbox()}
 
@@ -342,8 +343,8 @@ which effectively renders the HTML at runtime::
 
     <input id="remember-me" name="remember_me" type="checkbox" value="1" />
 
-Since widgets also decorate appropriate HTML tags in case of error, ``errors``
-dictionary must be available in ``Mako`` context::
+Since widgets also decorate appropriate HTML tags in case of error, the ``errors``
+dictionary must be available in the ``Mako`` context::
 
     template = template_lookup.get_template(template_name)
     assert 'errors' in kwargs
@@ -356,7 +357,7 @@ See :py:mod:`wheezy.html.ext.mako` for more examples.
 Tenjin
 ^^^^^^
 
-:ref:`wheezy.html` integration with ``Tenjin`` is provided via preprocessor
+:ref:`wheezy.html` integration with ``Tenjin`` is provided via the preprocessor
 feature. Here is how to add
 :py:meth:`~wheezy.html.ext.tenjin.widget_preprocessor` to your code::
 
@@ -369,7 +370,7 @@ feature. Here is how to add
 The only thing :py:meth:`~wheezy.html.ext.mako.widget_preprocessor` does is
 translation of widget code to adequate ``Tenjin`` code.
 
-Let demonstrate with by example::
+Let's demonstrate this with an example::
 
     ${model.remember_me.checkbox(class_='i')}
 
@@ -390,8 +391,8 @@ which effectively renders the HTML at runtime::
 
     <input id="remember-me" name="remember_me" type="checkbox" value="1" class="i" />
 
-Since widgets also decorate appropriate HTML tags in case of error, ``errors``
-dictionary must be available in ``Tenjin`` context::
+Since widgets also decorate appropriate HTML tags in case of error, the ``errors``
+dictionary must be available in the ``Tenjin`` context::
 
     assert 'errors' in kwargs
     engine.render('page.html',
@@ -403,7 +404,7 @@ See :py:mod:`wheezy.html.ext.tenjin` for more examples.
 Wheezy Template
 ^^^^^^^^^^^^^^^
 
-:ref:`wheezy.html` integration with ``wheezy.template`` is provided via preprocessor
+:ref:`wheezy.html` integration with ``wheezy.template`` is provided via the preprocessor
 feature. Here is how to add
 :py:meth:`~wheezy.html.ext.template.WidgetExtension` to your code::
 
@@ -425,7 +426,7 @@ The only thing
 :py:meth:`~wheezy.html.ext.template.WidgetExtension` does is
 translation of widget code to adequate ``wheezy.template`` code.
 
-Let demonstrate with by example::
+Let's demonstrate this with an example::
 
     @model.remember_me.checkbox(class_='i')
 

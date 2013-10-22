@@ -6,7 +6,7 @@ Install
 -------
 
 :ref:`wheezy.html` requires `python`_ version 2.4 to 2.7 or 3.2+.
-It is independent of operating system. You can install it from `pypi`_
+It is operating system independent. You can install it from the `pypi`_
 site using `setuptools`_::
 
     $ easy_install wheezy.html
@@ -16,8 +16,8 @@ If you are using `virtualenv`_::
     $ virtualenv env
     $ env/bin/easy_install wheezy.html
 
-If you would like take a benefit of template preprocessing for
-Jinja2, Mako, Tenjin or Wheezy.Template engines specify extra requirements::
+If you would like to benefit from template preprocessing for
+Jinja2, Mako, Tenjin or Wheezy, you can specify the template engine as extra requirement::
 
     $ env/bin/easy_install wheezy.html[jinja2]
     $ env/bin/easy_install wheezy.html[mako]
@@ -40,10 +40,10 @@ Prepare `virtualenv`_ environment in *env* directory ::
 
     $ make test
 
-You can read how to compile from source code different versions of
-`python`_ in the `article`_ published on `mind reference`_ blog.
+You can read how to compile different versions of
+`python`_ from source code, in the `article`_ published on `mind reference`_ blog.
 
-You can run certain make targets with specific python version. Here
+You can run certain make targets with a specific python version. Here
 we are going to run `doctest`_ with python3.2::
 
     $ make env doctest-cover VERSION=3.2
@@ -52,7 +52,7 @@ Generate documentation with `sphinx`_::
 
 	$ make doc
 
-If you run into any issue or have comments, go ahead and add on
+If you run into any issues or have comments, go ahead and add them on
 `bitbucket`_.
 
 .. _`pypi`: http://pypi.python.org/pypi/wheezy.html
