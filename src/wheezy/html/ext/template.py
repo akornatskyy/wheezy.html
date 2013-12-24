@@ -83,10 +83,21 @@ value="@key%(expr_filter)s"%(class)s\\
 """
 
     SELECT = """\\
-<select id="%(id)s" name="%(name)s"%(select_type)s%(attrs)s%(class)s>\\
+<select id="%(id)s" name="%(name)s"%(attrs)s%(class)s>\\
 @for key, text in %(choices)s:
 <option value="@key%(expr_filter)s"\\
 @if key == %(value)s:
+ selected="selected"\\
+@end
+>@text%(expr_filter)s</option>\\
+@end
+</select>"""
+
+    MULTIPLE_SELECT = """\\
+<select id="%(id)s" name="%(name)s" multiple="multiple"%(attrs)s%(class)s>\\
+@for key, text in %(choices)s:
+<option value="@key%(expr_filter)s"\\
+@if key in %(value)s:
  selected="selected"\\
 @end
 >@text%(expr_filter)s</option>\\

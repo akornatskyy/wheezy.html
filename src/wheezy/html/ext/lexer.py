@@ -245,17 +245,6 @@ class Preprocessor(object):
     def dropdown(self, expr, params, expr_filter):
         """ HTML element select.
         """
-        return self.select_helper(expr, params, expr_filter, '')
-
-    def listbox(self, expr, params, expr_filter):
-        """ HTML element select of type multiple.
-        """
-        return self.select_helper(
-            expr, params, expr_filter, ' multiple="multiple"')
-
-    def select_helper(self, expr, params, expr_filter, select_type):
-        """ HTML element select.
-        """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop('class', None)
@@ -263,7 +252,22 @@ class Preprocessor(object):
         return self.SELECT % {
             'id': html_id(name),
             'name': name,
-            'select_type': select_type,
+            'choices': choices,
+            'value': expr,
+            'expr_filter': expr_filter,
+            'attrs': self.join_attrs(kwargs),
+            'class': self.error_class(name, class_)}
+
+    def listbox(self, expr, params, expr_filter):
+        """ HTML element select of type multiple.
+        """
+        name = parse_name(expr)
+        args, kwargs = parse_params(params)
+        class_ = kwargs.pop('class', None)
+        choices = kwargs.pop('choices')
+        return self.MULTIPLE_SELECT % {
+            'id': html_id(name),
+            'name': name,
             'choices': choices,
             'value': expr,
             'expr_filter': expr_filter,

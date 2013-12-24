@@ -295,7 +295,6 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         self.p.SELECT = """
             id = %(id)s
             name = %(name)s
-            select_type = |%(select_type)s|
             choices = %(choices)s
             value = %(value)s
             expr_filter = %(expr_filter)s
@@ -305,7 +304,6 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         assert """
             id = security-question
             name = security_question
-            select_type = ||
             choices = ${lst}
             value = model.security_question
             expr_filter = |f
@@ -318,10 +316,9 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
     def test_listbox(self):
         """ listbox widget
         """
-        self.p.SELECT = """
+        self.p.MULTIPLE_SELECT = """
             id = %(id)s
             name = %(name)s
-            select_type = %(select_type)s
             choices = %(choices)s
             value = %(value)s
             expr_filter = %(expr_filter)s
@@ -331,7 +328,6 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         assert """
             id = languages
             name = languages
-            select_type =  multiple="multiple"
             choices = ${lst}
             value = model.languages
             expr_filter = |f
@@ -648,15 +644,15 @@ class PreprocessorMixin(object):
     def test_listbox(self):
         """ listbox widget.
         """
-        self.m.scm = 'hg'
+        self.m.scm = ('hg', 'svn')
         self.render(
             self.LISTBOX,
             '<select id="scm" name="scm" multiple="multiple" class="x">'
             '<option value="git">Git</option>'
             '<option value="hg" selected="selected">Mercurial</option>'
-            '<option value="svn">SVN</option>'
+            '<option value="svn" selected="selected">SVN</option>'
             '</select>')
-        self.m.scm = ''
+        self.m.scm = []
         self.render(
             self.LISTBOX,
             '<select id="scm" name="scm" multiple="multiple" class="x">'

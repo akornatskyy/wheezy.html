@@ -31,7 +31,8 @@ class Jinja2Preprocessor(Preprocessor):
 
         attrs = [
             'EXPRESSION', 'ERROR', 'SELECT', 'INPUT', 'CHECKBOX',
-            'MULTIPLE_CHECKBOX', 'MULTIPLE_HIDDEN', 'RADIO'
+            'MULTIPLE_CHECKBOX', 'MULTIPLE_HIDDEN', 'RADIO',
+            'MULTIPLE_SELECT'
         ]
         c = self.__class__.__dict__
         for attr in attrs:
@@ -97,10 +98,21 @@ value="{{ key%(expr_filter)s }}"%(class)s\
 {%% endfor %%}"""
 
     SELECT = """\
-<select id="%(id)s" name="%(name)s"%(select_type)s%(attrs)s%(class)s>\
+<select id="%(id)s" name="%(name)s"%(attrs)s%(class)s>\
 {%% for key, text in %(choices)s: %%}\
 <option value="{{ key%(expr_filter)s }}"\
 {%% if key == %(value)s: %%}\
+ selected="selected"\
+{%% endif %%}\
+>{{ text%(expr_filter)s }}</option>\
+{%% endfor %%}\
+</select>"""
+
+    MULTIPLE_SELECT = """\
+<select id="%(id)s" name="%(name)s" multiple="multiple"%(attrs)s%(class)s>\
+{%% for key, text in %(choices)s: %%}\
+<option value="{{ key%(expr_filter)s }}"\
+{%% if key in %(value)s: %%}\
  selected="selected"\
 {%% endif %%}\
 >{{ text%(expr_filter)s }}</option>\

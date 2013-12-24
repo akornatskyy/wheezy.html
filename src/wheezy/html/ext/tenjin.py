@@ -81,11 +81,24 @@ value="%(expr_filter)s{key}"%(class)s
 
     SELECT = """\
 <?py #pass ?>
-<select id="%(id)s" name="%(name)s"%(select_type)s%(attrs)s%(class)s>\
+<select id="%(id)s" name="%(name)s"%(attrs)s%(class)s>\
 <?py #pass ?>
 <?py for key, text in %(choices)s: ?>
 <option value="%(expr_filter)s{key}"<?py #pass ?>
 <?py if key == %(value)s: ?>
+ selected="selected"<?py #pass ?>
+<?py #endif ?>
+>%(expr_filter)s{text}</option><?py #pass ?>
+<?py #endfor ?>\
+</select>"""
+
+    MULTIPLE_SELECT = """\
+<?py #pass ?>
+<select id="%(id)s" name="%(name)s" multiple="multiple"%(attrs)s%(class)s>\
+<?py #pass ?>
+<?py for key, text in %(choices)s: ?>
+<option value="%(expr_filter)s{key}"<?py #pass ?>
+<?py if key in %(value)s: ?>
  selected="selected"<?py #pass ?>
 <?py #endif ?>
 >%(expr_filter)s{text}</option><?py #pass ?>
