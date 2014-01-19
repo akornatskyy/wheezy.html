@@ -4,7 +4,18 @@ import os
 import platform
 import sys
 
-extra = {}
+extra = {'ext_modules': []}
+
+try:
+    from Cython.Build import cythonize
+    p = os.path.join('src', 'wheezy', 'html')
+    extra['ext_modules'] += cythonize(
+        [os.path.join(p, '*.py'),
+         os.path.join(p, 'ext', '*.py')],
+        quiet=True)
+except ImportError:
+    pass
+
 can_build_ext = getattr(
     platform, 'python_implementation',
     lambda: None
@@ -18,7 +29,7 @@ except ImportError:
     from distutils.core import setup, Extension  # noqa
     from distutils.command.build_ext import build_ext  # noqa
     if can_build_ext:
-        extra['ext_modules'] = [Extension('wheezy.html.boost', sources)]
+        extra['ext_modules'] += [Extension('wheezy.html.boost', sources)]
 else:
     if can_build_ext:
         extra['features'] = {
@@ -99,8 +110,6 @@ setup(
     namespace_packages=['wheezy'],
 
     zip_safe=False,
-    install_requires=[
-    ],
     extras_require={
         'dev': [
             'coverage',
