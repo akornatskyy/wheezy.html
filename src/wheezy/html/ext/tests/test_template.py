@@ -67,6 +67,41 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
         assert 'a \\\nb' == self.preprocess('  a \\\n  b  ')
         assert 'a \\\nb' == self.preprocess('a\n  b')
 
+    def test_postprocessor(self):
+        from wheezy.html.ext.template import whitespace_postprocessor
+        tokens = [
+            ('1', 'markup', '  a')
+        ]
+        whitespace_postprocessor(tokens)
+        assert tokens == [
+            ('1', 'markup', 'a')
+        ]
+
+
+class InlineExtensionTestCase(unittest.TestCase):
+    """ Test the ``InlineExtension``.
+    """
+
+    def p(self, text, fallback=False):
+        from wheezy.html.ext.template import InlineExtension
+        p = InlineExtension(searchpath=['.'], fallback=fallback)
+        p = p.preprocessors[0]
+        return p(text)
+
+    def test_inline(self):
+        assert self.p('@inline("LICENSE")')
+
+    def test_inline_fallback(self):
+        assert '@include("LICENSE")' == self.p('@inline("LICENSE")',
+                                               fallback=True)
+
+    def test_inline_not_found(self):
+        import warnings
+        warnings.simplefilter('ignore')
+        assert not self.p('@inline("X")')
+        warnings.simplefilter('default')
+
+
 try:
     from wheezy.html.ext.template import WidgetExtension
     from wheezy.html.utils import html_escape

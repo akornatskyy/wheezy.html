@@ -191,7 +191,7 @@ class InlineExtension(Extension):
         self.preprocessor = InlinePreprocessor(
             RE_INLINE, searchpath, strategy)
 
-    def __call__(self, environment):
+    def __call__(self, environment):  # pragma: nocover
         super(InlineExtension, self).__init__(environment)
         return self
 

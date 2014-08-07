@@ -50,6 +50,29 @@ class MakoWhitespacePreprocessorTestCase(unittest.TestCase):
         assert 'x' == whitespace_preprocessor('x  ')
         assert '><' == whitespace_preprocessor('  > < ')
 
+
+class InlinePreprocessorTestCase(unittest.TestCase):
+    """ Test the ``inline_preprocessor``.
+    """
+
+    def p(self, text, fallback=False):
+        from wheezy.html.ext.mako import inline_preprocessor
+        p = inline_preprocessor(directories=['.'], fallback=fallback)
+        return p(text)
+
+    def test_inline(self):
+        assert self.p('<%inline file="LICENSE" />')
+
+    def test_inline_fallback(self):
+        assert ('<%include file="LICENSE"/>' ==
+                self.p('<%inline file="LICENSE" />', fallback=True))
+
+    def test_inline_not_found(self):
+        import warnings
+        warnings.simplefilter('ignore')
+        assert not self.p('<%inline file="X" />')
+        warnings.simplefilter('default')
+
 try:
     # from mako.template import Template
     Template = __import__('mako.template', None, None, ['Template']).Template

@@ -105,6 +105,29 @@ class Jinja2WhitespaceExtensionTestCase2(Jinja2WhitespaceExtensionTestCase):
     block_end_string = '%>'
 
 
+class InlineExtensionTestCase(unittest.TestCase):
+    """ Test the ``InlineExtension``.
+    """
+
+    def p(self, text, fallback=False):
+        from wheezy.html.ext.jinja2 import InlineExtension
+        p = InlineExtension(searchpath=['.'], fallback=fallback)
+        return p.preprocess(text, None)
+
+    def test_inline(self):
+        assert self.p('{% inline "LICENSE" %}')
+
+    def test_inline_fallback(self):
+        assert '{% include "LICENSE" %}' == self.p('{% inline "LICENSE" %}',
+                                                   fallback=True)
+
+    def test_inline_not_found(self):
+        import warnings
+        warnings.simplefilter('ignore')
+        assert not self.p('{% inline "X" %}')
+        warnings.simplefilter('default')
+
+
 try:
     # from jinja2 import Environment
     Environment = __import__('jinja2', None, None,

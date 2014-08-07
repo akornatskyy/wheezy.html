@@ -54,6 +54,29 @@ class TenjinWhitespacePreprocessorTestCase(unittest.TestCase):
         assert '?> <?' == whitespace_preprocessor('  ?> <? ')
 
 
+class InlinePreprocessorTestCase(unittest.TestCase):
+    """ Test the ``inline_preprocessor``.
+    """
+
+    def p(self, text, fallback=False):
+        from wheezy.html.ext.tenjin import inline_preprocessor
+        p = inline_preprocessor(directories=['.'], fallback=fallback)
+        return p(text)
+
+    def test_inline(self):
+        assert self.p('<?py inline("LICENSE") ?>')
+
+    def test_inline_fallback(self):
+        assert ('<?py include("LICENSE") ?>' ==
+                self.p('<?py inline("LICENSE") ?>', fallback=True))
+
+    def test_inline_not_found(self):
+        import warnings
+        warnings.simplefilter('ignore')
+        assert not self.p('<?py inline("X") ?>')
+        warnings.simplefilter('default')
+
+
 try:
     # from tenjin import Template
     Template = __import__('tenjin', None, None, ['Template']).Template
