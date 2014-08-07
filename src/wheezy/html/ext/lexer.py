@@ -382,7 +382,5 @@ class InlinePreprocessor(object):
                     return f.read()
                 finally:
                     f.close()
-            else:
-                msg = 'InlinePreprocessor: "%s" not found.' % path
-                warn(msg)
-                return ''
+        warn('InlinePreprocessor: "%s" not found.' % path)
+        return ''
