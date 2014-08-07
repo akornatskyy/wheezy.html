@@ -2,32 +2,6 @@
 User Guide
 ==========
 
-Core feature of :ref:`wheezy.html`
-is the :py:class:`~wheezy.html.factory.WidgetFactory`. This class has
-a shortcut:
-``widget``. You instantiate :py:class:`~wheezy.html.factory.WidgetFactory`
-and pass the following arguments:
-
-* ``model`` - object being wrapped.
-* ``errors`` - dictionary contains all errors reported; ``key`` corresponds to
-  attribute name, while ``value`` is a list of errors.
-
-Let's declare our domain model::
-
-    class Credential(object):
-
-        def __init__(self):
-            self.username = ''
-            self.password = ''
-
-This way we get an HTML widget::
-
-    from wheezy.html import widget
-
-    credential = Credential()
-    errors = {}
-    credential = widget(credential, errors)
-
 Widget Name
 ~~~~~~~~~~~
 
@@ -46,9 +20,7 @@ widget for rendering::
 
 Let's explain this single line:
 
-* ``credential`` - an instance of
-  :py:class:`~wheezy.html.factory.WidgetFactory` that wraps ``model`` and
-  ``errors``.
+* ``credential`` - domain object.
 * ``username`` - attribute name of our domain object.
 * ``textbox`` - widget we need to render.
 * ``autocomplete`` - html specific attribute.
@@ -147,107 +119,6 @@ It renders the following html element only if the __ERROR__ key exists::
 
 Notice class ``error-message``. Your application is able to distinguish field
 errors from general errors.
-
-Widgets
-~~~~~~~
-
-:ref:`wheezy.html` comes with a number of built-in widgets. They can be
-generally divided into two categories: supporting a single value
-(``string``, ``int``, ``datetime``, etc) or supporting multiple values (``list`` or ``tuple``).
-
-Single value widgets:
-
-* :py:meth:`~wheezy.html.widgets.hidden` - html element input of type hidden.
-* :py:meth:`~wheezy.html.widgets.emptybox` - html element input of type text,
-  value is rendered only if evaluated to boolean True.
-* :py:meth:`~wheezy.html.widgets.textbox` - html element input of type text,
-  value is rendered only if it is not None or ''.
-* :py:meth:`~wheezy.html.widgets.password` - html element input of type
-  password, value is rendered only if it is not None or ''.
-* :py:meth:`~wheezy.html.widgets.textarea` - html element textarea.
-* :py:meth:`~wheezy.html.widgets.checkbox` - html element input of type
-  checkbox.
-* :py:meth:`~wheezy.html.widgets.label` - html element label.
-* :py:meth:`~wheezy.html.widgets.dropdown` - html element select (there is
-  also synonym ``select``). Attribute ``choices`` is a list of html options.
-* :py:meth:`~wheezy.html.widgets.radio` - a group of html input elements
-  of type radio. Attribute ``choices`` is a list of options.
-
-Widgets that support multiple values:
-
-* :py:meth:`~wheezy.html.widgets.multiple_hidden` - renders several html
-  input elements of type hidden per item in the value list.
-* :py:meth:`~wheezy.html.widgets.multiple_checkbox` - renders several
-  html elements of type checkbox per item in the value list nested into
-  html label element.
-* :py:meth:`~wheezy.html.widgets.listbox` - html element select of type
-  multiple (there is also synonym ``multiple_select``). Attribute
-  ``choices`` is a list of html options.
-
-Several widgets support a ``choices`` attribute, it is an iteratable of a tuple
-of two::
-
-    account_types = (('u', 'User'), ('b', 'Business'))
-    account.account_type.radio(choices=account_types)
-
-It renders the following html::
-
-    <label><input checked="checked" type="radio"
-        name="account_type" value="1" />User</label>
-    <label><input type="radio" name="account_type"
-        value="2" />Business</label>
-
-It is sometimes more convenient to operate with a dictionary::
-
-    >>> from operator import itemgetter
-    >>> account_types = sorted({'u': 'User', 'b': 'Business'}.items(),
-    ...         key=itemgetter(1))
-    >>> account_types
-    [('u', 'User'), ('b', 'Business')]
-
-
-Custom Widgets
-~~~~~~~~~~~~~~
-
-It is easy to provide your own widgets. A widget is any callable of the following
-contract::
-
-    from wheezy.html.markup import Tag
-
-    def my_widget(name, value, attrs):
-        tag_attrs = {
-            'id' = id(name)
-        }
-        if attrs:
-            tag_attrs.update(attrs)
-        return Tag('name', value, attrs=tag_attrs)
-
-Here is a description of each attribute:
-
-* ``name`` - name of model attribute.
-* ``value`` - value that is currently rendered.
-* ``attrs`` - a dictionary of extra key-word arguments passed.
-
-Your custom widget must return an instance of
-:py:class:`~wheezy.html.markup.Tag` or
-:py:class:`~wheezy.html.markup.Fragment`. In case of field errors, the html element
-is decorated with css class ``error``.
-
-Registration
-^^^^^^^^^^^^
-
-Once ``my_widget`` is ready you can add it to a list of default widgets::
-
-    from wheezy.html.widgets import default as default_widgets
-
-    default_widgets['my_widget'] = my_widget
-
-Now you should be able to use it::
-
-    credential.username.my_widget()
-
-Since ``default_widgets`` is python dictionary you can manipulate it any way you
-like.
 
 Integration
 ~~~~~~~~~~~

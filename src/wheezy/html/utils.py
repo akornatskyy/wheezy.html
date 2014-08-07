@@ -32,7 +32,7 @@ escape_html_native = escape_html
 try:
     from wheezy.html.boost import escape_html
     html_escape = escape_html
-except ImportError:
+except ImportError:  # pragma: nocover
     html_escape = escape_html
 
 
