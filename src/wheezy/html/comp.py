@@ -17,6 +17,10 @@ else:  # pragma: nocover
 
 
 if PY3:  # pragma: nocover
-    iteritems = lambda d: d.items()
+
+    def iteritems(d):
+        return d.items()
 else:  # pragma: nocover
-    iteritems = lambda d: d.iteritems()
+
+    def iteritems(d):
+        return d.iteritems()

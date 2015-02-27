@@ -1,16 +1,16 @@
 
-
 """ ``jinja2`` extension module.
 """
 
 import re
 
-# from jinja2.ext import Extension
-Extension = __import__('jinja2.ext', None, None, ['Extension']).Extension
-
 from wheezy.html.ext.lexer import InlinePreprocessor
 from wheezy.html.ext.lexer import Preprocessor
 from wheezy.html.ext.lexer import WhitespacePreprocessor
+
+
+# from jinja2.ext import Extension
+Extension = __import__('jinja2.ext', None, None, ['Extension']).Extension
 
 
 class Jinja2Preprocessor(Preprocessor):

@@ -36,7 +36,8 @@ except ImportError:  # pragma: nocover
     html_escape = escape_html
 
 
-html_id = lambda name: name.replace('_', '-')
+def html_id(name):
+    return name.replace('_', '-')
 
 
 def format_value(value, format_spec=None, format_provider=None):
@@ -84,7 +85,10 @@ def format_value(value, format_spec=None, format_provider=None):
         return format_provider(value, format_spec)
 
 
-str_format_provider = lambda value, format_spec: str_type(value)
+def str_format_provider(value, format_spec):
+    return str_type(value)
+
+
 min_date = date(1900, 1, 1)
 min_datetime = datetime(1900, 1, 1)
 
