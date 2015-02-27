@@ -4,15 +4,21 @@ import os
 import platform
 import sys
 
-extra = {'ext_modules': []}
+try:
+    from setuptools import setup
+except:
+    from distutils.core import setup  # noqa
 
+extra = {'ext_modules': []}
 try:
     from Cython.Build import cythonize
     p = os.path.join('src', 'wheezy', 'html')
     extra['ext_modules'] += cythonize(
         [os.path.join(p, '*.py'),
          os.path.join(p, 'ext', '*.py')],
-        quiet=True)
+        exclude=[os.path.join(p, '__init__.py'),
+                 os.path.join(p, 'ext', '__init__.py')],
+        nthreads=2, quiet=True)
 except ImportError:
     pass
 
@@ -20,27 +26,12 @@ can_build_ext = getattr(
     platform, 'python_implementation',
     lambda: None
 )() != 'PyPy' and 'java' not in sys.platform
-sources = [os.path.join('src', 'wheezy', 'html', 'boost.c')]
-
-try:
-    from setuptools import setup, Extension, Feature
-    from setuptools.command.build_ext import build_ext
-except ImportError:
-    from distutils.core import setup, Extension  # noqa
-    from distutils.command.build_ext import build_ext  # noqa
-    if can_build_ext:
-        extra['ext_modules'] += [Extension('wheezy.html.boost', sources)]
-else:
-    if can_build_ext:
-        extra['features'] = {
-            'boost': Feature(
-                'code optimizations',
-                standard=True,
-                ext_modules=[Extension('wheezy.html.boost', sources)])
-        }
-
 
 if can_build_ext:
+    from distutils.core import Extension  # noqa
+    from distutils.command.build_ext import build_ext  # noqa
+    sources = [os.path.join('src', 'wheezy', 'html', 'boost.c')]
+    extra['ext_modules'] += [Extension('wheezy.html.boost', sources)]
 
     class build_ext_optional(build_ext):
 
@@ -64,7 +55,6 @@ if can_build_ext:
             print('An optional extension could not be compiled.')
 
     extra['cmdclass'] = {'build_ext': build_ext_optional}
-
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 
