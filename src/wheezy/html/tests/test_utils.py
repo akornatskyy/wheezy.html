@@ -35,5 +35,5 @@ try:
     class BoostEscapeHTMLTestCase(unittest.TestCase, EscapeHTMLMixin):
         def setUp(self):
             self.escape = escape_html
-except ImportError:
+except ImportError:  # pragma: nocover
     pass

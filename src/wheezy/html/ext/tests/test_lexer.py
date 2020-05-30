@@ -5,7 +5,7 @@
 import unittest
 
 
-def generate_white_space_patterns():
+def generate_white_space_patterns():  # pragma: nocover
     for t in ['x', ' x', 'x ', ' x ', '[ x', 'x ]', '[ x ]', 'xx', 'x x']:
         for s in [' ', '\t', '\n', ' \t', ' \n', '\n ']:
             for n in [1, 3]:
@@ -449,7 +449,7 @@ class PreprocessorMixin(object):
         self.e = {}
 
     def assert_render_equal(self, template, expected, **kwargs):
-        pass
+        pass  # pragma: nocover
 
     def render(self, widget, html):
         """ hidden widget.

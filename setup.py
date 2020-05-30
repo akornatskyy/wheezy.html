@@ -102,8 +102,6 @@ setup(
     zip_safe=False,
     extras_require={
         'dev': [
-            'coverage',
-            'nose',
             'pytest',
             'pytest-pep8',
             'pytest-cov',
