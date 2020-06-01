@@ -56,14 +56,15 @@ if can_build_ext:
 
     extra['cmdclass'] = {'build_ext': build_ext_optional}
 
-README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
+README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 
 setup(
     name='wheezy.html',
     version='0.1',
     description='A lightweight html rendering library',
     long_description=README,
-    url='https://bitbucket.org/akorn/wheezy.html',
+    long_description_content_type='text/markdown',
+    url='https://github.com/akornatskyy/wheezy.html',
 
     author='Andriy Kornatskyy',
     author_email='andriy.kornatskyy at live.com',
