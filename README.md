@@ -20,7 +20,7 @@ Resources:
 - [source code](https://github.com/akornatskyy/src) and
   [issues](https://github.com/akornatskyy/wheezy.html/issues) tracker are
   available on [github](https://github.com/akornatskyy/wheezy.html)
-- [documentation](http://readthedocs.org/builds/wheezyhtml)
+- [documentation](https://wheezyhtml.readthedocs.io/en/latest/)
 
 ## Install
 

@@ -4,10 +4,7 @@ import os
 import platform
 import sys
 
-try:
-    from setuptools import setup
-except:
-    from distutils.core import setup  # noqa
+from setuptools import setup
 
 extra = {'ext_modules': []}
 try:

@@ -1,6 +1,6 @@
 .. _`wheezy.html`:
 
-Wheezy HTML
+wheezy.html
 ===========
 
 Introduction
@@ -13,16 +13,15 @@ template systems:
 * `Jinja2 Templates <http://jinja.pocoo.org>`_
 * `Mako Templates <http://www.makotemplates.org>`_
 * `Tenjin Templates <http://www.kuwata-lab.com/tenjin/>`_
-* `Wheezy Templates <http://pypi.python.org/pypi/wheezy.template/>`_
+* `Wheezy Templates <https://pypi.org/project/wheezy.template/>`_
 
 It is optimized for performance, well tested and documented.
 
 Resources:
 
-* `source code`_, `examples`_ and `issues`_ tracker are available
-  on `bitbucket`_
-* `documentation`_, `readthedocs`_
-* `eggs`_ on `pypi`_
+* `source code`_ and `issues`_ tracker are available
+  on `github`_
+* `documentation`_
 
 Contents
 --------
@@ -35,12 +34,8 @@ Contents
    userguide
    modules
 
-.. _`bitbucket`: http://bitbucket.org/akorn/wheezy.html
-.. _`documentation`: http://packages.python.org/wheezy.html
-.. _`eggs`: http://pypi.python.org/pypi/wheezy.html
-.. _`examples`: http://bitbucket.org/akorn/wheezy.html/src/tip/demos
-.. _`issues`: http://bitbucket.org/akorn/wheezy.html/issues
-.. _`pypi`: http://pypi.python.org
+.. _`github`: https://github.com/akornatskyy/wheezy.html
+.. _`documentation`: https://wheezyhtml.readthedocs.io/en/latest/
+.. _`issues`: https://github.com/akornatskyy/wheezy.html/issues
 .. _`python`: http://www.python.org
-.. _`readthedocs`: http://readthedocs.org/builds/wheezyhtml/
-.. _`source code`: http://bitbucket.org/akorn/wheezy.html/src
+.. _`source code`: https://github.com/akornatskyy/wheezy.html
