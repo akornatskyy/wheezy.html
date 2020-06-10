@@ -4,6 +4,5 @@ tenjin
 wheezy.template
 
 pytest
-pytest-pep8
 pytest-cov
 pip-tools
