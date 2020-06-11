@@ -22,10 +22,10 @@ class Jinja2Preprocessor(Preprocessor):
             r'(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*'\
             r'(?P<expr_filter>(\|\s*[\w,\s]+?|\s*)))\}\}'
         if variable_start_string:
-            pattern = pattern.replace('\{\{',
+            pattern = pattern.replace('\{\{',  # noqa: W605
                                       re.escape(variable_start_string))
         if variable_end_string:
-            pattern = pattern.replace('\}\}',
+            pattern = pattern.replace('\}\}',  # noqa: W605
                                       re.escape(variable_end_string))
         super(Jinja2Preprocessor, self).__init__(pattern)
 
@@ -154,10 +154,12 @@ class WhitespaceExtension(Extension):
             (re.compile(r'>\s+<'),
                 r'><'),
             (re.compile(
-                r'>\s+\{%'.replace('\{%', re.escape(block_start_string))),
+                r'>\s+\{%'.replace(  # noqa: W605
+                    '\{%', re.escape(block_start_string))),  # noqa: W605
                 r'>{%'.replace('{%', block_start_string)),
             (re.compile(
-                r'%\}\s+<'.replace('%\}', re.escape(block_end_string))),
+                r'%\}\s+<'.replace(  # noqa: W605
+                    '%\}', re.escape(block_end_string))),  # noqa: W605
                 r'%}<'.replace('%}', block_end_string)),
         ])
 

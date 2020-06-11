@@ -67,8 +67,8 @@ class InlinePreprocessorTestCase(unittest.TestCase):
         assert self.p('<?py inline("LICENSE") ?>')
 
     def test_inline_fallback(self):
-        assert ('<?py include("LICENSE") ?>' ==
-                self.p('<?py inline("LICENSE") ?>', fallback=True))
+        assert ('<?py include("LICENSE") ?>' == self.p(
+            '<?py inline("LICENSE") ?>', fallback=True))
 
     def test_inline_not_found(self):
         import warnings

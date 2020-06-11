@@ -2,9 +2,8 @@
 """ ``lexer`` module
 """
 
-import re
 import os.path
-
+import re
 from warnings import warn
 
 from wheezy.html.ext.parser import parse_known_function

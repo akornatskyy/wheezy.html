@@ -12,7 +12,7 @@ if PY3:  # pragma: nocover
     str_type = str
     xrange = range
 else:  # pragma: nocover
-    str_type = unicode
+    str_type = unicode  # noqa: F821
     xrange = xrange
 
 
@@ -23,4 +23,4 @@ if PY3:  # pragma: nocover
 else:  # pragma: nocover
 
     def iteritems(d):
-        return d.iteritems()
+        return d.iteritems()  # noqa: B301

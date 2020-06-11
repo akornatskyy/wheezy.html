@@ -29,6 +29,7 @@ class NativeEscapeHTMLTestCase(unittest.TestCase, EscapeHTMLMixin):
         from wheezy.html.utils import escape_html_native
         self.escape = escape_html_native
 
+
 try:
     from wheezy.html.boost import escape_html
 

@@ -2,6 +2,7 @@
 
 import os
 import platform
+import re
 import sys
 
 from setuptools import setup
@@ -24,13 +25,13 @@ can_build_ext = getattr(
     lambda: None
 )() != 'PyPy' and 'java' not in sys.platform
 
-if can_build_ext:
+if can_build_ext:  # noqa: C901
     from distutils.core import Extension  # noqa
     from distutils.command.build_ext import build_ext  # noqa
     sources = [os.path.join('src', 'wheezy', 'html', 'boost.c')]
     extra['ext_modules'] += [Extension('wheezy.html.boost', sources)]
 
-    class build_ext_optional(build_ext):
+    class BuildExtOptional(build_ext):
 
         def run(self):
             from distutils.errors import DistutilsPlatformError
@@ -51,24 +52,29 @@ if can_build_ext:
             print(' WARNING '.center(44, '*'))
             print('An optional extension could not be compiled.')
 
-    extra['cmdclass'] = {'build_ext': build_ext_optional}
+    extra['cmdclass'] = {'build_ext': BuildExtOptional}
 
 README = open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
+VERSION = (
+    re.search(
+        r'__version__ = "(.+)"',
+        open("src/wheezy/html/__init__.py").read(),
+    )
+    .group(1)
+    .strip()
+)
 
 setup(
     name='wheezy.html',
-    version='0.1',
+    version=VERSION,
     description='A lightweight html rendering library',
     long_description=README,
     long_description_content_type='text/markdown',
     url='https://github.com/akornatskyy/wheezy.html',
-
     author='Andriy Kornatskyy',
-    author_email='andriy.kornatskyy at live.com',
-
+    author_email='andriy.kornatskyy@live.com',
     license='MIT',
     classifiers=[
-        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
@@ -83,6 +89,11 @@ setup(
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.2',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Internet :: WWW/HTTP',
@@ -96,14 +107,8 @@ setup(
     packages=['wheezy', 'wheezy.html', 'wheezy.html.ext'],
     package_dir={'': 'src'},
     namespace_packages=['wheezy'],
-
     zip_safe=False,
     extras_require={
-        'dev': [
-            'pytest',
-            'pytest-pep8',
-            'pytest-cov',
-        ],
         'mako': [
             'mako>=0.7.0'
         ],
@@ -117,7 +122,6 @@ setup(
             'wheezy.template>=0.1.88'
         ]
     },
-
     platforms='any',
     **extra
 )

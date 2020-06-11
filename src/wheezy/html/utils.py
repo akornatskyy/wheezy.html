@@ -27,6 +27,8 @@ def escape_html(s):
     except AttributeError:
         raise TypeError("expected string or unicode object, "
                         "%s found" % s.__class__.__name__)
+
+
 escape_html_native = escape_html
 
 try:
