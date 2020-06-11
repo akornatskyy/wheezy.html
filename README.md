@@ -1,7 +1,9 @@
 # wheezy.html
 
 [![Build Status](https://travis-ci.org/akornatskyy/wheezy.html.svg?branch=master)](https://travis-ci.org/akornatskyy/wheezy.html)
+[![Coverage Status](https://coveralls.io/repos/github/akornatskyy/wheezy.html/badge.svg?branch=master)](https://coveralls.io/github/akornatskyy/wheezy.html?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/wheezyhtml/badge/?version=latest)](https://wheezyhtml.readthedocs.io/en/latest/?badge=latest)
+[![pypi version](https://badge.fury.io/py/wheezy.html.svg)](https://badge.fury.io/py/wheezy.html)
 
 [wheezy.html](https://pypi.org/project/wheezy.html) is a
 [python](http://www.python.org) package written in pure Python code. It
@@ -30,7 +32,7 @@ independent of operating system. You can install it from
 [pypi](https://pypi.org/project/wheezy.html) site:
 
 ```sh
-pip install wheezy.html
+pip install -U wheezy.html
 ```
 
 If you would like take a benefit of template preprocessing for Mako,
