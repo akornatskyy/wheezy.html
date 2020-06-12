@@ -2,11 +2,10 @@
 Examples
 ========
 
-We start with a simple credential validation example. Before we proceed
-let's setup a `virtualenv`_ environment::
+Before we proceed let's setup a `virtualenv`_ environment, activate it and
+install::
 
-    $ virtualenv env
-    $ env/bin/easy_install wheezy.html
+    $ pip install wheezy.html
 
 
 .. _`virtualenv`: http://pypi.python.org/pypi/virtualenv
