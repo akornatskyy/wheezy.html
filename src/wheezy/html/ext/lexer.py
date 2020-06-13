@@ -1,4 +1,3 @@
-
 """ ``lexer`` module
 """
 
@@ -6,10 +5,12 @@ import os.path
 import re
 from warnings import warn
 
-from wheezy.html.ext.parser import parse_known_function
-from wheezy.html.ext.parser import parse_name
-from wheezy.html.ext.parser import parse_params
-from wheezy.html.ext.parser import parse_str_or_int
+from wheezy.html.ext.parser import (
+    parse_known_function,
+    parse_name,
+    parse_params,
+    parse_str_or_int,
+)
 from wheezy.html.utils import html_id
 
 
@@ -31,34 +32,37 @@ class Preprocessor(object):
     PREPEND = None
     RADIO = None
     SELECT = None
-    TEXTAREA = '<textarea id="%(id)s" name="%(name)s"%(attrs)s%(class)s>' \
-        '%(value)s</textarea>'
+    TEXTAREA = (
+        '<textarea id="%(id)s" name="%(name)s"%(attrs)s%(class)s>'
+        "%(value)s</textarea>"
+    )
 
     # region: preprocessing
 
     def __init__(self, widgets_pattern):
         self.widgets = {
-            'checkbox': self.checkbox,
-            'dropdown': self.dropdown,
-            'emptybox': self.emptybox,
-            'error': self.error,
-            'hidden': self.hidden,
-            'info': self.info,
-            'label': self.label,
-            'listbox': self.listbox,
-            'multiple_checkbox': self.multiple_checkbox,
-            'multiple_hidden': self.multiple_hidden,
-            'multiple_select': self.listbox,
-            'password': self.password,
-            'radio': self.radio,
-            'select': self.dropdown,
-            'textarea': self.textarea,
-            'textbox': self.textbox,
-            'warning': self.warning,
+            "checkbox": self.checkbox,
+            "dropdown": self.dropdown,
+            "emptybox": self.emptybox,
+            "error": self.error,
+            "hidden": self.hidden,
+            "info": self.info,
+            "label": self.label,
+            "listbox": self.listbox,
+            "multiple_checkbox": self.multiple_checkbox,
+            "multiple_hidden": self.multiple_hidden,
+            "multiple_select": self.listbox,
+            "password": self.password,
+            "radio": self.radio,
+            "select": self.dropdown,
+            "textarea": self.textarea,
+            "textbox": self.textbox,
+            "warning": self.warning,
         }
-        assert '%(widgets)s' in widgets_pattern
-        self.RE_WIDGETS = re.compile(widgets_pattern % {
-            'widgets': '|'.join(self.widgets.keys())})
+        assert "%(widgets)s" in widgets_pattern
+        self.RE_WIDGETS = re.compile(
+            widgets_pattern % {"widgets": "|".join(self.widgets.keys())}
+        )
 
     def __call__(self, text, **kwargs):
         """ Preprocess input text.
@@ -66,47 +70,51 @@ class Preprocessor(object):
         result = []
         start = 0
         for m in self.RE_WIDGETS.finditer(text):
-            result.append(text[start:m.start()])
+            result.append(text[start : m.start()])
             start = m.end()
             args = m.groupdict()
-            widget = self.widgets[args.pop('widget')]
+            widget = self.widgets[args.pop("widget")]
             result.append(widget(**args))
         if start > 0 and self.PREPEND:
             result.insert(0, self.PREPEND)
         result.append(text[start:])
-        return ''.join(result)
+        return "".join(result)
 
     # region: helpers
 
-    def expression(self, text, expr_filter=''):
+    def expression(self, text, expr_filter=""):
         """ Interpretate ``text`` as string expression or
             python expression.
         """
         value = parse_str_or_int(text)
         return value or self.EXPRESSION % {
-            'expr': text,
-            'expr_filter': expr_filter}
+            "expr": text,
+            "expr_filter": expr_filter,
+        }
 
     def join_attrs(self, kwargs):
         """ Joins ``kwargs`` as html attributes.
         """
         if kwargs:
-            return ' ' + ' '.join([
-                '%s="%s"' % (k, self.expression(kwargs[k]))
-                for k in sorted(kwargs.keys())])
+            return " " + " ".join(
+                [
+                    '%s="%s"' % (k, self.expression(kwargs[k]))
+                    for k in sorted(kwargs.keys())
+                ]
+            )
         else:
-            return ''
+            return ""
 
     def error_class(self, name, class_):
         """ Checks for error and add css class error.
         """
         if class_:
             return self.ERROR_CLASS1 % {
-                'name': name,
-                'class': self.expression(class_)}
+                "name": name,
+                "class": self.expression(class_),
+            }
         else:
-            return self.ERROR_CLASS0 % {
-                'name': name}
+            return self.ERROR_CLASS0 % {"name": name}
 
     # region: widgets
 
@@ -115,206 +123,218 @@ class Preprocessor(object):
         """
         name = parse_name(expr)
         return self.HIDDEN % {
-            'name': name,
-            'value': self.expression(expr, expr_filter)}
+            "name": name,
+            "value": self.expression(expr, expr_filter),
+        }
 
     def multiple_hidden(self, expr, params, expr_filter):
         """ Multiple HTML element input of type hidden.
         """
         name = parse_name(expr)
         return self.MULTIPLE_HIDDEN % {
-            'name': name,
-            'value': expr,
-            'expr_filter': expr_filter}
+            "name": name,
+            "value": expr,
+            "expr_filter": expr_filter,
+        }
 
     def label(self, expr, params, expr_filter):
         """ HTML element label.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        class_ = kwargs.pop('class', None)
+        class_ = kwargs.pop("class", None)
         return self.LABEL % {
-            'id': html_id(name),
-            'name': name,
-            'value': self.expression(args[0], expr_filter),
-            'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_)}
+            "id": html_id(name),
+            "name": name,
+            "value": self.expression(args[0], expr_filter),
+            "attrs": self.join_attrs(kwargs),
+            "class": self.error_class(name, class_),
+        }
 
     def emptybox(self, expr, params, expr_filter):
         """ HTML element input of type text. Value is rendered
             only if evaluated to boolean True.
         """
-        return self.input_helper(expr, params, expr_filter, 'empty')
+        return self.input_helper(expr, params, expr_filter, "empty")
 
     def textbox(self, expr, params, expr_filter):
         """ HTML element input of type text. Value is rendered
             only if it is not None or ''.
         """
-        return self.input_helper(expr, params, expr_filter, 'text')
+        return self.input_helper(expr, params, expr_filter, "text")
 
     def password(self, expr, params, expr_filter):
         """ HTML element input of type password. Value is rendered
             only if it is not None or ''.
         """
-        return self.input_helper(expr, params, expr_filter, 'password')
+        return self.input_helper(expr, params, expr_filter, "password")
 
     def input_helper(self, expr, params, expr_filter, input_type):
         """ HTML element input of type input_type.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        class_ = kwargs.pop('class', None)
-        if input_type == 'empty':
-            input_type = 'text'
-            condition = ''
+        class_ = kwargs.pop("class", None)
+        if input_type == "empty":
+            input_type = "text"
+            condition = ""
         else:
             condition = " not in (None, '')"
         value, func = parse_known_function(expr)
         return self.INPUT % {
-            'id': html_id(name),
-            'name': name,
-            'type': input_type,
-            'value': value,
-            'condition': condition,
-            'func': func,
-            'expr_filter': expr_filter,
-            'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_)}
+            "id": html_id(name),
+            "name": name,
+            "type": input_type,
+            "value": value,
+            "condition": condition,
+            "func": func,
+            "expr_filter": expr_filter,
+            "attrs": self.join_attrs(kwargs),
+            "class": self.error_class(name, class_),
+        }
 
     def textarea(self, expr, params, expr_filter):
         """ HTML element textarea.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        kwargs.setdefault('rows', '"9"')
-        kwargs.setdefault('cols', '"40"')
-        class_ = kwargs.pop('class', None)
+        kwargs.setdefault("rows", '"9"')
+        kwargs.setdefault("cols", '"40"')
+        class_ = kwargs.pop("class", None)
         return self.TEXTAREA % {
-            'id': html_id(name),
-            'name': name,
-            'value': self.expression(expr, expr_filter),
-            'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_)}
+            "id": html_id(name),
+            "name": name,
+            "value": self.expression(expr, expr_filter),
+            "attrs": self.join_attrs(kwargs),
+            "class": self.error_class(name, class_),
+        }
 
     def checkbox(self, expr, params, expr_filter):
         """ HTML element input of type checkbox.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        class_ = kwargs.pop('class', None)
+        class_ = kwargs.pop("class", None)
         return self.CHECKBOX % {
-            'id': html_id(name),
-            'name': name,
-            'value': expr,
-            'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_)}
+            "id": html_id(name),
+            "name": name,
+            "value": expr,
+            "attrs": self.join_attrs(kwargs),
+            "class": self.error_class(name, class_),
+        }
 
     def multiple_checkbox(self, expr, params, expr_filter):
         """ Multiple HTML element input of type checkbox.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        choices = kwargs.pop('choices')
-        class_ = kwargs.pop('class', None)
+        choices = kwargs.pop("choices")
+        class_ = kwargs.pop("class", None)
         return self.MULTIPLE_CHECKBOX % {
-            'id': html_id(name),
-            'name': name,
-            'choices': choices,
-            'value': expr,
-            'expr_filter': expr_filter,
-            'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_)}
+            "id": html_id(name),
+            "name": name,
+            "choices": choices,
+            "value": expr,
+            "expr_filter": expr_filter,
+            "attrs": self.join_attrs(kwargs),
+            "class": self.error_class(name, class_),
+        }
 
     def radio(self, expr, params, expr_filter):
         """ A group of HTML input elements of type radio.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        class_ = kwargs.pop('class', None)
-        choices = kwargs.pop('choices')
+        class_ = kwargs.pop("class", None)
+        choices = kwargs.pop("choices")
         return self.RADIO % {
-            'id': html_id(name),
-            'name': name,
-            'choices': choices,
-            'value': expr,
-            'expr_filter': expr_filter,
-            'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_)}
+            "id": html_id(name),
+            "name": name,
+            "choices": choices,
+            "value": expr,
+            "expr_filter": expr_filter,
+            "attrs": self.join_attrs(kwargs),
+            "class": self.error_class(name, class_),
+        }
 
     def dropdown(self, expr, params, expr_filter):
         """ HTML element select.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        class_ = kwargs.pop('class', None)
-        choices = kwargs.pop('choices')
+        class_ = kwargs.pop("class", None)
+        choices = kwargs.pop("choices")
         return self.SELECT % {
-            'id': html_id(name),
-            'name': name,
-            'choices': choices,
-            'value': expr,
-            'expr_filter': expr_filter,
-            'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_)}
+            "id": html_id(name),
+            "name": name,
+            "choices": choices,
+            "value": expr,
+            "expr_filter": expr_filter,
+            "attrs": self.join_attrs(kwargs),
+            "class": self.error_class(name, class_),
+        }
 
     def listbox(self, expr, params, expr_filter):
         """ HTML element select of type multiple.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        class_ = kwargs.pop('class', None)
-        choices = kwargs.pop('choices')
+        class_ = kwargs.pop("class", None)
+        choices = kwargs.pop("choices")
         return self.MULTIPLE_SELECT % {
-            'id': html_id(name),
-            'name': name,
-            'choices': choices,
-            'value': expr,
-            'expr_filter': expr_filter,
-            'attrs': self.join_attrs(kwargs),
-            'class': self.error_class(name, class_)}
+            "id": html_id(name),
+            "name": name,
+            "choices": choices,
+            "value": expr,
+            "expr_filter": expr_filter,
+            "attrs": self.join_attrs(kwargs),
+            "class": self.error_class(name, class_),
+        }
 
     def error(self, expr, params, expr_filter):
         """ General error message or field error.
         """
         name = parse_name(expr)
         args, kwargs = parse_params(params)
-        class_ = kwargs.pop('class', '')
+        class_ = kwargs.pop("class", "")
         if class_:
-            class_ = ' ' + self.expression(class_)
-        if '.' not in expr:
-            name = '__ERROR__'
-            kwargs['class'] = '"error-message' + class_ + '"'
+            class_ = " " + self.expression(class_)
+        if "." not in expr:
+            name = "__ERROR__"
+            kwargs["class"] = '"error-message' + class_ + '"'
         else:
-            kwargs['class'] = '"error' + class_ + '"'
+            kwargs["class"] = '"error' + class_ + '"'
         return self.ERROR % {
-            'name': name,
-            'attrs': self.join_attrs(kwargs),
-            'expr_filter': expr_filter}
+            "name": name,
+            "attrs": self.join_attrs(kwargs),
+            "expr_filter": expr_filter,
+        }
 
     def info(self, expr, params, expr_filter):
         """ General info message.
         """
-        return self.message_helper(expr, params, expr_filter, 'info')
+        return self.message_helper(expr, params, expr_filter, "info")
 
     def warning(self, expr, params, expr_filter):
         """ General warning message.
         """
-        return self.message_helper(expr, params, expr_filter, 'warning')
+        return self.message_helper(expr, params, expr_filter, "warning")
 
     def message_helper(self, expr, params, expr_filter, msg_class):
         """ General info message.
         """
         args, kwargs = parse_params(params)
-        class_ = kwargs.pop('class', '')
+        class_ = kwargs.pop("class", "")
         if class_:
-            class_ = ' ' + self.expression(class_)
-        if '.' not in expr:
-            class_ = '-message' + class_
-        kwargs['class'] = '"' + msg_class + class_ + '"'
+            class_ = " " + self.expression(class_)
+        if "." not in expr:
+            class_ = "-message" + class_
+        kwargs["class"] = '"' + msg_class + class_ + '"'
         return self.MESSAGE % {
-            'value': expr,
-            'info': self.expression(expr, expr_filter),
-            'attrs': self.join_attrs(kwargs)}
+            "value": expr,
+            "info": self.expression(expr, expr_filter),
+            "attrs": self.join_attrs(kwargs),
+        }
 
 
 class WhitespacePreprocessor(object):
@@ -331,12 +351,12 @@ class WhitespacePreprocessor(object):
                 start = 0
                 result = []
                 for m in ignore_rule.finditer(text):
-                    result.append(self.cleanup(text[start:m.start()]))
+                    result.append(self.cleanup(text[start : m.start()]))
                     result.append(m.group())
                     start = m.end()
                 else:
                     result.append(self.cleanup(text[start:]))
-                text = ''.join(result)
+                text = "".join(result)
             return text
         else:
             return self.cleanup(text)
@@ -361,25 +381,25 @@ class InlinePreprocessor(object):
         result = []
         start = 0
         for m in self.pattern.finditer(text):
-            result.append(text[start:m.start()])
+            result.append(text[start : m.start()])
             start = m.end()
-            path = m.group('path')
+            path = m.group("path")
             result.append(self(self.strategy(path)))
         if start:
             result.append(text[start:])
-            return ''.join(result)
+            return "".join(result)
         else:
             return text
 
     def strategy(self, path):
-        path = path.lstrip('/')
+        path = path.lstrip("/")
         for d in self.directories:
             abspath = os.path.abspath(os.path.join(d, path))
             if os.path.exists(abspath) and os.path.isfile(abspath):
-                f = open(abspath, 'r')
+                f = open(abspath, "r")
                 try:
                     return f.read()
                 finally:
                     f.close()
         warn('InlinePreprocessor: "%s" not found.' % path)
-        return ''
+        return ""

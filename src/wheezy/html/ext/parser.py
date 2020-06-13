@@ -1,25 +1,21 @@
-
 """ ``parser`` module
 """
 
 import re
 
+known_functions = ["format"]
 
-known_functions = ['format']
-
-RE_ARGS = re.compile(
-    r'\s*(?P<expr>(([\'"]).*?\3|.+?))\s*\,')
+RE_ARGS = re.compile(r'\s*(?P<expr>(([\'"]).*?\3|.+?))\s*\,')
 RE_KWARGS = re.compile(
-    r'\s*(?P<name>\w+)\s*=\s*(?P<expr>([\'"].*?[\'"]|.+?))\s*\,')
-RE_STR_VALUE = re.compile(
-    r'^[\'"](?P<value>.+)[\'"]$')
-RE_INT_VALUE = re.compile(
-    r'^(?P<value>(\d+))$')
-RE_FUNCTIONS = re.compile(
-    r'\.(%s)\(' % '|'.join(known_functions))
+    r'\s*(?P<name>\w+)\s*=\s*(?P<expr>([\'"].*?[\'"]|.+?))\s*\,'
+)
+RE_STR_VALUE = re.compile(r'^[\'"](?P<value>.+)[\'"]$')
+RE_INT_VALUE = re.compile(r"^(?P<value>(\d+))$")
+RE_FUNCTIONS = re.compile(r"\.(%s)\(" % "|".join(known_functions))
 RE_FUNCTION = re.compile(
-    r'(?P<context>.+?)\.(?P<name>%s)\((?P<args>(|.+))\)'
-    % '|'.join(known_functions))
+    r"(?P<context>.+?)\.(?P<name>%s)\((?P<args>(|.+))\)"
+    % "|".join(known_functions)
+)
 
 
 def parse_name(expr):
@@ -35,7 +31,7 @@ def parse_name(expr):
         'display_name'
     """
     expr = RE_FUNCTIONS.split(expr)[0]
-    name = expr.rsplit('.', 1)[-1]
+    name = expr.rsplit(".", 1)[-1]
     return name
 
 
@@ -56,9 +52,9 @@ ignore: value.strftime('%m-%d-%y'))")
     m = RE_FUNCTION.search(expr)
     if not m:
         return expr, expr
-    context = m.group('context')
-    name = m.group('name')
-    args = m.group('args') or 'None'
+    context = m.group("context")
+    name = m.group("name")
+    args = m.group("args") or "None"
     return context, "%s_value(%s, %s)" % (name, context, args)
 
 
@@ -71,9 +67,9 @@ def parse_kwargs(text):
         [('autocomplete', '"off"'), ('maxlength', '12')]
     """
     kwargs = {}
-    for m in RE_KWARGS.finditer(text + ','):
+    for m in RE_KWARGS.finditer(text + ","):
         groups = m.groupdict()
-        kwargs[groups['name'].rstrip('_')] = groups['expr']
+        kwargs[groups["name"].rstrip("_")] = groups["expr"]
     return kwargs
 
 
@@ -90,8 +86,8 @@ def parse_args(text):
         ['"Account Type:"']
     """
     args = []
-    for m in RE_ARGS.finditer(text + ','):
-        args.append(m.group('expr'))
+    for m in RE_ARGS.finditer(text + ","):
+        args.append(m.group("expr"))
     return args
 
 
@@ -107,11 +103,11 @@ def parse_params(text):
         >>> parse_params('"Account Type:", class_="inline"')
         (['"Account Type:"'], {'class': '"inline"'})
     """
-    if '=' in text:
-        args = text.split('=')[0]
-        if ',' in args:
-            args = args.rsplit(',', 1)[0]
-            kwargs = text[len(args):]
+    if "=" in text:
+        args = text.split("=")[0]
+        if "," in args:
+            args = args.rsplit(",", 1)[0]
+            kwargs = text[len(args) :]
             return parse_args(args), parse_kwargs(kwargs)
         else:
             return [], parse_kwargs(text)
@@ -132,10 +128,10 @@ def parse_str_or_int(text):
     """
     m = RE_STR_VALUE.match(text)
     if m:
-        return m.group('value')
+        return m.group("value")
     else:
         m = RE_INT_VALUE.match(text)
         if m:
-            return m.group('value')
+            return m.group("value")
         else:
             return None

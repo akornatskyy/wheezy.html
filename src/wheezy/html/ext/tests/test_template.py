@@ -1,4 +1,3 @@
-
 """ Unit tests for ``wheezy.html.ext.mako``.
 """
 
@@ -14,8 +13,8 @@ class TemplatePreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
     def assert_render_equal(self, template, expected, **kwargs):
         assert_template_equal(template, expected, **kwargs)
 
-    HIDDEN = '@model.pref.hidden()!h'
-    MULTIPLE_HIDDEN = '@model.prefs.multiple_hidden()'
+    HIDDEN = "@model.pref.hidden()!h"
+    MULTIPLE_HIDDEN = "@model.prefs.multiple_hidden()"
     LABEL = "@model.username.label('<i>*</i>Username:')"
     EMPTYBOX = "@model.amount.emptybox(class_='x')!s"
     TEXTBOX = "@model.username.textbox(autocomplete='off')"
@@ -39,43 +38,45 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
     """
 
     def setUp(self):
-        from wheezy.html.ext.template import WhitespaceExtension
-        from wheezy.html.ext.template import whitespace_preprocessor
+        from wheezy.html.ext.template import (
+            WhitespaceExtension,
+            whitespace_preprocessor,
+        )
+
         whitespace_preprocessor1 = WhitespaceExtension.preprocessors[0]
         self.preprocess = lambda text: whitespace_preprocessor(
-            whitespace_preprocessor1(text))
+            whitespace_preprocessor1(text)
+        )
 
     def test_whitespace(self):
         """
         """
-        assert '><' == self.preprocess('  >  < ')
-        assert '>\\\na' == self.preprocess('  >\n  a')
-        assert '' == self.preprocess('  ')
-        assert 'x' == self.preprocess('  x')
-        assert 'x' == self.preprocess('x  ')
-        assert '<code>\n 1\n 2 </code>' == self.preprocess(
-            '  <code> \n 1 \n 2 </code> ')
-        assert '<pre>\n </pre>' == self.preprocess('  <pre> \n </pre> ')
+        assert "><" == self.preprocess("  >  < ")
+        assert ">\\\na" == self.preprocess("  >\n  a")
+        assert "" == self.preprocess("  ")
+        assert "x" == self.preprocess("  x")
+        assert "x" == self.preprocess("x  ")
+        assert "<code>\n 1\n 2 </code>" == self.preprocess(
+            "  <code> \n 1 \n 2 </code> "
+        )
+        assert "<pre>\n </pre>" == self.preprocess("  <pre> \n </pre> ")
 
     def test_preserve_whitespace(self):
         # single space is preserved at the beginning of line
-        assert ' x' == self.preprocess(' x')
-        assert 'a\\\n b' == self.preprocess('a\n b')
-        assert '>\\\n a' == self.preprocess('>\n a')
+        assert " x" == self.preprocess(" x")
+        assert "a\\\n b" == self.preprocess("a\n b")
+        assert ">\\\n a" == self.preprocess(">\n a")
         # whitespace is preserved at the end of line
-        assert 'b  \\' == self.preprocess('  b  \\\n  ')
-        assert 'a \\\nb' == self.preprocess('  a \\\n  b  ')
-        assert 'a \\\nb' == self.preprocess('a\n  b')
+        assert "b  \\" == self.preprocess("  b  \\\n  ")
+        assert "a \\\nb" == self.preprocess("  a \\\n  b  ")
+        assert "a \\\nb" == self.preprocess("a\n  b")
 
     def test_postprocessor(self):
         from wheezy.html.ext.template import whitespace_postprocessor
-        tokens = [
-            ('1', 'markup', '  a')
-        ]
+
+        tokens = [("1", "markup", "  a")]
         whitespace_postprocessor(tokens)
-        assert tokens == [
-            ('1', 'markup', 'a')
-        ]
+        assert tokens == [("1", "markup", "a")]
 
 
 class InlineExtensionTestCase(unittest.TestCase):
@@ -84,7 +85,8 @@ class InlineExtensionTestCase(unittest.TestCase):
 
     def p(self, text, fallback=False):
         from wheezy.html.ext.template import InlineExtension
-        p = InlineExtension(searchpath=['.'], fallback=fallback)
+
+        p = InlineExtension(searchpath=["."], fallback=fallback)
         p = p.preprocessors[0]
         return p(text)
 
@@ -92,14 +94,16 @@ class InlineExtensionTestCase(unittest.TestCase):
         assert self.p('@inline("LICENSE")')
 
     def test_inline_fallback(self):
-        assert '@include("LICENSE")' == self.p('@inline("LICENSE")',
-                                               fallback=True)
+        assert '@include("LICENSE")' == self.p(
+            '@inline("LICENSE")', fallback=True
+        )
 
     def test_inline_not_found(self):
         import warnings
-        warnings.simplefilter('ignore')
+
+        warnings.simplefilter("ignore")
         assert not self.p('@inline("X")')
-        warnings.simplefilter('default')
+        warnings.simplefilter("default")
 
 
 try:
@@ -111,12 +115,15 @@ try:
 
     def assert_template_equal(text, expected, **kwargs):
         engine = Engine(
-            loader=DictLoader({
-                'x': "@require(model, errors, message, scm)\n" + text}),
-            extensions=[CoreExtension(), WidgetExtension()])
-        engine.global_vars.update({'h': html_escape})
-        value = engine.render('x', kwargs, {}, {})
+            loader=DictLoader(
+                {"x": "@require(model, errors, message, scm)\n" + text}
+            ),
+            extensions=[CoreExtension(), WidgetExtension()],
+        )
+        engine.global_vars.update({"h": html_escape})
+        value = engine.render("x", kwargs, {}, {})
         assert expected == value
+
 
 except ImportError:  # pragma: nocover
 

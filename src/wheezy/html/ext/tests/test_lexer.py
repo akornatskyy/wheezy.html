@@ -1,4 +1,3 @@
-
 """ Unit tests for ``wheezy.html.ext.lexer``.
 """
 
@@ -6,10 +5,10 @@ import unittest
 
 
 def generate_white_space_patterns():  # pragma: nocover
-    for t in ['x', ' x', 'x ', ' x ', '[ x', 'x ]', '[ x ]', 'xx', 'x x']:
-        for s in [' ', '\t', '\n', ' \t', ' \n', '\n ']:
+    for t in ["x", " x", "x ", " x ", "[ x", "x ]", "[ x ]", "xx", "x x"]:
+        for s in [" ", "\t", "\n", " \t", " \n", "\n "]:
             for n in [1, 3]:
-                yield t.replace(' ', s * n).replace('x', '%(w)s')
+                yield t.replace(" ", s * n).replace("x", "%(w)s")
 
 
 class PreprocessorInitTestCase(unittest.TestCase):
@@ -21,19 +20,23 @@ class PreprocessorInitTestCase(unittest.TestCase):
             widgets.
         """
         from wheezy.html.ext.lexer import Preprocessor
-        self.assertRaises(AssertionError, lambda: Preprocessor(''))
+
+        self.assertRaises(AssertionError, lambda: Preprocessor(""))
 
     def test_widgets(self):
         """ Ensure widgets supported.
         """
         from wheezy.html.ext.lexer import Preprocessor
-        p = Preprocessor('%(widgets)s')
+
+        p = Preprocessor("%(widgets)s")
         assert 17 == len(p.widgets)
-        assert 'checkbox|dropdown|emptybox|error|hidden|info|'\
-            'label|listbox|multiple_checkbox|multiple_hidden|'\
-            'multiple_select|password|radio|select|textarea|'\
-            'textbox|warning' == '|'.join(
-                sorted(p.RE_WIDGETS.pattern.split('|')))
+        assert (
+            "checkbox|dropdown|emptybox|error|hidden|info|"
+            "label|listbox|multiple_checkbox|multiple_hidden|"
+            "multiple_select|password|radio|select|textarea|"
+            "textbox|warning"
+            == "|".join(sorted(p.RE_WIDGETS.pattern.split("|")))
+        )
 
 
 class PreprocessorHelpersTestCase(unittest.TestCase):
@@ -42,42 +45,49 @@ class PreprocessorHelpersTestCase(unittest.TestCase):
 
     def setUp(self):
         from wheezy.html.ext.lexer import Preprocessor
-        self.p = Preprocessor('%(widgets)s')
+
+        self.p = Preprocessor("%(widgets)s")
 
     def test_expression(self):
         """ Expression distinguish text, number and python object access.
             Python object access is filtered.
         """
-        self.p.EXPRESSION = '%(expr)s|%(expr_filter)s'
+        self.p.EXPRESSION = "%(expr)s|%(expr_filter)s"
 
-        assert 'text' == self.p.expression('"text"')
-        assert '100' == self.p.expression('100')
-        assert 'user.name|filter' == self.p.expression('user.name', 'filter')
+        assert "text" == self.p.expression('"text"')
+        assert "100" == self.p.expression("100")
+        assert "user.name|filter" == self.p.expression("user.name", "filter")
 
     def test_join_attrs(self):
         """ Ensure HTML attributes are joined correctly.
         """
-        assert '' == self.p.join_attrs({})
+        assert "" == self.p.join_attrs({})
 
-        self.p.EXPRESSION = '%(expr)s%(expr_filter)s'
-        assert ' autocomplete="off" disabled="${disabled}" ' \
-            'maxlength="100"' == self.p.join_attrs({
-                'autocomplete': 'off',
-                'maxlength': '100',
-                'disabled': '${disabled}'})
+        self.p.EXPRESSION = "%(expr)s%(expr_filter)s"
+        assert (
+            ' autocomplete="off" disabled="${disabled}" '
+            'maxlength="100"'
+            == self.p.join_attrs(
+                {
+                    "autocomplete": "off",
+                    "maxlength": "100",
+                    "disabled": "${disabled}",
+                }
+            )
+        )
 
     def test_error_class_no_class(self):
         """ Substitute ``name`` in case ``class_`` is undefined.
         """
-        self.p.ERROR_CLASS0 = '=%(name)s='
-        assert '=x=' == self.p.error_class('x', class_='')
+        self.p.ERROR_CLASS0 = "=%(name)s="
+        assert "=x=" == self.p.error_class("x", class_="")
 
     def test_error_class(self):
         """ Substitute ``name`` and ``class`` in case ``class_``
             is defined.
         """
-        self.p.ERROR_CLASS1 = '=%(name)s %(class)s='
-        assert '=x c=' == self.p.error_class('x', class_='"c"')
+        self.p.ERROR_CLASS1 = "=%(name)s %(class)s="
+        assert "=x c=" == self.p.error_class("x", class_='"c"')
 
 
 class PreprocessorWidgetsTestCase(unittest.TestCase):
@@ -86,23 +96,24 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
 
     def setUp(self):
         from wheezy.html.ext.lexer import Preprocessor
-        self.p = Preprocessor('%(widgets)s')
-        self.p.EXPRESSION = '%(expr)s%(expr_filter)s'
-        self.p.ERROR_CLASS1 = '%(name)s %(class)s'
+
+        self.p = Preprocessor("%(widgets)s")
+        self.p.EXPRESSION = "%(expr)s%(expr_filter)s"
+        self.p.ERROR_CLASS1 = "%(name)s %(class)s"
 
     def test_hidden(self):
         """ hidden widget
         """
-        self.p.HIDDEN = '%(name)s %(value)s'
-        assert 'pref model.pref|f' == self.p.hidden(
-            'model.pref', None, '|f')
+        self.p.HIDDEN = "%(name)s %(value)s"
+        assert "pref model.pref|f" == self.p.hidden("model.pref", None, "|f")
 
     def test_multiple_hidden(self):
         """ multiple_hidden widget
         """
-        self.p.MULTIPLE_HIDDEN = '%(name)s %(value)s%(expr_filter)s'
-        assert 'prefs model.prefs|f' == self.p.multiple_hidden(
-            'model.prefs', None, '|f')
+        self.p.MULTIPLE_HIDDEN = "%(name)s %(value)s%(expr_filter)s"
+        assert "prefs model.prefs|f" == self.p.multiple_hidden(
+            "model.prefs", None, "|f"
+        )
 
     def test_label(self):
         """ label widget
@@ -120,8 +131,9 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = User:
             attrs =  autocomplete="off"
             class = user_name x
-        """ == self.p.label('model.user_name',
-                            '"User:", class="x", autocomplete="off"', '|f')
+        """ == self.p.label(
+            "model.user_name", '"User:", class="x", autocomplete="off"', "|f"
+        )
 
     def test_emptybox(self):
         """ emptybox widget
@@ -147,8 +159,9 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             expr_filter = |f
             attrs =  autocomplete="off"
             class = user_name x
-        """ == self.p.emptybox('model.user_name',
-                               'class="x", autocomplete="off"', '|f')
+        """ == self.p.emptybox(
+            "model.user_name", 'class="x", autocomplete="off"', "|f"
+        )
 
     def test_textbox(self):
         """ textbox widget
@@ -174,8 +187,9 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             expr_filter = |f
             attrs =  autocomplete="off"
             class = user_name x
-        """ == self.p.textbox('model.user_name',
-                              'class="x", autocomplete="off"', '|f')
+        """ == self.p.textbox(
+            "model.user_name", 'class="x", autocomplete="off"', "|f"
+        )
 
     def test_password(self):
         """ password widget
@@ -201,8 +215,9 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             expr_filter = |f
             attrs =  autocomplete="off"
             class = user_pwd x
-        """ == self.p.password('model.user_pwd',
-                               'class="x", autocomplete="off"', '|f')
+        """ == self.p.password(
+            "model.user_pwd", 'class="x", autocomplete="off"', "|f"
+        )
 
     def test_textarea(self):
         """ textarea widget
@@ -220,8 +235,9 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = model.comment|f
             attrs =  autocomplete="off" cols="40" rows="9"
             class = comment x
-        """ == self.p.textarea('model.comment',
-                               'class="x", autocomplete="off"', '|f')
+        """ == self.p.textarea(
+            "model.comment", 'class="x", autocomplete="off"', "|f"
+        )
 
     def test_checkbox(self):
         """ checkbox widget
@@ -239,8 +255,9 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = model.accepts
             attrs =  autocomplete="off"
             class = accepts x
-        """ == self.p.checkbox('model.accepts',
-                               'class="x", autocomplete="off"', '|f')
+        """ == self.p.checkbox(
+            "model.accepts", 'class="x", autocomplete="off"', "|f"
+        )
 
     def test_multiple_checkbox(self):
         """ multiple_checkbox widget
@@ -263,8 +280,8 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             attrs =  cursor="auto"
             class = colors x
         """ == self.p.multiple_checkbox(
-            'model.colors',
-            'class="x", cursor="auto", choices=${lst}', '|f')
+            "model.colors", 'class="x", cursor="auto", choices=${lst}', "|f"
+        )
 
     def test_radio(self):
         """ radio widget
@@ -286,8 +303,9 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             expr_filter = |f
             attrs =  cursor="auto"
             class = yes_no x
-        """ == self.p.radio('model.yes_no',
-                            'class="x", cursor="auto", choices=${lst}', '|f')
+        """ == self.p.radio(
+            "model.yes_no", 'class="x", cursor="auto", choices=${lst}', "|f"
+        )
 
     def test_dropdown(self):
         """ dropdown widget
@@ -310,8 +328,10 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             attrs =  cursor="auto"
             class = security_question x
         """ == self.p.dropdown(
-            'model.security_question',
-            'class="x", cursor="auto", choices=${lst}', '|f')
+            "model.security_question",
+            'class="x", cursor="auto", choices=${lst}',
+            "|f",
+        )
 
     def test_listbox(self):
         """ listbox widget
@@ -334,8 +354,8 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             attrs =  cursor="auto"
             class = languages x
         """ == self.p.listbox(
-            'model.languages',
-            'class="x", cursor="auto", choices=${lst}', '|f')
+            "model.languages", 'class="x", cursor="auto", choices=${lst}', "|f"
+        )
 
     def test_error(self):
         """ error widget
@@ -349,26 +369,30 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             name = user_name
             attrs =  class="error" cursor="auto"
             expr_filter = |f
-        """ == self.p.error('model.user_name',
-                            'cursor="auto"', '|f')
+        """ == self.p.error(
+            "model.user_name", 'cursor="auto"', "|f"
+        )
         assert """
             name = user_name
             attrs =  class="error x" cursor="auto"
             expr_filter = |f
-        """ == self.p.error('model.user_name',
-                            'class="x", cursor="auto"', '|f')
+        """ == self.p.error(
+            "model.user_name", 'class="x", cursor="auto"', "|f"
+        )
         assert """
             name = __ERROR__
             attrs =  class="error-message" cursor="auto"
             expr_filter = |f
-        """ == self.p.error('model',
-                            'cursor="auto"', '|f')
+        """ == self.p.error(
+            "model", 'cursor="auto"', "|f"
+        )
         assert """
             name = __ERROR__
             attrs =  class="error-message x" cursor="auto"
             expr_filter = |f
-        """ == self.p.error('model',
-                            'class="x", cursor="auto"', '|f')
+        """ == self.p.error(
+            "model", 'class="x", cursor="auto"', "|f"
+        )
 
     def test_info(self):
         """ info widget
@@ -382,22 +406,30 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = model.username
             info = model.username|f
             attrs =  class="info" cursor="auto"
-        """ == self.p.info('model.username', 'cursor="auto"', '|f')
+        """ == self.p.info(
+            "model.username", 'cursor="auto"', "|f"
+        )
         assert """
             value = model.username
             info = model.username|f
             attrs =  class="info x" cursor="auto"
-        """ == self.p.info('model.username', 'class="x", cursor="auto"', '|f')
+        """ == self.p.info(
+            "model.username", 'class="x", cursor="auto"', "|f"
+        )
         assert """
             value = model
             info = model|f
             attrs =  class="info-message" cursor="auto"
-        """ == self.p.info('model', 'cursor="auto"', '|f')
+        """ == self.p.info(
+            "model", 'cursor="auto"', "|f"
+        )
         assert """
             value = model
             info = model|f
             attrs =  class="info-message x" cursor="auto"
-        """ == self.p.info('model', 'class="x", cursor="auto"', '|f')
+        """ == self.p.info(
+            "model", 'class="x", cursor="auto"', "|f"
+        )
 
     def test_warning(self):
         """ warning widget
@@ -411,38 +443,47 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = model.username
             info = model.username|f
             attrs =  class="warning" cursor="auto"
-        """ == self.p.warning('model.username', 'cursor="auto"', '|f')
+        """ == self.p.warning(
+            "model.username", 'cursor="auto"', "|f"
+        )
         assert """
             value = model.username
             info = model.username|f
             attrs =  class="warning x" cursor="auto"
-        """ == self.p.warning('model.username',
-                              'class="x", cursor="auto"', '|f')
+        """ == self.p.warning(
+            "model.username", 'class="x", cursor="auto"', "|f"
+        )
         assert """
             value = model
             info = model|f
             attrs =  class="warning-message" cursor="auto"
-        """ == self.p.warning('model', 'cursor="auto"', '|f')
+        """ == self.p.warning(
+            "model", 'cursor="auto"', "|f"
+        )
         assert """
             value = model
             info = model|f
             attrs =  class="warning-message x" cursor="auto"
-        """ == self.p.warning('model', 'class="x", cursor="auto"', '|f')
+        """ == self.p.warning(
+            "model", 'class="x", cursor="auto"', "|f"
+        )
 
 
 class PreprocessorMixin(object):
     """ Test the ``Preprocessor``.
     """
+
     from operator import itemgetter
 
-    WHITE_SPACE_PATTERNS = ['%(w)s']
+    WHITE_SPACE_PATTERNS = ["%(w)s"]
 
     class Dummy(object):
         pass
 
-    scm = sorted({
-        'git': 'Git', 'hg': 'Mercurial', 'svn': 'SVN'
-    }.items(), key=itemgetter(1))
+    scm = sorted(
+        {"git": "Git", "hg": "Mercurial", "svn": "SVN"}.items(),
+        key=itemgetter(1),
+    )
 
     def setUp(self):
         self.m = PreprocessorMixin.Dummy()
@@ -456,128 +497,164 @@ class PreprocessorMixin(object):
         """
         for wsp in self.WHITE_SPACE_PATTERNS:
             self.assert_render_equal(
-                wsp % {'w': widget},
-                wsp % {'w': html},
-                model=self.m, errors=self.e, scm=self.scm,
-                message=(hasattr(self.m, 'message') and self.m.message or ''))
+                wsp % {"w": widget},
+                wsp % {"w": html},
+                model=self.m,
+                errors=self.e,
+                scm=self.scm,
+                message=(hasattr(self.m, "message") and self.m.message or ""),
+            )
 
     def test_hidden(self):
         """ hidden widget.
         """
-        self.m.pref = 'ab<c>'
-        self.render(self.HIDDEN,
-                    '<input type="hidden" name="pref" value="ab&lt;c&gt;" />')
+        self.m.pref = "ab<c>"
+        self.render(
+            self.HIDDEN,
+            '<input type="hidden" name="pref" value="ab&lt;c&gt;" />',
+        )
 
     def test_multiple_hidden(self):
         """ multiple_hidden widget.
         """
-        self.m.prefs = ['a', 'b']
-        self.render(self.MULTIPLE_HIDDEN,
-                    '<input type="hidden" name="prefs" value="a" />'
-                    '<input type="hidden" name="prefs" value="b" />')
+        self.m.prefs = ["a", "b"]
+        self.render(
+            self.MULTIPLE_HIDDEN,
+            '<input type="hidden" name="prefs" value="a" />'
+            '<input type="hidden" name="prefs" value="b" />',
+        )
 
     def test_label(self):
         """ label widget.
         """
-        self.m.username = ''
-        self.render(self.LABEL,
-                    '<label for="username"><i>*</i>Username:</label>')
-        self.e['username'] = 'Error'
-        self.render(self.LABEL,
-                    '<label for="username" class="error">'
-                    '<i>*</i>Username:</label>')
+        self.m.username = ""
+        self.render(
+            self.LABEL, '<label for="username"><i>*</i>Username:</label>'
+        )
+        self.e["username"] = "Error"
+        self.render(
+            self.LABEL,
+            '<label for="username" class="error">' "<i>*</i>Username:</label>",
+        )
 
     def test_emptybox(self):
         """ emptybox widget.
         """
         self.m.amount = 10
-        self.render(self.EMPTYBOX,
-                    '<input id="amount" name="amount" type="text" class="x" '
-                    'value="10" />')
+        self.render(
+            self.EMPTYBOX,
+            '<input id="amount" name="amount" type="text" class="x" '
+            'value="10" />',
+        )
         self.m.amount = 0
         self.render(
             self.EMPTYBOX,
-            '<input id="amount" name="amount" type="text" class="x" />')
-        self.e['amount'] = 'Error'
-        self.render(self.EMPTYBOX,
-                    '<input id="amount" name="amount" type="text"'
-                    ' class="error x" />')
+            '<input id="amount" name="amount" type="text" class="x" />',
+        )
+        self.e["amount"] = "Error"
+        self.render(
+            self.EMPTYBOX,
+            '<input id="amount" name="amount" type="text"'
+            ' class="error x" />',
+        )
 
     def test_textbox(self):
         """ textbox widget.
         """
-        self.m.username = 'John'
-        self.render(self.TEXTBOX,
-                    '<input id="username" name="username" type="text" '
-                    'autocomplete="off" value="John" />')
-        self.m.username = ''
-        self.render(self.TEXTBOX,
-                    '<input id="username" name="username" type="text" '
-                    'autocomplete="off" />')
-        self.e['username'] = 'Error'
-        self.render(self.TEXTBOX,
-                    '<input id="username" name="username" type="text" '
-                    'autocomplete="off" class="error" />')
+        self.m.username = "John"
+        self.render(
+            self.TEXTBOX,
+            '<input id="username" name="username" type="text" '
+            'autocomplete="off" value="John" />',
+        )
+        self.m.username = ""
+        self.render(
+            self.TEXTBOX,
+            '<input id="username" name="username" type="text" '
+            'autocomplete="off" />',
+        )
+        self.e["username"] = "Error"
+        self.render(
+            self.TEXTBOX,
+            '<input id="username" name="username" type="text" '
+            'autocomplete="off" class="error" />',
+        )
 
     def test_password(self):
         """ password widget.
         """
-        self.m.pwd = ''
-        self.render(self.PASSWORD,
-                    '<input id="pwd" name="pwd" type="password" />')
-        self.e['pwd'] = 'Error'
+        self.m.pwd = ""
+        self.render(
+            self.PASSWORD, '<input id="pwd" name="pwd" type="password" />'
+        )
+        self.e["pwd"] = "Error"
         self.render(
             self.PASSWORD,
-            '<input id="pwd" name="pwd" type="password" class="error" />')
+            '<input id="pwd" name="pwd" type="password" class="error" />',
+        )
 
     def test_textarea(self):
         """ textarea widget.
         """
-        self.m.comment = 'x'
-        self.render(self.TEXTAREA,
-                    '<textarea id="comment" name="comment" '
-                    'cols="40" rows="9">x</textarea>')
-        self.e['comment'] = 'Error'
-        self.render(self.TEXTAREA,
-                    '<textarea id="comment" name="comment" '
-                    'cols="40" rows="9" class="error">x</textarea>')
+        self.m.comment = "x"
+        self.render(
+            self.TEXTAREA,
+            '<textarea id="comment" name="comment" '
+            'cols="40" rows="9">x</textarea>',
+        )
+        self.e["comment"] = "Error"
+        self.render(
+            self.TEXTAREA,
+            '<textarea id="comment" name="comment" '
+            'cols="40" rows="9" class="error">x</textarea>',
+        )
 
     def test_checkbox(self):
         """ checkbox widget.
         """
         self.m.remember_me = True
-        self.render(self.CHECKBOX,
-                    '<input id="remember-me" name="remember_me" '
-                    'type="checkbox" value="1" checked="checked" />')
+        self.render(
+            self.CHECKBOX,
+            '<input id="remember-me" name="remember_me" '
+            'type="checkbox" value="1" checked="checked" />',
+        )
         self.m.remember_me = False
-        self.render(self.CHECKBOX,
-                    '<input id="remember-me" name="remember_me" '
-                    'type="checkbox" value="1" />')
-        self.e['remember_me'] = 'Error'
-        self.render(self.CHECKBOX,
-                    '<input id="remember-me" name="remember_me" '
-                    'type="checkbox" value="1" class="error" />')
+        self.render(
+            self.CHECKBOX,
+            '<input id="remember-me" name="remember_me" '
+            'type="checkbox" value="1" />',
+        )
+        self.e["remember_me"] = "Error"
+        self.render(
+            self.CHECKBOX,
+            '<input id="remember-me" name="remember_me" '
+            'type="checkbox" value="1" class="error" />',
+        )
 
     def test_multiple_checkbox(self):
         """ multiple_checkbox widget.
         """
-        self.m.scm = ['hg', 'git']
-        self.render(self.MULTIPLE_CHECKBOX,
-                    '<label><input id="scm" name="scm" type="checkbox" '
-                    'value="1" checked="checked" />Git</label>'
-                    '<label><input id="scm" name="scm" type="checkbox" '
-                    'value="1" checked="checked" />Mercurial</label>'
-                    '<label><input id="scm" name="scm" type="checkbox" '
-                    'value="1" />SVN</label>')
+        self.m.scm = ["hg", "git"]
+        self.render(
+            self.MULTIPLE_CHECKBOX,
+            '<label><input id="scm" name="scm" type="checkbox" '
+            'value="1" checked="checked" />Git</label>'
+            '<label><input id="scm" name="scm" type="checkbox" '
+            'value="1" checked="checked" />Mercurial</label>'
+            '<label><input id="scm" name="scm" type="checkbox" '
+            'value="1" />SVN</label>',
+        )
         self.m.scm = []
-        self.render(self.MULTIPLE_CHECKBOX,
-                    '<label><input id="scm" name="scm" type="checkbox" '
-                    'value="1" />Git</label>'
-                    '<label><input id="scm" name="scm" type="checkbox" '
-                    'value="1" />Mercurial</label>'
-                    '<label><input id="scm" name="scm" type="checkbox" '
-                    'value="1" />SVN</label>')
-        self.e['scm'] = 'Error'
+        self.render(
+            self.MULTIPLE_CHECKBOX,
+            '<label><input id="scm" name="scm" type="checkbox" '
+            'value="1" />Git</label>'
+            '<label><input id="scm" name="scm" type="checkbox" '
+            'value="1" />Mercurial</label>'
+            '<label><input id="scm" name="scm" type="checkbox" '
+            'value="1" />SVN</label>',
+        )
+        self.e["scm"] = "Error"
         self.render(
             self.MULTIPLE_CHECKBOX,
             '<label class="error"><input id="scm" name="scm" '
@@ -585,73 +662,86 @@ class PreprocessorMixin(object):
             '<label class="error"><input id="scm" name="scm" '
             'type="checkbox" value="1" class="error" />Mercurial</label>'
             '<label class="error"><input id="scm" name="scm" '
-            'type="checkbox" value="1" class="error" />SVN</label>')
+            'type="checkbox" value="1" class="error" />SVN</label>',
+        )
 
     def test_radio(self):
         """ radio widget.
         """
-        self.m.scm = 'hg'
-        self.render(self.RADIO,
-                    '<label><input type="radio" name="scm" value="git" />'
-                    'Git</label>'
-                    '<label><input type="radio" name="scm" value="hg" '
-                    'checked="checked" />Mercurial</label>'
-                    '<label><input type="radio" name="scm" value="svn" />'
-                    'SVN</label>')
-        self.m.scm = ''
-        self.render(self.RADIO,
-                    '<label><input type="radio" name="scm" value="git" />'
-                    'Git</label>'
-                    '<label><input type="radio" name="scm" value="hg" />'
-                    'Mercurial</label>'
-                    '<label><input type="radio" name="scm" value="svn" />'
-                    'SVN</label>')
-        self.e['scm'] = 'Error'
-        self.render(self.RADIO,
-                    '<label class="error"><input type="radio" name="scm" '
-                    'value="git" class="error" />Git</label>'
-                    '<label class="error"><input type="radio" name="scm" '
-                    'value="hg" class="error" />Mercurial</label>'
-                    '<label class="error"><input type="radio" name="scm" '
-                    'value="svn" class="error" />SVN</label>')
+        self.m.scm = "hg"
+        self.render(
+            self.RADIO,
+            '<label><input type="radio" name="scm" value="git" />'
+            "Git</label>"
+            '<label><input type="radio" name="scm" value="hg" '
+            'checked="checked" />Mercurial</label>'
+            '<label><input type="radio" name="scm" value="svn" />'
+            "SVN</label>",
+        )
+        self.m.scm = ""
+        self.render(
+            self.RADIO,
+            '<label><input type="radio" name="scm" value="git" />'
+            "Git</label>"
+            '<label><input type="radio" name="scm" value="hg" />'
+            "Mercurial</label>"
+            '<label><input type="radio" name="scm" value="svn" />'
+            "SVN</label>",
+        )
+        self.e["scm"] = "Error"
+        self.render(
+            self.RADIO,
+            '<label class="error"><input type="radio" name="scm" '
+            'value="git" class="error" />Git</label>'
+            '<label class="error"><input type="radio" name="scm" '
+            'value="hg" class="error" />Mercurial</label>'
+            '<label class="error"><input type="radio" name="scm" '
+            'value="svn" class="error" />SVN</label>',
+        )
 
     def test_dropdown(self):
         """ dropdown widget.
         """
-        self.m.scm = 'hg'
+        self.m.scm = "hg"
         self.render(
             self.DROPDOWN,
             '<select id="scm" name="scm">'
             '<option value="git">Git</option>'
             '<option value="hg" selected="selected">Mercurial</option>'
             '<option value="svn">SVN</option>'
-            '</select>')
-        self.m.scm = ''
-        self.render(self.DROPDOWN,
-                    '<select id="scm" name="scm">'
-                    '<option value="git">Git</option>'
-                    '<option value="hg">Mercurial</option>'
-                    '<option value="svn">SVN</option>'
-                    '</select>')
-        self.e['scm'] = 'Error'
-        self.render(self.DROPDOWN,
-                    '<select id="scm" name="scm" class="error">'
-                    '<option value="git">Git</option>'
-                    '<option value="hg">Mercurial</option>'
-                    '<option value="svn">SVN</option>'
-                    '</select>')
+            "</select>",
+        )
+        self.m.scm = ""
+        self.render(
+            self.DROPDOWN,
+            '<select id="scm" name="scm">'
+            '<option value="git">Git</option>'
+            '<option value="hg">Mercurial</option>'
+            '<option value="svn">SVN</option>'
+            "</select>",
+        )
+        self.e["scm"] = "Error"
+        self.render(
+            self.DROPDOWN,
+            '<select id="scm" name="scm" class="error">'
+            '<option value="git">Git</option>'
+            '<option value="hg">Mercurial</option>'
+            '<option value="svn">SVN</option>'
+            "</select>",
+        )
 
     def test_listbox(self):
         """ listbox widget.
         """
-        self.m.scm = ('hg', 'svn')
+        self.m.scm = ("hg", "svn")
         self.render(
             self.LISTBOX,
             '<select id="scm" name="scm" multiple="multiple" class="x">'
             '<option value="git">Git</option>'
             '<option value="hg" selected="selected">Mercurial</option>'
             '<option value="svn" selected="selected">SVN</option>'
-            '</select>')
+            "</select>",
+        )
         self.m.scm = []
         self.render(
             self.LISTBOX,
@@ -659,59 +749,66 @@ class PreprocessorMixin(object):
             '<option value="git">Git</option>'
             '<option value="hg">Mercurial</option>'
             '<option value="svn">SVN</option>'
-            '</select>')
-        self.e['scm'] = 'Error'
-        self.render(self.LISTBOX,
-                    '<select id="scm" name="scm" multiple="multiple" '
-                    'class="error x">'
-                    '<option value="git">Git</option>'
-                    '<option value="hg">Mercurial</option>'
-                    '<option value="svn">SVN</option>'
-                    '</select>')
+            "</select>",
+        )
+        self.e["scm"] = "Error"
+        self.render(
+            self.LISTBOX,
+            '<select id="scm" name="scm" multiple="multiple" '
+            'class="error x">'
+            '<option value="git">Git</option>'
+            '<option value="hg">Mercurial</option>'
+            '<option value="svn">SVN</option>'
+            "</select>",
+        )
 
     def test_attribute_error(self):
         """ attribute error widget.
         """
-        self.render(self.ERROR, '')
-        self.e['username'] = ['Error1', 'Error2']
+        self.render(self.ERROR, "")
+        self.e["username"] = ["Error1", "Error2"]
         self.render(self.ERROR, '<span class="error">Error2</span>')
 
     def test_general_error(self):
         """ general error widget.
         """
-        self.render(self.GENERAL_ERROR, '')
-        self.e['__ERROR__'] = ['Error1', 'Error2']
-        self.render(self.GENERAL_ERROR,
-                    '<span class="error-message">Error2</span>')
+        self.render(self.GENERAL_ERROR, "")
+        self.e["__ERROR__"] = ["Error1", "Error2"]
+        self.render(
+            self.GENERAL_ERROR, '<span class="error-message">Error2</span>'
+        )
 
     def test_attribute_info(self):
         """ attribute info widget.
         """
         self.m.user_info = None
-        self.render(self.INFO, '')
-        self.m.user_info = 'Info'
+        self.render(self.INFO, "")
+        self.m.user_info = "Info"
         self.render(self.INFO, '<span class="info">Info</span>')
 
     def test_general_info(self):
         """ general info widget.
         """
-        self.render(self.GENERAL_INFO, '')
-        self.m.message = 'Message'
-        self.render(self.GENERAL_INFO,
-                    '<span class="info-message">Message</span>')
+        self.render(self.GENERAL_INFO, "")
+        self.m.message = "Message"
+        self.render(
+            self.GENERAL_INFO, '<span class="info-message">Message</span>'
+        )
 
     def test_attribute_warning(self):
         """ attribute warning widget.
         """
         self.m.user_info = None
-        self.render(self.WARNING, '')
-        self.m.user_info = 'Warn'
+        self.render(self.WARNING, "")
+        self.m.user_info = "Warn"
         self.render(self.WARNING, '<span class="warning">Warn</span>')
 
     def test_general_warning(self):
         """ general warning widget.
         """
-        self.render(self.GENERAL_WARNING, '')
-        self.m.message = 'Message'
-        self.render(self.GENERAL_WARNING,
-                    '<span class="warning-message">Message</span>')
+        self.render(self.GENERAL_WARNING, "")
+        self.m.message = "Message"
+        self.render(
+            self.GENERAL_WARNING,
+            '<span class="warning-message">Message</span>',
+        )

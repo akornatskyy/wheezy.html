@@ -1,4 +1,3 @@
-
 """ Unit tests for ``wheezy.html.utils``.
 """
 
@@ -6,7 +5,6 @@ import unittest
 
 
 class EscapeHTMLMixin:
-
     def test_none(self):
         assert "" == self.escape(None)
 
@@ -17,16 +15,16 @@ class EscapeHTMLMixin:
         assert "abc" == self.escape("abc")
 
     def test_escape(self):
-        assert "&amp;&lt;&gt;&quot;\'" == self.escape('&<>"\'')
+        assert "&amp;&lt;&gt;&quot;'" == self.escape("&<>\"'")
 
     def test_type_error(self):
         self.assertRaises(TypeError, lambda: self.escape(1))
 
 
 class NativeEscapeHTMLTestCase(unittest.TestCase, EscapeHTMLMixin):
-
     def setUp(self):
         from wheezy.html.utils import escape_html_native
+
         self.escape = escape_html_native
 
 
@@ -36,5 +34,7 @@ try:
     class BoostEscapeHTMLTestCase(unittest.TestCase, EscapeHTMLMixin):
         def setUp(self):
             self.escape = escape_html
+
+
 except ImportError:  # pragma: nocover
     pass

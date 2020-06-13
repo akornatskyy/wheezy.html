@@ -1,23 +1,24 @@
-
 """ ``tenjin`` extension module.
 """
 
 import re
 
-from wheezy.html.ext.lexer import InlinePreprocessor
-from wheezy.html.ext.lexer import Preprocessor
-from wheezy.html.ext.lexer import WhitespacePreprocessor
+from wheezy.html.ext.lexer import (
+    InlinePreprocessor,
+    Preprocessor,
+    WhitespacePreprocessor,
+)
 
 
 class TenjinPreprocessor(Preprocessor):
-
     def __init__(self):
         super(TenjinPreprocessor, self).__init__(
-            r'(?P<expr_filter>[#\$])\{((?P<expr>.+?)\.'
-            r'(?P<widget>%(widgets)s){1}'
-            r'\((?P<params>.*?)\)\s*)\}')
+            r"(?P<expr_filter>[#\$])\{((?P<expr>.+?)\."
+            r"(?P<widget>%(widgets)s){1}"
+            r"\((?P<params>.*?)\)\s*)\}"
+        )
 
-    EXPRESSION = '%(expr_filter)s{%(expr)s}'
+    EXPRESSION = "%(expr_filter)s{%(expr)s}"
 
     ERROR_CLASS0 = """\
 <?py #pass ?>
@@ -120,16 +121,17 @@ value="%(expr_filter)s{key}"%(class)s
 
 
 widget_preprocessor = TenjinPreprocessor()
-whitespace_preprocessor = WhitespacePreprocessor(rules=[
-    (re.compile(r'^ \s+|\s+$', re.MULTILINE),
-     r''),
-    (re.compile(r'(?<!\?)>\s+<(?!\?)'),
-     r'><'),
-])
+whitespace_preprocessor = WhitespacePreprocessor(
+    rules=[
+        (re.compile(r"^ \s+|\s+$", re.MULTILINE), r""),
+        (re.compile(r"(?<!\?)>\s+<(?!\?)"), r"><"),
+    ]
+)
 
 
-RE_INLINE = re.compile(r'<\?py\s+inline\(("|\')(?P<path>.+?)\1\)\s*\?>',
-                       re.MULTILINE)
+RE_INLINE = re.compile(
+    r'<\?py\s+inline\(("|\')(?P<path>.+?)\1\)\s*\?>', re.MULTILINE
+)
 
 
 def inline_preprocessor(directories, fallback=False):
@@ -147,6 +149,7 @@ def inline_preprocessor(directories, fallback=False):
         >>> m.group('path')
         'shared/footer.html'
     """
-    strategy = fallback and (
-        lambda path: '<?py include("' + path + '") ?>') or None
+    strategy = (
+        fallback and (lambda path: '<?py include("' + path + '") ?>') or None
+    )
     return InlinePreprocessor(RE_INLINE, directories, strategy)

@@ -1,9 +1,7 @@
-
 """ ``utils`` module.
 """
 
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 
 from wheezy.html.comp import str_type
 
@@ -20,26 +18,33 @@ def escape_html(s):
         "&amp;&lt;&gt;&quot;\'"
     """
     if s is None:
-        return ''
+        return ""
     try:
-        return s.replace('&', '&amp;').replace('<', '&lt;').replace(
-            '>', '&gt;').replace('"', '&quot;')
+        return (
+            s.replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;")
+            .replace('"', "&quot;")
+        )
     except AttributeError:
-        raise TypeError("expected string or unicode object, "
-                        "%s found" % s.__class__.__name__)
+        raise TypeError(
+            "expected string or unicode object, "
+            "%s found" % s.__class__.__name__
+        )
 
 
 escape_html_native = escape_html
 
 try:
     from wheezy.html.boost import escape_html
+
     html_escape = escape_html  # pragma: nocover
 except ImportError:  # pragma: nocover
     html_escape = escape_html
 
 
 def html_id(name):
-    return name.replace('_', '-')
+    return name.replace("_", "-")
 
 
 def format_value(value, format_spec=None, format_provider=None):
@@ -73,8 +78,7 @@ def format_value(value, format_spec=None, format_provider=None):
             if format_provider is None:
                 formatter_name = type(value[0]).__name__
                 format_provider = format_providers[formatter_name]
-            return tuple(format_provider(item, format_spec)
-                         for item in value)
+            return tuple(format_provider(item, format_spec) for item in value)
         except IndexError:
             return tuple([])
     else:
@@ -108,10 +112,10 @@ def date_format_provider(value, format_spec=None):
         '2012/02/06'
     """
     if value < min_date:
-        return ''
+        return ""
     # Python 2.4, 2.5
     # TypeError: strftime() argument 1 must be str, not unicode
-    return value.strftime(str(format_spec or '%Y/%m/%d'))
+    return value.strftime(str(format_spec or "%Y/%m/%d"))
 
 
 def datetime_format_provider(value, format_spec=None):
@@ -127,22 +131,23 @@ def datetime_format_provider(value, format_spec=None):
         '2012/02/06 15:17'
     """
     if value < min_datetime:
-        return ''
+        return ""
     # Python 2.4, 2.5
     # TypeError: strftime() argument 1 must be str, not unicode
-    return value.strftime(str(format_spec or '%Y/%m/%d %H:%M'))
+    return value.strftime(str(format_spec or "%Y/%m/%d %H:%M"))
 
 
 format_providers = {
-    'str': lambda value, format_spec: html_escape(str_type(value)),
-    'unicode': lambda value, format_spec: html_escape(value),
-    'int': str_format_provider,
-    'Decimal': str_format_provider,
-    'bool': str_format_provider,
-    'float': str_format_provider,
-    'date': date_format_provider,
-    'time': lambda value, format_spec: value.strftime(
-        str(format_spec or '%H:%M')),
-    'datetime': datetime_format_provider,
-    'NoneType': lambda value, format_spec: ''
+    "str": lambda value, format_spec: html_escape(str_type(value)),
+    "unicode": lambda value, format_spec: html_escape(value),
+    "int": str_format_provider,
+    "Decimal": str_format_provider,
+    "bool": str_format_provider,
+    "float": str_format_provider,
+    "date": date_format_provider,
+    "time": lambda value, format_spec: value.strftime(
+        str(format_spec or "%H:%M")
+    ),
+    "datetime": datetime_format_provider,
+    "NoneType": lambda value, format_spec: "",
 }

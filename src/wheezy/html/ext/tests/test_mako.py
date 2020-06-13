@@ -1,4 +1,3 @@
-
 """ Unit tests for ``wheezy.html.ext.mako``.
 """
 
@@ -11,13 +10,13 @@ class MakoPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
     """ Test the ``MakoPreprocessor``.
     """
 
-    WHITE_SPACE_PATTERNS = ['%(w)s', ' %(w)s', '%(w)s ', ' %(w)s ']
+    WHITE_SPACE_PATTERNS = ["%(w)s", " %(w)s", "%(w)s ", " %(w)s "]
 
     def assert_render_equal(self, template, expected, **kwargs):
         assert_mako_equal(template, expected, **kwargs)
 
-    HIDDEN = '${model.pref.hidden()|h}'
-    MULTIPLE_HIDDEN = '${model.prefs.multiple_hidden()}'
+    HIDDEN = "${model.pref.hidden()|h}"
+    MULTIPLE_HIDDEN = "${model.prefs.multiple_hidden()}"
     LABEL = "${model.username.label('<i>*</i>Username:')}"
     EMPTYBOX = "${model.amount.emptybox(class_='x')|h}"
     TEXTBOX = "${model.username.textbox(autocomplete='off')|h}"
@@ -44,11 +43,12 @@ class MakoWhitespacePreprocessorTestCase(unittest.TestCase):
         """
         """
         from wheezy.html.ext.mako import whitespace_preprocessor
-        assert ' x' == whitespace_preprocessor(' x')
-        assert 'x' == whitespace_preprocessor('  \n x \n  ')
-        assert 'x' == whitespace_preprocessor('  x')
-        assert 'x' == whitespace_preprocessor('x  ')
-        assert '><' == whitespace_preprocessor('  > < ')
+
+        assert " x" == whitespace_preprocessor(" x")
+        assert "x" == whitespace_preprocessor("  \n x \n  ")
+        assert "x" == whitespace_preprocessor("  x")
+        assert "x" == whitespace_preprocessor("x  ")
+        assert "><" == whitespace_preprocessor("  > < ")
 
 
 class InlinePreprocessorTestCase(unittest.TestCase):
@@ -57,33 +57,36 @@ class InlinePreprocessorTestCase(unittest.TestCase):
 
     def p(self, text, fallback=False):
         from wheezy.html.ext.mako import inline_preprocessor
-        p = inline_preprocessor(directories=['.'], fallback=fallback)
+
+        p = inline_preprocessor(directories=["."], fallback=fallback)
         return p(text)
 
     def test_inline(self):
         assert self.p('<%inline file="LICENSE" />')
 
     def test_inline_fallback(self):
-        assert ('<%include file="LICENSE"/>' == self.p(
-            '<%inline file="LICENSE" />', fallback=True))
+        assert '<%include file="LICENSE"/>' == self.p(
+            '<%inline file="LICENSE" />', fallback=True
+        )
 
     def test_inline_not_found(self):
         import warnings
-        warnings.simplefilter('ignore')
+
+        warnings.simplefilter("ignore")
         assert not self.p('<%inline file="X" />')
-        warnings.simplefilter('default')
+        warnings.simplefilter("default")
 
 
 try:
     # from mako.template import Template
-    Template = __import__('mako.template', None, None, ['Template']).Template
+    Template = __import__("mako.template", None, None, ["Template"]).Template
     from wheezy.html.ext.mako import widget_preprocessor
 
     def assert_mako_equal(text, expected, **kwargs):
-        template = Template(text, preprocessor=[
-            widget_preprocessor])
+        template = Template(text, preprocessor=[widget_preprocessor])
         value = template.render(**kwargs)
         assert expected == value
+
 
 except ImportError:  # pragma: nocover
 

@@ -1,47 +1,54 @@
-
 """ ``jinja2`` extension module.
 """
 
 import re
 
-from wheezy.html.ext.lexer import InlinePreprocessor
-from wheezy.html.ext.lexer import Preprocessor
-from wheezy.html.ext.lexer import WhitespacePreprocessor
-
+from wheezy.html.ext.lexer import (
+    InlinePreprocessor,
+    Preprocessor,
+    WhitespacePreprocessor,
+)
 
 # from jinja2.ext import Extension
-Extension = __import__('jinja2.ext', None, None, ['Extension']).Extension
+Extension = __import__("jinja2.ext", None, None, ["Extension"]).Extension
 
 
 class Jinja2Preprocessor(Preprocessor):
-
-    def __init__(self,
-                 variable_start_string=None,
-                 variable_end_string=None):
-        pattern = r'\{\{((?P<expr>.+?)\.'\
-            r'(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*'\
-            r'(?P<expr_filter>(\|\s*[\w,\s]+?|\s*)))\}\}'
+    def __init__(self, variable_start_string=None, variable_end_string=None):
+        pattern = (
+            r"\{\{((?P<expr>.+?)\."
+            r"(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*"
+            r"(?P<expr_filter>(\|\s*[\w,\s]+?|\s*)))\}\}"
+        )
         if variable_start_string:
-            pattern = pattern.replace('\{\{',  # noqa: W605
-                                      re.escape(variable_start_string))
+            pattern = pattern.replace(
+                "\{\{", re.escape(variable_start_string)  # noqa: W605
+            )
         if variable_end_string:
-            pattern = pattern.replace('\}\}',  # noqa: W605
-                                      re.escape(variable_end_string))
+            pattern = pattern.replace(
+                "\}\}", re.escape(variable_end_string)  # noqa: W605
+            )
         super(Jinja2Preprocessor, self).__init__(pattern)
 
         attrs = [
-            'EXPRESSION', 'ERROR', 'SELECT', 'INPUT', 'CHECKBOX',
-            'MULTIPLE_CHECKBOX', 'MULTIPLE_HIDDEN', 'RADIO',
-            'MULTIPLE_SELECT'
+            "EXPRESSION",
+            "ERROR",
+            "SELECT",
+            "INPUT",
+            "CHECKBOX",
+            "MULTIPLE_CHECKBOX",
+            "MULTIPLE_HIDDEN",
+            "RADIO",
+            "MULTIPLE_SELECT",
         ]
         c = self.__class__.__dict__
         for attr in attrs:
             t = c[attr]
-            t = t.replace('{{', variable_start_string)
-            t = t.replace('}}', variable_end_string)
+            t = t.replace("{{", variable_start_string)
+            t = t.replace("}}", variable_end_string)
             self.__dict__[attr] = t
 
-    EXPRESSION = '{{ %(expr)s%(expr_filter)s }}'
+    EXPRESSION = "{{ %(expr)s%(expr_filter)s }}"
 
     ERROR_CLASS0 = """\
 {%% if '%(name)s' in errors: %%}\
@@ -131,44 +138,52 @@ value="{{ key%(expr_filter)s }}"%(class)s\
 
 
 class WidgetExtension(Extension):
-
     def __init__(self, environment):
         super(WidgetExtension, self).__init__(environment)
         self.preprocessor = Jinja2Preprocessor(
             variable_start_string=environment.variable_start_string,
-            variable_end_string=environment.variable_end_string)
+            variable_end_string=environment.variable_end_string,
+        )
 
     def preprocess(self, source, name, filename=None):
         return self.preprocessor(source)
 
 
 class WhitespaceExtension(Extension):
-
     def __init__(self, environment):
         super(WhitespaceExtension, self).__init__(environment)
         block_start_string = environment.block_start_string
         block_end_string = environment.block_end_string
-        self.preprocessor = WhitespacePreprocessor(rules=[
-            (re.compile(r'^ \s+|\s+$', re.MULTILINE),
-                r''),
-            (re.compile(r'>\s+<'),
-                r'><'),
-            (re.compile(
-                r'>\s+\{%'.replace(  # noqa: W605
-                    '\{%', re.escape(block_start_string))),  # noqa: W605
-                r'>{%'.replace('{%', block_start_string)),
-            (re.compile(
-                r'%\}\s+<'.replace(  # noqa: W605
-                    '%\}', re.escape(block_end_string))),  # noqa: W605
-                r'%}<'.replace('%}', block_end_string)),
-        ])
+        self.preprocessor = WhitespacePreprocessor(
+            rules=[
+                (re.compile(r"^ \s+|\s+$", re.MULTILINE), r""),
+                (re.compile(r">\s+<"), r"><"),
+                (
+                    re.compile(
+                        r">\s+\{%".replace(  # noqa: W605
+                            "\{%", re.escape(block_start_string)  # noqa: W605
+                        )
+                    ),
+                    r">{%".replace("{%", block_start_string),
+                ),
+                (
+                    re.compile(
+                        r"%\}\s+<".replace(  # noqa: W605
+                            "%\}", re.escape(block_end_string)  # noqa: W605
+                        )
+                    ),
+                    r"%}<".replace("%}", block_end_string),
+                ),
+            ]
+        )
 
     def preprocess(self, source, name, filename=None):
         return self.preprocessor(source)
 
 
-RE_INLINE = re.compile(r'{%\s*inline\s+("|\')(?P<path>.+?)\1\s*%}',
-                       re.MULTILINE)
+RE_INLINE = re.compile(
+    r'{%\s*inline\s+("|\')(?P<path>.+?)\1\s*%}', re.MULTILINE
+)
 
 
 class InlineExtension(Extension):
@@ -188,10 +203,10 @@ class InlineExtension(Extension):
     """
 
     def __init__(self, searchpath, fallback=False):
-        strategy = fallback and (
-            lambda path: '{% include "' + path + '" %}') or None
-        self.preprocessor = InlinePreprocessor(
-            RE_INLINE, searchpath, strategy)
+        strategy = (
+            fallback and (lambda path: '{% include "' + path + '" %}') or None
+        )
+        self.preprocessor = InlinePreprocessor(RE_INLINE, searchpath, strategy)
 
     def __call__(self, environment):  # pragma: nocover
         super(InlineExtension, self).__init__(environment)

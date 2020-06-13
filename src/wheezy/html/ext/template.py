@@ -1,26 +1,25 @@
-
-
 """ ``wheezy.template`` extension module.
 """
 
 import re
 
-
 from wheezy.html.comp import xrange
-from wheezy.html.ext.lexer import InlinePreprocessor
-from wheezy.html.ext.lexer import Preprocessor
-from wheezy.html.ext.lexer import WhitespacePreprocessor
+from wheezy.html.ext.lexer import (
+    InlinePreprocessor,
+    Preprocessor,
+    WhitespacePreprocessor,
+)
 
 
 class WheezyPreprocessor(Preprocessor):
-
     def __init__(self):
         super(WheezyPreprocessor, self).__init__(
-            r'@((?P<expr>.+?)\.'
-            r'(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*?'
-            r'(?P<expr_filter>((?<!!)!\w+(!\w+)*|)))(?=\s|$)')
+            r"@((?P<expr>.+?)\."
+            r"(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*?"
+            r"(?P<expr_filter>((?<!!)!\w+(!\w+)*|)))(?=\s|$)"
+        )
 
-    EXPRESSION = '@%(expr)s%(expr_filter)s'
+    EXPRESSION = "@%(expr)s%(expr_filter)s"
 
     ERROR_CLASS0 = """\\
 @if '%(name)s' in errors:
@@ -124,39 +123,35 @@ class WidgetExtension(object):
 
 whitespace_preprocessor = WhitespacePreprocessor(
     rules=[
-        (re.compile(r'^ [ \t]+', re.MULTILINE),
-            r''),
-        (re.compile(r'>\s+<', re.MULTILINE),
-            r'><'),
-        (re.compile(r'(?<![>\\])\n(?=\w)', re.MULTILINE),
-            r' \\\n'),
-        (re.compile(r'\s*(?<!\\)\n', re.MULTILINE),
-            r'\\\n'),
+        (re.compile(r"^ [ \t]+", re.MULTILINE), r""),
+        (re.compile(r">\s+<", re.MULTILINE), r"><"),
+        (re.compile(r"(?<![>\\])\n(?=\w)", re.MULTILINE), r" \\\n"),
+        (re.compile(r"\s*(?<!\\)\n", re.MULTILINE), r"\\\n"),
     ],
-    ignore_rules=[
-        re.compile(r'<(pre|code).*?>.*?</\1>', re.DOTALL)
-    ])
+    ignore_rules=[re.compile(r"<(pre|code).*?>.*?</\1>", re.DOTALL)],
+)
 
 
 def whitespace_postprocessor(tokens):
     for i in xrange(len(tokens)):
         lineno, token, value = tokens[i]
-        if token == 'markup':
+        if token == "markup":
             value = whitespace_preprocessor(value)
             tokens[i] = (lineno, token, value)
 
 
 class WhitespaceExtension(object):
 
-    preprocessors = [WhitespacePreprocessor(rules=[
-        (re.compile(r'\s+$', re.MULTILINE), r'')
-    ])]
+    preprocessors = [
+        WhitespacePreprocessor(
+            rules=[(re.compile(r"\s+$", re.MULTILINE), r"")]
+        )
+    ]
 
     postprocessors = [whitespace_postprocessor]
 
 
-RE_INLINE = re.compile(r'@inline\(("|\')(?P<path>.+?)\1\)',
-                       re.MULTILINE)
+RE_INLINE = re.compile(r'@inline\(("|\')(?P<path>.+?)\1\)', re.MULTILINE)
 
 
 class InlineExtension(object):
@@ -176,7 +171,9 @@ class InlineExtension(object):
     """
 
     def __init__(self, searchpath, fallback=False):
-        strategy = fallback and (
-            lambda path: '@include("' + path + '")') or None
-        self.preprocessors = [InlinePreprocessor(
-            RE_INLINE, searchpath, strategy)]
+        strategy = (
+            fallback and (lambda path: '@include("' + path + '")') or None
+        )
+        self.preprocessors = [
+            InlinePreprocessor(RE_INLINE, searchpath, strategy)
+        ]

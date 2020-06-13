@@ -1,28 +1,29 @@
-
 """ ``mako`` extension module.
 """
 
 import re
 
-from wheezy.html.ext.lexer import InlinePreprocessor
-from wheezy.html.ext.lexer import Preprocessor
-from wheezy.html.ext.lexer import WhitespacePreprocessor
+from wheezy.html.ext.lexer import (
+    InlinePreprocessor,
+    Preprocessor,
+    WhitespacePreprocessor,
+)
 
 
 class MakoPreprocessor(Preprocessor):
-
     def __init__(self, skip_imports=False):
         super(MakoPreprocessor, self).__init__(
-            r'\$\{((?P<expr>.+?)\.'
-            r'(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*?'
-            r'(?P<expr_filter>(\|\s*[\w,\s]+?|)))\}')
+            r"\$\{((?P<expr>.+?)\."
+            r"(?P<widget>%(widgets)s){1}\((?P<params>.*?)\)\s*?"
+            r"(?P<expr_filter>(\|\s*[\w,\s]+?|)))\}"
+        )
 
     PREPEND = """\
 <%!
 from wheezy.html.utils import format_value
 %>"""
 
-    EXPRESSION = '${%(expr)s%(expr_filter)s}'
+    EXPRESSION = "${%(expr)s%(expr_filter)s}"
 
     ERROR_CLASS0 = """\\
 %% if '%(name)s' in errors:
@@ -120,16 +121,17 @@ value="${key%(expr_filter)s}"%(class)s\
 
 
 widget_preprocessor = MakoPreprocessor()
-whitespace_preprocessor = WhitespacePreprocessor(rules=[
-    (re.compile(r'^ \s+|\s+$', re.MULTILINE),
-     r''),
-    (re.compile(r'>\s+<'),
-     r'><'),
-])
+whitespace_preprocessor = WhitespacePreprocessor(
+    rules=[
+        (re.compile(r"^ \s+|\s+$", re.MULTILINE), r""),
+        (re.compile(r">\s+<"), r"><"),
+    ]
+)
 
 
-RE_INLINE = re.compile(r'<%inline\s+file=("|\')(?P<path>.+?)\1\s*/>',
-                       re.MULTILINE)
+RE_INLINE = re.compile(
+    r'<%inline\s+file=("|\')(?P<path>.+?)\1\s*/>', re.MULTILINE
+)
 
 
 def inline_preprocessor(directories, fallback=False):
@@ -147,6 +149,7 @@ def inline_preprocessor(directories, fallback=False):
         >>> m.group('path')
         'shared/footer.html'
     """
-    strategy = fallback and (
-        lambda path: '<%include file="' + path + '"/>') or None
+    strategy = (
+        fallback and (lambda path: '<%include file="' + path + '"/>') or None
+    )
     return InlinePreprocessor(RE_INLINE, directories, strategy)
