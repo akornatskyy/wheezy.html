@@ -7,15 +7,15 @@ from wheezy.html.comp import str_type
 
 
 def escape_html(s):
-    """ Escapes a string so it is valid within HTML. Converts `None`
-        to an empty string. Raises TypeError is `s` is not a string
-        or unicode object.
+    """Escapes a string so it is valid within HTML. Converts `None`
+    to an empty string. Raises TypeError is `s` is not a string
+    or unicode object.
 
-        >>> html_escape(None)
-        ''
+    >>> html_escape(None)
+    ''
 
-        >>> escape_html('&<>"\\'')
-        "&amp;&lt;&gt;&quot;\'"
+    >>> escape_html('&<>"\\'')
+    "&amp;&lt;&gt;&quot;\'"
     """
     if s is None:
         return ""
@@ -48,28 +48,28 @@ def html_id(name):
 
 
 def format_value(value, format_spec=None, format_provider=None):
-    """ Formats widget value.
+    """Formats widget value.
 
-        ``format_provider`` - a callable of the following form::
+    ``format_provider`` - a callable of the following form::
 
-            def my_formatter(value, format_spec):
-                return value_formatted
+        def my_formatter(value, format_spec):
+            return value_formatted
 
-        >>> str(format_value(date(2012, 2, 6), '%m-%d-%y'))
-        '02-06-12'
-        >>> format_value(date(2012, 2, 6),
-        ...         format_provider=lambda value, ignore:
-        ...         value.strftime('%m-%d-%y'))
-        '02-06-12'
-        >>> list(map(str, format_value([1, 2, 7])))
-        ['1', '2', '7']
-        >>> format_value([])
-        ()
+    >>> str(format_value(date(2012, 2, 6), '%m-%d-%y'))
+    '02-06-12'
+    >>> format_value(date(2012, 2, 6),
+    ...         format_provider=lambda value, ignore:
+    ...         value.strftime('%m-%d-%y'))
+    '02-06-12'
+    >>> list(map(str, format_value([1, 2, 7])))
+    ['1', '2', '7']
+    >>> format_value([])
+    ()
 
-        If format provider is unknown apply str_type.
+    If format provider is unknown apply str_type.
 
-        >>> str(format_value({}))
-        '{}'
+    >>> str(format_value({}))
+    '{}'
     """
     # TODO: probably there is better check since attribute check for
     # __iter__ is not valid in python 3.2, str support it.
@@ -100,16 +100,16 @@ min_datetime = datetime(1900, 1, 1)
 
 
 def date_format_provider(value, format_spec=None):
-    """ Default format provider for ``datetime.date``.
+    """Default format provider for ``datetime.date``.
 
-        Requires year >= 1900, otherwise returns an empty string.
+    Requires year >= 1900, otherwise returns an empty string.
 
-        >>> date_format_provider(date.min)
-        ''
-        >>> date_format_provider(min_date)
-        '1900/01/01'
-        >>> date_format_provider(date(2012, 2, 6))
-        '2012/02/06'
+    >>> date_format_provider(date.min)
+    ''
+    >>> date_format_provider(min_date)
+    '1900/01/01'
+    >>> date_format_provider(date(2012, 2, 6))
+    '2012/02/06'
     """
     if value < min_date:
         return ""
@@ -119,16 +119,16 @@ def date_format_provider(value, format_spec=None):
 
 
 def datetime_format_provider(value, format_spec=None):
-    """ Default format provider for ``datetime.datetime``.
+    """Default format provider for ``datetime.datetime``.
 
-        Requires year >= 1900, otherwise returns an empty string.
+    Requires year >= 1900, otherwise returns an empty string.
 
-        >>> datetime_format_provider(datetime.min)
-        ''
-        >>> datetime_format_provider(min_datetime)
-        '1900/01/01 00:00'
-        >>> datetime_format_provider(datetime(2012, 2, 6, 15, 17))
-        '2012/02/06 15:17'
+    >>> datetime_format_provider(datetime.min)
+    ''
+    >>> datetime_format_provider(min_datetime)
+    '1900/01/01 00:00'
+    >>> datetime_format_provider(datetime(2012, 2, 6, 15, 17))
+    '2012/02/06 15:17'
     """
     if value < min_datetime:
         return ""

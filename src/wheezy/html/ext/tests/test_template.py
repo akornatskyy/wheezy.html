@@ -7,8 +7,7 @@ from wheezy.html.ext.tests.test_lexer import PreprocessorMixin
 
 
 class TemplatePreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
-    """ Test the ``MakoPreprocessor``.
-    """
+    """Test the ``MakoPreprocessor``."""
 
     def assert_render_equal(self, template, expected, **kwargs):
         assert_template_equal(template, expected, **kwargs)
@@ -34,8 +33,7 @@ class TemplatePreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
 
 
 class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
-    """ Test the ``WhitespaceExtension``.
-    """
+    """Test the ``WhitespaceExtension``."""
 
     def setUp(self):
         from wheezy.html.ext.template import (
@@ -49,8 +47,7 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
         )
 
     def test_whitespace(self):
-        """
-        """
+        """"""
         assert "><" == self.preprocess("  >  < ")
         assert ">\\\na" == self.preprocess("  >\n  a")
         assert "" == self.preprocess("  ")
@@ -80,8 +77,7 @@ class WheezyWhitespaceExtensionTestCase(unittest.TestCase):
 
 
 class InlineExtensionTestCase(unittest.TestCase):
-    """ Test the ``InlineExtension``.
-    """
+    """Test the ``InlineExtension``."""
 
     def p(self, text, fallback=False):
         from wheezy.html.ext.template import InlineExtension

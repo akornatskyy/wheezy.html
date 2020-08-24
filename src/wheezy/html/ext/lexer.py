@@ -15,8 +15,7 @@ from wheezy.html.utils import html_id
 
 
 class Preprocessor(object):
-    """ Generic widget preprocessor.
-    """
+    """Generic widget preprocessor."""
 
     CHECKBOX = None
     ERROR = None
@@ -65,8 +64,7 @@ class Preprocessor(object):
         )
 
     def __call__(self, text, **kwargs):
-        """ Preprocess input text.
-        """
+        """Preprocess input text."""
         result = []
         start = 0
         for m in self.RE_WIDGETS.finditer(text):
@@ -83,8 +81,8 @@ class Preprocessor(object):
     # region: helpers
 
     def expression(self, text, expr_filter=""):
-        """ Interpretate ``text`` as string expression or
-            python expression.
+        """Interpretate ``text`` as string expression or
+        python expression.
         """
         value = parse_str_or_int(text)
         return value or self.EXPRESSION % {
@@ -93,8 +91,7 @@ class Preprocessor(object):
         }
 
     def join_attrs(self, kwargs):
-        """ Joins ``kwargs`` as html attributes.
-        """
+        """Joins ``kwargs`` as html attributes."""
         if kwargs:
             return " " + " ".join(
                 [
@@ -106,8 +103,7 @@ class Preprocessor(object):
             return ""
 
     def error_class(self, name, class_):
-        """ Checks for error and add css class error.
-        """
+        """Checks for error and add css class error."""
         if class_:
             return self.ERROR_CLASS1 % {
                 "name": name,
@@ -119,8 +115,7 @@ class Preprocessor(object):
     # region: widgets
 
     def hidden(self, expr, params, expr_filter):
-        """ HTML element input hidden.
-        """
+        """HTML element input hidden."""
         name = parse_name(expr)
         return self.HIDDEN % {
             "name": name,
@@ -128,8 +123,7 @@ class Preprocessor(object):
         }
 
     def multiple_hidden(self, expr, params, expr_filter):
-        """ Multiple HTML element input of type hidden.
-        """
+        """Multiple HTML element input of type hidden."""
         name = parse_name(expr)
         return self.MULTIPLE_HIDDEN % {
             "name": name,
@@ -138,8 +132,7 @@ class Preprocessor(object):
         }
 
     def label(self, expr, params, expr_filter):
-        """ HTML element label.
-        """
+        """HTML element label."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop("class", None)
@@ -152,26 +145,25 @@ class Preprocessor(object):
         }
 
     def emptybox(self, expr, params, expr_filter):
-        """ HTML element input of type text. Value is rendered
-            only if evaluated to boolean True.
+        """HTML element input of type text. Value is rendered
+        only if evaluated to boolean True.
         """
         return self.input_helper(expr, params, expr_filter, "empty")
 
     def textbox(self, expr, params, expr_filter):
-        """ HTML element input of type text. Value is rendered
-            only if it is not None or ''.
+        """HTML element input of type text. Value is rendered
+        only if it is not None or ''.
         """
         return self.input_helper(expr, params, expr_filter, "text")
 
     def password(self, expr, params, expr_filter):
-        """ HTML element input of type password. Value is rendered
-            only if it is not None or ''.
+        """HTML element input of type password. Value is rendered
+        only if it is not None or ''.
         """
         return self.input_helper(expr, params, expr_filter, "password")
 
     def input_helper(self, expr, params, expr_filter, input_type):
-        """ HTML element input of type input_type.
-        """
+        """HTML element input of type input_type."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop("class", None)
@@ -194,8 +186,7 @@ class Preprocessor(object):
         }
 
     def textarea(self, expr, params, expr_filter):
-        """ HTML element textarea.
-        """
+        """HTML element textarea."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         kwargs.setdefault("rows", '"9"')
@@ -210,8 +201,7 @@ class Preprocessor(object):
         }
 
     def checkbox(self, expr, params, expr_filter):
-        """ HTML element input of type checkbox.
-        """
+        """HTML element input of type checkbox."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop("class", None)
@@ -224,8 +214,7 @@ class Preprocessor(object):
         }
 
     def multiple_checkbox(self, expr, params, expr_filter):
-        """ Multiple HTML element input of type checkbox.
-        """
+        """Multiple HTML element input of type checkbox."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         choices = kwargs.pop("choices")
@@ -241,8 +230,7 @@ class Preprocessor(object):
         }
 
     def radio(self, expr, params, expr_filter):
-        """ A group of HTML input elements of type radio.
-        """
+        """A group of HTML input elements of type radio."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop("class", None)
@@ -258,8 +246,7 @@ class Preprocessor(object):
         }
 
     def dropdown(self, expr, params, expr_filter):
-        """ HTML element select.
-        """
+        """HTML element select."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop("class", None)
@@ -275,8 +262,7 @@ class Preprocessor(object):
         }
 
     def listbox(self, expr, params, expr_filter):
-        """ HTML element select of type multiple.
-        """
+        """HTML element select of type multiple."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop("class", None)
@@ -292,8 +278,7 @@ class Preprocessor(object):
         }
 
     def error(self, expr, params, expr_filter):
-        """ General error message or field error.
-        """
+        """General error message or field error."""
         name = parse_name(expr)
         args, kwargs = parse_params(params)
         class_ = kwargs.pop("class", "")
@@ -311,18 +296,15 @@ class Preprocessor(object):
         }
 
     def info(self, expr, params, expr_filter):
-        """ General info message.
-        """
+        """General info message."""
         return self.message_helper(expr, params, expr_filter, "info")
 
     def warning(self, expr, params, expr_filter):
-        """ General warning message.
-        """
+        """General warning message."""
         return self.message_helper(expr, params, expr_filter, "warning")
 
     def message_helper(self, expr, params, expr_filter, msg_class):
-        """ General info message.
-        """
+        """General info message."""
         args, kwargs = parse_params(params)
         class_ = kwargs.pop("class", "")
         if class_:
@@ -338,8 +320,7 @@ class Preprocessor(object):
 
 
 class WhitespacePreprocessor(object):
-    """ Whitespace preprocessor.
-    """
+    """Whitespace preprocessor."""
 
     def __init__(self, rules, ignore_rules=None):
         self.rules = rules
@@ -368,8 +349,7 @@ class WhitespacePreprocessor(object):
 
 
 class InlinePreprocessor(object):
-    """ Inline preprocessor
-    """
+    """Inline preprocessor"""
 
     def __init__(self, pattern, directories, strategy=None):
         self.pattern = pattern

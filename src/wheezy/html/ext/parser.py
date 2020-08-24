@@ -19,16 +19,16 @@ RE_FUNCTION = re.compile(
 
 
 def parse_name(expr):
-    """ Parses name from expression of the following form::
+    """Parses name from expression of the following form::
 
-        [object.]name[.format(...]
+    [object.]name[.format(...]
 
-        >>> parse_name('display_name')
-        'display_name'
-        >>> parse_name('account.display_name')
-        'display_name'
-        >>> parse_name('account.display_name.format(')
-        'display_name'
+    >>> parse_name('display_name')
+    'display_name'
+    >>> parse_name('account.display_name')
+    'display_name'
+    >>> parse_name('account.display_name.format(')
+    'display_name'
     """
     expr = RE_FUNCTIONS.split(expr)[0]
     name = expr.rsplit(".", 1)[-1]
@@ -59,12 +59,12 @@ ignore: value.strftime('%m-%d-%y'))")
 
 
 def parse_kwargs(text):
-    """ Parses key-value type of parameters.
+    """Parses key-value type of parameters.
 
-        >>> parse_kwargs('choices=account_types')
-        {'choices': 'account_types'}
-        >>> sorted(parse_kwargs('autocomplete="off", maxlength=12').items())
-        [('autocomplete', '"off"'), ('maxlength', '12')]
+    >>> parse_kwargs('choices=account_types')
+    {'choices': 'account_types'}
+    >>> sorted(parse_kwargs('autocomplete="off", maxlength=12').items())
+    [('autocomplete', '"off"'), ('maxlength', '12')]
     """
     kwargs = {}
     for m in RE_KWARGS.finditer(text + ","):
@@ -74,16 +74,16 @@ def parse_kwargs(text):
 
 
 def parse_args(text):
-    """ Parses argument type of parameters.
+    """Parses argument type of parameters.
 
-        >>> parse_args('')
-        []
-        >>> parse_args('10, "x"')
-        ['10', '"x"']
-        >>> parse_args("'x', 100")
-        ["'x'", '100']
-        >>> parse_args('"Account Type:"')
-        ['"Account Type:"']
+    >>> parse_args('')
+    []
+    >>> parse_args('10, "x"')
+    ['10', '"x"']
+    >>> parse_args("'x', 100")
+    ["'x'", '100']
+    >>> parse_args('"Account Type:"')
+    ['"Account Type:"']
     """
     args = []
     for m in RE_ARGS.finditer(text + ","):
@@ -92,16 +92,16 @@ def parse_args(text):
 
 
 def parse_params(text):
-    """ Parses function parameters.
+    """Parses function parameters.
 
-        >>> parse_params('')
-        ([], {})
-        >>> parse_params('choices=account_types')
-        ([], {'choices': 'account_types'})
-        >>> parse_params('"Account Type:"')
-        (['"Account Type:"'], {})
-        >>> parse_params('"Account Type:", class_="inline"')
-        (['"Account Type:"'], {'class': '"inline"'})
+    >>> parse_params('')
+    ([], {})
+    >>> parse_params('choices=account_types')
+    ([], {'choices': 'account_types'})
+    >>> parse_params('"Account Type:"')
+    (['"Account Type:"'], {})
+    >>> parse_params('"Account Type:", class_="inline"')
+    (['"Account Type:"'], {'class': '"inline"'})
     """
     if "=" in text:
         args = text.split("=")[0]
@@ -116,15 +116,15 @@ def parse_params(text):
 
 
 def parse_str_or_int(text):
-    """ Interpretate ``text`` as string or int expression.
+    """Interpretate ``text`` as string or int expression.
 
-        >>> parse_str_or_int('"Hello"')
-        'Hello'
-        >>> parse_str_or_int("'Hello'")
-        'Hello'
-        >>> parse_str_or_int('100')
-        '100'
-        >>> parse_str_or_int('model.username')
+    >>> parse_str_or_int('"Hello"')
+    'Hello'
+    >>> parse_str_or_int("'Hello'")
+    'Hello'
+    >>> parse_str_or_int('100')
+    '100'
+    >>> parse_str_or_int('model.username')
     """
     m = RE_STR_VALUE.match(text)
     if m:

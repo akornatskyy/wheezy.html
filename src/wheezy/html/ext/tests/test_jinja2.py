@@ -7,8 +7,7 @@ from wheezy.html.ext.tests.test_lexer import PreprocessorMixin
 
 
 class Jinja2PreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
-    """ Test the ``Jinja2Preprocessor``.
-    """
+    """Test the ``Jinja2Preprocessor``."""
 
     WHITE_SPACE_PATTERNS = ["%(w)s", " %(w)s", "%(w)s ", " %(w)s "]
 
@@ -41,8 +40,7 @@ class Jinja2PreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
 
 
 class Jinja2PreprocessorTestCase2(PreprocessorMixin, unittest.TestCase):
-    """ Test the ``Jinja2Preprocessor``.
-    """
+    """Test the ``Jinja2Preprocessor``."""
 
     WHITE_SPACE_PATTERNS = ["%(w)s", " %(w)s", "%(w)s ", " %(w)s "]
 
@@ -75,8 +73,7 @@ class Jinja2PreprocessorTestCase2(PreprocessorMixin, unittest.TestCase):
 
 
 class Jinja2WhitespaceExtensionTestCase(unittest.TestCase):
-    """ Test the ``WhitespaceExtension``.
-    """
+    """Test the ``WhitespaceExtension``."""
 
     block_start_string = "{%"
     block_end_string = "%}"
@@ -88,8 +85,7 @@ class Jinja2WhitespaceExtensionTestCase(unittest.TestCase):
         self.preprocess = lambda s: extension.preprocess(s, None)
 
     def test_whitespace(self):
-        """
-        """
+        """"""
         assert " x" == self.preprocess(" x")
         assert "x" == self.preprocess("  \n x \n  ")
         assert "x" == self.preprocess("  x")
@@ -104,16 +100,14 @@ class Jinja2WhitespaceExtensionTestCase(unittest.TestCase):
 
 
 class Jinja2WhitespaceExtensionTestCase2(Jinja2WhitespaceExtensionTestCase):
-    """ Test the ``WhitespaceExtension``.
-    """
+    """Test the ``WhitespaceExtension``."""
 
     block_start_string = "<%"
     block_end_string = "%>"
 
 
 class InlineExtensionTestCase(unittest.TestCase):
-    """ Test the ``InlineExtension``.
-    """
+    """Test the ``InlineExtension``."""
 
     def p(self, text, fallback=False):
         from wheezy.html.ext.jinja2 import InlineExtension

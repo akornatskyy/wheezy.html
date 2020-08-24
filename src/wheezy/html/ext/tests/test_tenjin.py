@@ -7,8 +7,7 @@ from wheezy.html.ext.tests.test_lexer import PreprocessorMixin
 
 
 class TenjinPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
-    """ Test the ``TenjinPreprocessor``.
-    """
+    """Test the ``TenjinPreprocessor``."""
 
     WHITE_SPACE_PATTERNS = ["%(w)s", "[ %(w)s", "%(w)s ", "[ %(w)s "]
 
@@ -36,12 +35,10 @@ class TenjinPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
 
 
 class TenjinWhitespacePreprocessorTestCase(unittest.TestCase):
-    """ Test the ``whitespace_preprocessor``.
-    """
+    """Test the ``whitespace_preprocessor``."""
 
     def test_whitespace(self):
-        """
-        """
+        """"""
         from wheezy.html.ext.tenjin import whitespace_preprocessor
 
         assert " x" == whitespace_preprocessor(" x")
@@ -55,8 +52,7 @@ class TenjinWhitespacePreprocessorTestCase(unittest.TestCase):
 
 
 class InlinePreprocessorTestCase(unittest.TestCase):
-    """ Test the ``inline_preprocessor``.
-    """
+    """Test the ``inline_preprocessor``."""
 
     def p(self, text, fallback=False):
         from wheezy.html.ext.tenjin import inline_preprocessor

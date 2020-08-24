@@ -7,8 +7,7 @@ from wheezy.html.ext.tests.test_lexer import PreprocessorMixin
 
 
 class MakoPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
-    """ Test the ``MakoPreprocessor``.
-    """
+    """Test the ``MakoPreprocessor``."""
 
     WHITE_SPACE_PATTERNS = ["%(w)s", " %(w)s", "%(w)s ", " %(w)s "]
 
@@ -36,12 +35,10 @@ class MakoPreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
 
 
 class MakoWhitespacePreprocessorTestCase(unittest.TestCase):
-    """ Test the ``whitespace_preprocessor``.
-    """
+    """Test the ``whitespace_preprocessor``."""
 
     def test_whitespace(self):
-        """
-        """
+        """"""
         from wheezy.html.ext.mako import whitespace_preprocessor
 
         assert " x" == whitespace_preprocessor(" x")
@@ -52,8 +49,7 @@ class MakoWhitespacePreprocessorTestCase(unittest.TestCase):
 
 
 class InlinePreprocessorTestCase(unittest.TestCase):
-    """ Test the ``inline_preprocessor``.
-    """
+    """Test the ``inline_preprocessor``."""
 
     def p(self, text, fallback=False):
         from wheezy.html.ext.mako import inline_preprocessor

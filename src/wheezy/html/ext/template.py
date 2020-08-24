@@ -155,19 +155,19 @@ RE_INLINE = re.compile(r'@inline\(("|\')(?P<path>.+?)\1\)', re.MULTILINE)
 
 
 class InlineExtension(object):
-    """ Inline preprocessor. Rewrite @inline("...") tag with
-        file content. If fallback is ``True`` rewrite to
-        @include("...") tag.
+    """Inline preprocessor. Rewrite @inline("...") tag with
+    file content. If fallback is ``True`` rewrite to
+    @include("...") tag.
 
-        >>> t = '1 @inline("master.html") 2'
-        >>> m = RE_INLINE.search(t)
-        >>> m.group('path')
-        'master.html'
-        >>> t[:m.start()], t[m.end():]
-        ('1 ', ' 2')
-        >>> m = RE_INLINE.search(' @inline("shared/footer.html")')
-        >>> m.group('path')
-        'shared/footer.html'
+    >>> t = '1 @inline("master.html") 2'
+    >>> m = RE_INLINE.search(t)
+    >>> m.group('path')
+    'master.html'
+    >>> t[:m.start()], t[m.end():]
+    ('1 ', ' 2')
+    >>> m = RE_INLINE.search(' @inline("shared/footer.html")')
+    >>> m.group('path')
+    'shared/footer.html'
     """
 
     def __init__(self, searchpath, fallback=False):

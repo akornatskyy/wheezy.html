@@ -12,20 +12,18 @@ def generate_white_space_patterns():  # pragma: nocover
 
 
 class PreprocessorInitTestCase(unittest.TestCase):
-    """ Test the ``Preprocessor.__init__``.
-    """
+    """Test the ``Preprocessor.__init__``."""
 
     def test_assert_widgets_placeholder(self):
-        """ Assert widgets pattern has a placeholder for supported
-            widgets.
+        """Assert widgets pattern has a placeholder for supported
+        widgets.
         """
         from wheezy.html.ext.lexer import Preprocessor
 
         self.assertRaises(AssertionError, lambda: Preprocessor(""))
 
     def test_widgets(self):
-        """ Ensure widgets supported.
-        """
+        """Ensure widgets supported."""
         from wheezy.html.ext.lexer import Preprocessor
 
         p = Preprocessor("%(widgets)s")
@@ -40,8 +38,7 @@ class PreprocessorInitTestCase(unittest.TestCase):
 
 
 class PreprocessorHelpersTestCase(unittest.TestCase):
-    """ Test the ``Preprocessor`` helpers.
-    """
+    """Test the ``Preprocessor`` helpers."""
 
     def setUp(self):
         from wheezy.html.ext.lexer import Preprocessor
@@ -49,8 +46,8 @@ class PreprocessorHelpersTestCase(unittest.TestCase):
         self.p = Preprocessor("%(widgets)s")
 
     def test_expression(self):
-        """ Expression distinguish text, number and python object access.
-            Python object access is filtered.
+        """Expression distinguish text, number and python object access.
+        Python object access is filtered.
         """
         self.p.EXPRESSION = "%(expr)s|%(expr_filter)s"
 
@@ -59,8 +56,7 @@ class PreprocessorHelpersTestCase(unittest.TestCase):
         assert "user.name|filter" == self.p.expression("user.name", "filter")
 
     def test_join_attrs(self):
-        """ Ensure HTML attributes are joined correctly.
-        """
+        """Ensure HTML attributes are joined correctly."""
         assert "" == self.p.join_attrs({})
 
         self.p.EXPRESSION = "%(expr)s%(expr_filter)s"
@@ -77,22 +73,20 @@ class PreprocessorHelpersTestCase(unittest.TestCase):
         )
 
     def test_error_class_no_class(self):
-        """ Substitute ``name`` in case ``class_`` is undefined.
-        """
+        """Substitute ``name`` in case ``class_`` is undefined."""
         self.p.ERROR_CLASS0 = "=%(name)s="
         assert "=x=" == self.p.error_class("x", class_="")
 
     def test_error_class(self):
-        """ Substitute ``name`` and ``class`` in case ``class_``
-            is defined.
+        """Substitute ``name`` and ``class`` in case ``class_``
+        is defined.
         """
         self.p.ERROR_CLASS1 = "=%(name)s %(class)s="
         assert "=x c=" == self.p.error_class("x", class_='"c"')
 
 
 class PreprocessorWidgetsTestCase(unittest.TestCase):
-    """ Test the ``Preprocessor`` widgets.
-    """
+    """Test the ``Preprocessor`` widgets."""
 
     def setUp(self):
         from wheezy.html.ext.lexer import Preprocessor
@@ -102,22 +96,19 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         self.p.ERROR_CLASS1 = "%(name)s %(class)s"
 
     def test_hidden(self):
-        """ hidden widget
-        """
+        """hidden widget"""
         self.p.HIDDEN = "%(name)s %(value)s"
         assert "pref model.pref|f" == self.p.hidden("model.pref", None, "|f")
 
     def test_multiple_hidden(self):
-        """ multiple_hidden widget
-        """
+        """multiple_hidden widget"""
         self.p.MULTIPLE_HIDDEN = "%(name)s %(value)s%(expr_filter)s"
         assert "prefs model.prefs|f" == self.p.multiple_hidden(
             "model.prefs", None, "|f"
         )
 
     def test_label(self):
-        """ label widget
-        """
+        """label widget"""
         self.p.LABEL = """
             id = %(id)s
             name = %(name)s
@@ -136,8 +127,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_emptybox(self):
-        """ emptybox widget
-        """
+        """emptybox widget"""
         self.p.INPUT = """
             id = %(id)s
             name = %(name)s
@@ -164,8 +154,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_textbox(self):
-        """ textbox widget
-        """
+        """textbox widget"""
         self.p.INPUT = """
             id = %(id)s
             name = %(name)s
@@ -192,8 +181,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_password(self):
-        """ password widget
-        """
+        """password widget"""
         self.p.INPUT = """
             id = %(id)s
             name = %(name)s
@@ -220,8 +208,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_textarea(self):
-        """ textarea widget
-        """
+        """textarea widget"""
         self.p.TEXTAREA = """
             id = %(id)s
             name = %(name)s
@@ -240,8 +227,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_checkbox(self):
-        """ checkbox widget
-        """
+        """checkbox widget"""
         self.p.CHECKBOX = """
             id = %(id)s
             name = %(name)s
@@ -260,8 +246,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_multiple_checkbox(self):
-        """ multiple_checkbox widget
-        """
+        """multiple_checkbox widget"""
         self.p.MULTIPLE_CHECKBOX = """
             id = %(id)s
             name = %(name)s
@@ -284,8 +269,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_radio(self):
-        """ radio widget
-        """
+        """radio widget"""
         self.p.RADIO = """
             id = %(id)s
             name = %(name)s
@@ -308,8 +292,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_dropdown(self):
-        """ dropdown widget
-        """
+        """dropdown widget"""
         self.p.SELECT = """
             id = %(id)s
             name = %(name)s
@@ -334,8 +317,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_listbox(self):
-        """ listbox widget
-        """
+        """listbox widget"""
         self.p.MULTIPLE_SELECT = """
             id = %(id)s
             name = %(name)s
@@ -358,8 +340,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_error(self):
-        """ error widget
-        """
+        """error widget"""
         self.p.ERROR = """
             name = %(name)s
             attrs = %(attrs)s
@@ -395,8 +376,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_info(self):
-        """ info widget
-        """
+        """info widget"""
         self.p.MESSAGE = """
             value = %(value)s
             info = %(info)s
@@ -432,8 +412,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
         )
 
     def test_warning(self):
-        """ warning widget
-        """
+        """warning widget"""
         self.p.MESSAGE = """
             value = %(value)s
             info = %(info)s
@@ -470,8 +449,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
 
 
 class PreprocessorMixin(object):
-    """ Test the ``Preprocessor``.
-    """
+    """Test the ``Preprocessor``."""
 
     from operator import itemgetter
 
@@ -493,8 +471,7 @@ class PreprocessorMixin(object):
         pass  # pragma: nocover
 
     def render(self, widget, html):
-        """ hidden widget.
-        """
+        """hidden widget."""
         for wsp in self.WHITE_SPACE_PATTERNS:
             self.assert_render_equal(
                 wsp % {"w": widget},
@@ -506,8 +483,7 @@ class PreprocessorMixin(object):
             )
 
     def test_hidden(self):
-        """ hidden widget.
-        """
+        """hidden widget."""
         self.m.pref = "ab<c>"
         self.render(
             self.HIDDEN,
@@ -515,8 +491,7 @@ class PreprocessorMixin(object):
         )
 
     def test_multiple_hidden(self):
-        """ multiple_hidden widget.
-        """
+        """multiple_hidden widget."""
         self.m.prefs = ["a", "b"]
         self.render(
             self.MULTIPLE_HIDDEN,
@@ -525,8 +500,7 @@ class PreprocessorMixin(object):
         )
 
     def test_label(self):
-        """ label widget.
-        """
+        """label widget."""
         self.m.username = ""
         self.render(
             self.LABEL, '<label for="username"><i>*</i>Username:</label>'
@@ -538,8 +512,7 @@ class PreprocessorMixin(object):
         )
 
     def test_emptybox(self):
-        """ emptybox widget.
-        """
+        """emptybox widget."""
         self.m.amount = 10
         self.render(
             self.EMPTYBOX,
@@ -559,8 +532,7 @@ class PreprocessorMixin(object):
         )
 
     def test_textbox(self):
-        """ textbox widget.
-        """
+        """textbox widget."""
         self.m.username = "John"
         self.render(
             self.TEXTBOX,
@@ -581,8 +553,7 @@ class PreprocessorMixin(object):
         )
 
     def test_password(self):
-        """ password widget.
-        """
+        """password widget."""
         self.m.pwd = ""
         self.render(
             self.PASSWORD, '<input id="pwd" name="pwd" type="password" />'
@@ -594,8 +565,7 @@ class PreprocessorMixin(object):
         )
 
     def test_textarea(self):
-        """ textarea widget.
-        """
+        """textarea widget."""
         self.m.comment = "x"
         self.render(
             self.TEXTAREA,
@@ -610,8 +580,7 @@ class PreprocessorMixin(object):
         )
 
     def test_checkbox(self):
-        """ checkbox widget.
-        """
+        """checkbox widget."""
         self.m.remember_me = True
         self.render(
             self.CHECKBOX,
@@ -632,8 +601,7 @@ class PreprocessorMixin(object):
         )
 
     def test_multiple_checkbox(self):
-        """ multiple_checkbox widget.
-        """
+        """multiple_checkbox widget."""
         self.m.scm = ["hg", "git"]
         self.render(
             self.MULTIPLE_CHECKBOX,
@@ -666,8 +634,7 @@ class PreprocessorMixin(object):
         )
 
     def test_radio(self):
-        """ radio widget.
-        """
+        """radio widget."""
         self.m.scm = "hg"
         self.render(
             self.RADIO,
@@ -700,8 +667,7 @@ class PreprocessorMixin(object):
         )
 
     def test_dropdown(self):
-        """ dropdown widget.
-        """
+        """dropdown widget."""
         self.m.scm = "hg"
         self.render(
             self.DROPDOWN,
@@ -731,8 +697,7 @@ class PreprocessorMixin(object):
         )
 
     def test_listbox(self):
-        """ listbox widget.
-        """
+        """listbox widget."""
         self.m.scm = ("hg", "svn")
         self.render(
             self.LISTBOX,
@@ -763,15 +728,13 @@ class PreprocessorMixin(object):
         )
 
     def test_attribute_error(self):
-        """ attribute error widget.
-        """
+        """attribute error widget."""
         self.render(self.ERROR, "")
         self.e["username"] = ["Error1", "Error2"]
         self.render(self.ERROR, '<span class="error">Error2</span>')
 
     def test_general_error(self):
-        """ general error widget.
-        """
+        """general error widget."""
         self.render(self.GENERAL_ERROR, "")
         self.e["__ERROR__"] = ["Error1", "Error2"]
         self.render(
@@ -779,16 +742,14 @@ class PreprocessorMixin(object):
         )
 
     def test_attribute_info(self):
-        """ attribute info widget.
-        """
+        """attribute info widget."""
         self.m.user_info = None
         self.render(self.INFO, "")
         self.m.user_info = "Info"
         self.render(self.INFO, '<span class="info">Info</span>')
 
     def test_general_info(self):
-        """ general info widget.
-        """
+        """general info widget."""
         self.render(self.GENERAL_INFO, "")
         self.m.message = "Message"
         self.render(
@@ -796,16 +757,14 @@ class PreprocessorMixin(object):
         )
 
     def test_attribute_warning(self):
-        """ attribute warning widget.
-        """
+        """attribute warning widget."""
         self.m.user_info = None
         self.render(self.WARNING, "")
         self.m.user_info = "Warn"
         self.render(self.WARNING, '<span class="warning">Warn</span>')
 
     def test_general_warning(self):
-        """ general warning widget.
-        """
+        """general warning widget."""
         self.render(self.GENERAL_WARNING, "")
         self.m.message = "Message"
         self.render(

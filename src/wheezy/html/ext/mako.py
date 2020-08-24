@@ -135,19 +135,19 @@ RE_INLINE = re.compile(
 
 
 def inline_preprocessor(directories, fallback=False):
-    """ Inline preprocessor. Rewrite <%inline file="..." /> tag with
-        file content. If fallback is ``True`` rewrite to
-        <%include file="..." /> tag.
+    """Inline preprocessor. Rewrite <%inline file="..." /> tag with
+    file content. If fallback is ``True`` rewrite to
+    <%include file="..." /> tag.
 
-        >>> t = '1 <%inline file="master.html"/> 2'
-        >>> m = RE_INLINE.search(t)
-        >>> m.group('path')
-        'master.html'
-        >>> t[:m.start()], t[m.end():]
-        ('1 ', ' 2')
-        >>> m = RE_INLINE.search(' <%inline file="shared/footer.html"/>')
-        >>> m.group('path')
-        'shared/footer.html'
+    >>> t = '1 <%inline file="master.html"/> 2'
+    >>> m = RE_INLINE.search(t)
+    >>> m.group('path')
+    'master.html'
+    >>> t[:m.start()], t[m.end():]
+    ('1 ', ' 2')
+    >>> m = RE_INLINE.search(' <%inline file="shared/footer.html"/>')
+    >>> m.group('path')
+    'shared/footer.html'
     """
     strategy = (
         fallback and (lambda path: '<%include file="' + path + '"/>') or None

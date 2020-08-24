@@ -62,7 +62,8 @@ if can_build_ext:  # noqa: C901
 README = open(os.path.join(os.path.dirname(__file__), "README.md")).read()
 VERSION = (
     re.search(
-        r'__version__ = "(.+)"', open("src/wheezy/html/__init__.py").read(),
+        r'__version__ = "(.+)"',
+        open("src/wheezy/html/__init__.py").read(),
     )
     .group(1)
     .strip()
