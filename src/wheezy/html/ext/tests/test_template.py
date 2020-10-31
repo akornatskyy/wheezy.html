@@ -103,11 +103,12 @@ class InlineExtensionTestCase(unittest.TestCase):
 
 
 try:
-    from wheezy.html.ext.template import WidgetExtension
-    from wheezy.html.utils import html_escape
     from wheezy.template.engine import Engine
     from wheezy.template.ext.core import CoreExtension
     from wheezy.template.loader import DictLoader
+
+    from wheezy.html.ext.template import WidgetExtension
+    from wheezy.html.utils import html_escape
 
     def assert_template_equal(text, expected, **kwargs):
         engine = Engine(
