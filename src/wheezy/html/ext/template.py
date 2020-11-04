@@ -3,7 +3,6 @@
 
 import re
 
-from wheezy.html.comp import xrange
 from wheezy.html.ext.lexer import (
     InlinePreprocessor,
     Preprocessor,
@@ -133,7 +132,7 @@ whitespace_preprocessor = WhitespacePreprocessor(
 
 
 def whitespace_postprocessor(tokens):
-    for i in xrange(len(tokens)):
+    for i in range(len(tokens)):
         lineno, token, value = tokens[i]
         if token == "markup":
             value = whitespace_preprocessor(value)

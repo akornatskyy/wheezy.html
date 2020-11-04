@@ -27,9 +27,9 @@ Resources:
 ## Install
 
 [wheezy.html](https://pypi.org/project/wheezy.html) requires
-[python](http://www.python.org) version 2.4 to 2.7 or 3.2+. It is
-independent of operating system. You can install it from
-[pypi](https://pypi.org/project/wheezy.html) site:
+[python](http://www.python.org) version 3.6+. It is independent of operating
+system. You can install it from [pypi](https://pypi.org/project/wheezy.html)
+site:
 
 ```sh
 pip install -U wheezy.html
@@ -39,7 +39,6 @@ If you would like take a benefit of template preprocessing for Mako,
 Jinja2, Tenjin or Wheezy.Template engines specify extra requirements:
 
 ```sh
-pip install wheezy.html[jinja2]
 pip install wheezy.html[wheezy.template]
 ```
 

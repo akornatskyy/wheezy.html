@@ -1,14 +1,6 @@
 
 #include <Python.h>
 
-#if PY_VERSION_HEX < 0x02050000
-typedef int Py_ssize_t;
-#endif
-
-#if PY_VERSION_HEX < 0x02060000
-#define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
-#endif
-
 static PyObject*
 escape_html_unicode(PyUnicodeObject *s)
 {
@@ -86,11 +78,7 @@ escape_html_unicode(PyUnicodeObject *s)
 static PyObject*
 escape_html_string(PyObject *s)
 {
-#if PY_MAJOR_VERSION < 3
-    const Py_ssize_t s_size = PyString_GET_SIZE(s);
-#else
     const Py_ssize_t s_size = PyBytes_GET_SIZE(s);
-#endif
     if (s_size == 0)
     {
         Py_INCREF(s);
@@ -98,11 +86,7 @@ escape_html_string(PyObject *s)
     }
 
     Py_ssize_t count = 0;
-#if PY_MAJOR_VERSION < 3
-    char *start = PyString_AS_STRING(s);
-#else
     char *start = PyBytes_AS_STRING(s);
-#endif
     const char *end = start + s_size;
     char *p = start;
     while(p < end)
@@ -127,22 +111,14 @@ escape_html_string(PyObject *s)
         return (PyObject*)s;
     }
 
-#if PY_MAJOR_VERSION < 3
-    PyObject *result = PyString_FromStringAndSize(NULL, s_size + count);
-#else
     PyObject *result = PyBytes_FromStringAndSize(NULL, s_size + count);
-#endif
     if (! result)
     {
         return NULL;
     }
 
     p = start;
-#if PY_MAJOR_VERSION < 3
-    char *r = PyString_AS_STRING(result);
-#else
     char *r = PyBytes_AS_STRING(result);
-#endif
     while(p < end)
     {
         char ch = *p++;
@@ -186,21 +162,13 @@ escape_html(PyObject *self, PyObject *args)
         return escape_html_unicode((PyUnicodeObject*)s);
     }
 
-#if PY_MAJOR_VERSION < 3
-    if (PyString_CheckExact(s))
-#else
     if (PyBytes_CheckExact(s))
-#endif
     {
         return escape_html_string(s);
     }
 
     if (s == Py_None) {
-#if PY_MAJOR_VERSION < 3
-        return PyString_FromStringAndSize(NULL, 0);
-#else
         return PyUnicode_FromStringAndSize(NULL, 0);
-#endif
     }
 
     PyErr_Format(PyExc_TypeError,
@@ -217,16 +185,6 @@ static PyMethodDef module_methods[] = {
 };
 
 
-#if PY_MAJOR_VERSION < 3
-
-PyMODINIT_FUNC
-initboost(void)
-{
-    Py_InitModule("wheezy.html.boost", module_methods);
-}
-
-#else
-
 static struct PyModuleDef module_definition = {
     PyModuleDef_HEAD_INIT,
 	"wheezy.html.boost",
@@ -240,5 +198,3 @@ PyInit_boost(void)
 {
 	return PyModule_Create(&module_definition);
 }
-
-#endif

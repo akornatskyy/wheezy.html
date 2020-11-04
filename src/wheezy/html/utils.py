@@ -3,8 +3,6 @@
 
 from datetime import date, datetime
 
-from wheezy.html.comp import str_type
-
 
 def escape_html(s):
     """Escapes a string so it is valid within HTML. Converts `None`
@@ -66,7 +64,7 @@ def format_value(value, format_spec=None, format_provider=None):
     >>> format_value([])
     ()
 
-    If format provider is unknown apply str_type.
+    If format provider is unknown apply str.
 
     >>> str(format_value({}))
     '{}'
@@ -87,12 +85,12 @@ def format_value(value, format_spec=None, format_provider=None):
             if formatter_name in format_providers:
                 format_provider = format_providers[formatter_name]
             else:
-                return str_type(value)
+                return str(value)
         return format_provider(value, format_spec)
 
 
 def str_format_provider(value, format_spec):
-    return str_type(value)
+    return str(value)
 
 
 min_date = date(1900, 1, 1)
@@ -138,7 +136,7 @@ def datetime_format_provider(value, format_spec=None):
 
 
 format_providers = {
-    "str": lambda value, format_spec: html_escape(str_type(value)),
+    "str": lambda value, format_spec: html_escape(str(value)),
     "unicode": lambda value, format_spec: html_escape(value),
     "int": str_format_provider,
     "Decimal": str_format_provider,
