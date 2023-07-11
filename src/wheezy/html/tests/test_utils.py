@@ -35,6 +35,5 @@ try:
         def setUp(self):
             self.escape = escape_html
 
-
 except ImportError:  # pragma: nocover
     pass

@@ -116,7 +116,6 @@ value="@key%(expr_filter)s"%(class)s\\
 
 
 class WidgetExtension(object):
-
     preprocessors = [WheezyPreprocessor()]
 
 
@@ -140,7 +139,6 @@ def whitespace_postprocessor(tokens):
 
 
 class WhitespaceExtension(object):
-
     preprocessors = [
         WhitespacePreprocessor(
             rules=[(re.compile(r"\s+$", re.MULTILINE), r"")]

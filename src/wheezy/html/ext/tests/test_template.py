@@ -121,7 +121,6 @@ try:
         value = engine.render("x", kwargs, {}, {})
         assert expected == value
 
-
 except ImportError:  # pragma: nocover
 
     def assert_template_equal(text, expected, **kwargs):  # noqa

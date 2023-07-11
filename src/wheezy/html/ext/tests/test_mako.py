@@ -83,7 +83,6 @@ try:
         value = template.render(**kwargs)
         assert expected == value
 
-
 except ImportError:  # pragma: nocover
 
     def assert_mako_equal(text, expected, **kwargs):  # noqa

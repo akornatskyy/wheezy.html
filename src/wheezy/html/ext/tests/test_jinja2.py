@@ -143,7 +143,6 @@ try:
         value = template.render(kwargs)
         assert expected == value
 
-
 except ImportError:  # pragma: nocover
 
     def assert_jinja2_equal(text, expected, **kwargs):  # noqa
