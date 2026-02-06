@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.html.ext.jinja2``.
-"""
-
 import unittest
 
 from wheezy.html.ext.tests.test_lexer import PreprocessorMixin
@@ -16,7 +13,7 @@ class Jinja2PreprocessorTestCase(PreprocessorMixin, unittest.TestCase):
             {"variable_start_string": "{{", "variable_end_string": "}}"},
             template,
             expected,
-            **kwargs
+            **kwargs,
         )
 
     HIDDEN = "{{ model.pref.hidden()|e }}"
@@ -49,7 +46,7 @@ class Jinja2PreprocessorTestCase2(PreprocessorMixin, unittest.TestCase):
             {"variable_start_string": "${", "variable_end_string": "}"},
             template,
             expected,
-            **kwargs
+            **kwargs,
         )
 
     HIDDEN = "${model.pref.hidden()|e}"

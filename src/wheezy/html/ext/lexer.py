@@ -1,6 +1,3 @@
-""" ``lexer`` module
-"""
-
 import os.path
 import re
 from warnings import warn

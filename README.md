@@ -1,6 +1,6 @@
 # wheezy.html
 
-[![Build Status](https://travis-ci.org/akornatskyy/wheezy.html.svg?branch=master)](https://travis-ci.org/akornatskyy/wheezy.html)
+[![tests](https://github.com/akornatskyy/wheezy.html/actions/workflows/tests.yml/badge.svg)](https://github.com/akornatskyy/wheezy.html/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/akornatskyy/wheezy.html/badge.svg?branch=master)](https://coveralls.io/github/akornatskyy/wheezy.html?branch=master)
 [![Documentation Status](https://readthedocs.org/projects/wheezyhtml/badge/?version=latest)](https://wheezyhtml.readthedocs.io/en/latest/?badge=latest)
 [![pypi version](https://badge.fury.io/py/wheezy.html.svg)](https://badge.fury.io/py/wheezy.html)
@@ -19,9 +19,10 @@ It is optimized for performance, well tested and documented.
 
 Resources:
 
-- [source code](https://github.com/akornatskyy/src) and
-  [issues](https://github.com/akornatskyy/wheezy.html/issues) tracker are
-  available on [github](https://github.com/akornatskyy/wheezy.html)
+- [source code](https://github.com/akornatskyy/wheezy.html)
+  and [issues](https://github.com/akornatskyy/wheezy.html/issues)
+  tracker are available on
+  [github](https://github.com/akornatskyy/wheezy.html)
 - [documentation](https://wheezyhtml.readthedocs.io/en/latest/)
 
 ## Install

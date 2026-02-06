@@ -1,6 +1,3 @@
-""" ``utils`` module.
-"""
-
 from datetime import date, datetime
 
 

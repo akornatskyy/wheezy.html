@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.html.utils``.
-"""
-
 import unittest
 
 

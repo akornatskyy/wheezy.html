@@ -7,6 +7,7 @@ __pycache__/
 .pytest_cache/
 .cache/
 .coverage
+.tox
 *.pyc
 *.pyo
 *.pyd

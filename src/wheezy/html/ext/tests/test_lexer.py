@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.html.ext.lexer``.
-"""
-
 import unittest
 
 
@@ -350,9 +347,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             name = user_name
             attrs =  class="error" cursor="auto"
             expr_filter = |f
-        """ == self.p.error(
-            "model.user_name", 'cursor="auto"', "|f"
-        )
+        """ == self.p.error("model.user_name", 'cursor="auto"', "|f")
         assert """
             name = user_name
             attrs =  class="error x" cursor="auto"
@@ -364,16 +359,12 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             name = __ERROR__
             attrs =  class="error-message" cursor="auto"
             expr_filter = |f
-        """ == self.p.error(
-            "model", 'cursor="auto"', "|f"
-        )
+        """ == self.p.error("model", 'cursor="auto"', "|f")
         assert """
             name = __ERROR__
             attrs =  class="error-message x" cursor="auto"
             expr_filter = |f
-        """ == self.p.error(
-            "model", 'class="x", cursor="auto"', "|f"
-        )
+        """ == self.p.error("model", 'class="x", cursor="auto"', "|f")
 
     def test_info(self):
         """info widget"""
@@ -386,30 +377,22 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = model.username
             info = model.username|f
             attrs =  class="info" cursor="auto"
-        """ == self.p.info(
-            "model.username", 'cursor="auto"', "|f"
-        )
+        """ == self.p.info("model.username", 'cursor="auto"', "|f")
         assert """
             value = model.username
             info = model.username|f
             attrs =  class="info x" cursor="auto"
-        """ == self.p.info(
-            "model.username", 'class="x", cursor="auto"', "|f"
-        )
+        """ == self.p.info("model.username", 'class="x", cursor="auto"', "|f")
         assert """
             value = model
             info = model|f
             attrs =  class="info-message" cursor="auto"
-        """ == self.p.info(
-            "model", 'cursor="auto"', "|f"
-        )
+        """ == self.p.info("model", 'cursor="auto"', "|f")
         assert """
             value = model
             info = model|f
             attrs =  class="info-message x" cursor="auto"
-        """ == self.p.info(
-            "model", 'class="x", cursor="auto"', "|f"
-        )
+        """ == self.p.info("model", 'class="x", cursor="auto"', "|f")
 
     def test_warning(self):
         """warning widget"""
@@ -422,9 +405,7 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = model.username
             info = model.username|f
             attrs =  class="warning" cursor="auto"
-        """ == self.p.warning(
-            "model.username", 'cursor="auto"', "|f"
-        )
+        """ == self.p.warning("model.username", 'cursor="auto"', "|f")
         assert """
             value = model.username
             info = model.username|f
@@ -436,16 +417,12 @@ class PreprocessorWidgetsTestCase(unittest.TestCase):
             value = model
             info = model|f
             attrs =  class="warning-message" cursor="auto"
-        """ == self.p.warning(
-            "model", 'cursor="auto"', "|f"
-        )
+        """ == self.p.warning("model", 'cursor="auto"', "|f")
         assert """
             value = model
             info = model|f
             attrs =  class="warning-message x" cursor="auto"
-        """ == self.p.warning(
-            "model", 'class="x", cursor="auto"', "|f"
-        )
+        """ == self.p.warning("model", 'class="x", cursor="auto"', "|f")
 
 
 class PreprocessorMixin(object):

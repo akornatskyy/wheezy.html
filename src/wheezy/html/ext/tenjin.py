@@ -1,6 +1,3 @@
-""" ``tenjin`` extension module.
-"""
-
 import re
 
 from wheezy.html.ext.lexer import (
@@ -127,7 +124,6 @@ whitespace_preprocessor = WhitespacePreprocessor(
         (re.compile(r"(?<!\?)>\s+<(?!\?)"), r"><"),
     ]
 )
-
 
 RE_INLINE = re.compile(
     r'<\?py\s+inline\(("|\')(?P<path>.+?)\1\)\s*\?>', re.MULTILINE

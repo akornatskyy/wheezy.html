@@ -1,6 +1,3 @@
-""" ``parser`` module
-"""
-
 import re
 
 known_functions = ["format"]

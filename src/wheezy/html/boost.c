@@ -4,20 +4,22 @@
 static PyObject*
 escape_html_unicode(PyUnicodeObject *s)
 {
-    const Py_ssize_t s_size = PyUnicode_GET_SIZE(s);
+    const Py_ssize_t s_size = PyUnicode_GET_LENGTH(s);
     if (s_size == 0)
     {
         Py_INCREF(s);
-        return (PyObject*)s;
+        return s;
     }
 
+    int kind = PyUnicode_KIND(s);
+    void *data = PyUnicode_DATA(s);
     Py_ssize_t count = 0;
-    Py_UNICODE *start = PyUnicode_AS_UNICODE(s);
-    const Py_UNICODE *end = start + s_size;
-    Py_UNICODE *p = start;
-    while(p < end)
+    Py_UCS4 max_char = 0;
+
+    for (Py_ssize_t i = 0; i < s_size; i++)
     {
-        switch(*p++)
+        Py_UCS4 ch = PyUnicode_READ(kind, data, i);
+        switch(ch)
         {
             case '<':
             case '>':
@@ -29,44 +31,92 @@ escape_html_unicode(PyUnicodeObject *s)
             default:
                 break;
         }
+
+        if (ch > max_char) {
+            max_char = ch;
+        }
     }
 
     if (count == 0)
     {
         Py_INCREF(s);
-        return (PyObject*)s;
+        return s;
     }
 
-    PyObject *result = PyUnicode_FromUnicode(NULL, s_size + count);
-    if (! result)
+    PyObject *result = PyUnicode_New(s_size + count, max_char);
+    if (!result)
     {
         return NULL;
     }
 
-    p = start;
-    Py_UNICODE *r = PyUnicode_AS_UNICODE(result);
-    while(p < end)
-    {
-        Py_UNICODE ch = *p++;
-        switch(ch)
-        {
-            case '<':
-                *r++ = '&'; *r++ = 'l'; *r++ = 't'; *r++ = ';';
-                break;
-            case '>':
-                *r++ = '&'; *r++ = 'g'; *r++ = 't'; *r++ = ';';
-                break;
-            case '&':
-                *r++ = '&'; *r++ = 'a'; *r++ = 'm'; *r++ = 'p';
-                *r++ = ';';
-                break;
-            case '"':
-                *r++ = '&'; *r++ = 'q'; *r++ = 'u'; *r++ = 'o';
-                *r++ = 't'; *r++ = ';';
-                break;
-            default:
-                *r++ = ch;
-                break;
+    int result_kind = PyUnicode_KIND(result);
+    void *result_data = PyUnicode_DATA(result);
+    Py_ssize_t pos = 0;
+
+    if (kind == PyUnicode_1BYTE_KIND && max_char <= 127) {
+        const Py_UCS1 *in = (Py_UCS1 *)data;
+        Py_UCS1 *out = (Py_UCS1 *)result_data;
+
+        for (Py_ssize_t i = 0; i < s_size; i++) {
+            Py_UCS1 ch = in[i];
+            switch(ch) {
+                case '<':
+                    out[pos++] = '&'; out[pos++] = 'l'; out[pos++] = 't';
+                    out[pos++] = ';';
+                    break;
+                case '>':
+                    out[pos++] = '&'; out[pos++] = 'g'; out[pos++] = 't';
+                    out[pos++] = ';';
+                    break;
+                case '&':
+                    out[pos++] = '&'; out[pos++] = 'a'; out[pos++] = 'm';
+                    out[pos++] = 'p'; out[pos++] = ';';
+                    break;
+                case '"':
+                    out[pos++] = '&'; out[pos++] = 'q'; out[pos++] = 'u';
+                    out[pos++] = 'o'; out[pos++] = 't'; out[pos++] = ';';
+                    break;
+                default:
+                    out[pos++] = ch;
+                    break;
+            }
+        }
+    }
+    else {
+        for (Py_ssize_t i = 0; i < s_size; i++) {
+            Py_UCS4 ch = PyUnicode_READ(kind, data, i);
+            switch (ch) {
+                case '<':
+                    PyUnicode_WRITE(result_kind, result_data, pos++, '&');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 'l');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 't');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, ';');
+                    break;
+                case '>':
+                    PyUnicode_WRITE(result_kind, result_data, pos++, '&');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 'g');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 't');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, ';');
+                    break;
+                case '&':
+                    PyUnicode_WRITE(result_kind, result_data, pos++, '&');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 'a');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 'm');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 'p');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, ';');
+                    break;
+                case '"':
+                    PyUnicode_WRITE(result_kind, result_data, pos++, '&');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 'q');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 'u');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 'o');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, 't');
+                    PyUnicode_WRITE(result_kind, result_data, pos++, ';');
+                    break;
+                default:
+                    PyUnicode_WRITE(result_kind, result_data, pos++, ch);
+                    break;
+            }
         }
     }
 
@@ -159,7 +209,7 @@ escape_html(PyObject *self, PyObject *args)
 
     if (PyUnicode_CheckExact(s))
     {
-        return escape_html_unicode((PyUnicodeObject*)s);
+        return escape_html_unicode(s);
     }
 
     if (PyBytes_CheckExact(s))
@@ -172,7 +222,7 @@ escape_html(PyObject *self, PyObject *args)
     }
 
     PyErr_Format(PyExc_TypeError,
-                 "expected string or unicode object, %s found",
+                 "expected str or bytes, got %s",
                  Py_TYPE(s)->tp_name);
     return NULL;
 }

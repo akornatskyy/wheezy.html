@@ -1,6 +1,3 @@
-""" ``wheezy.template`` extension module.
-"""
-
 import re
 
 from wheezy.html.ext.lexer import (

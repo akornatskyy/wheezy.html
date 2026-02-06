@@ -1,6 +1,3 @@
-""" Unit tests for ``wheezy.html.ext.tenjin``.
-"""
-
 import unittest
 
 from wheezy.html.ext.tests.test_lexer import PreprocessorMixin

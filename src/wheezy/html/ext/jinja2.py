@@ -1,6 +1,3 @@
-""" ``jinja2`` extension module.
-"""
-
 import re
 
 from wheezy.html.ext.lexer import (
@@ -25,9 +22,7 @@ class Jinja2Preprocessor(Preprocessor):
                 "\\{\\{", re.escape(variable_start_string)
             )
         if variable_end_string:
-            pattern = pattern.replace(
-                "\\}\\}", re.escape(variable_end_string)
-            )
+            pattern = pattern.replace("\\}\\}", re.escape(variable_end_string))
         super(Jinja2Preprocessor, self).__init__(pattern)
 
         attrs = [
@@ -168,9 +163,7 @@ class WhitespaceExtension(Extension):
                 ),
                 (
                     re.compile(
-                        r"%\}\s+<".replace(
-                            r"%\}", re.escape(block_end_string)
-                        )
+                        r"%\}\s+<".replace(r"%\}", re.escape(block_end_string))
                     ),
                     r"%}<".replace("%}", block_end_string),
                 ),
