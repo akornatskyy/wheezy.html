@@ -2,7 +2,7 @@
 #include <Python.h>
 
 static PyObject*
-escape_html_unicode(PyUnicodeObject *s)
+escape_html_unicode(PyObject *s)
 {
     const Py_ssize_t s_size = PyUnicode_GET_LENGTH(s);
     if (s_size == 0)
