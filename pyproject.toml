@@ -65,6 +65,7 @@ version = { attr = "wheezy.html.__version__" }
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]
+addopts = "--import-mode=importlib"
 
 [tool.coverage.run]
 source = ["src/wheezy/html"]
