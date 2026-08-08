@@ -30,13 +30,13 @@ packaging==26.3
     #   build
     #   pytest
     #   wheel
-pip-tools==7.6.0
+pip-tools==7.6.1
     # via -r requirements/dev.in
 pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
-pygments==2.19.2
+pygments==2.21.0
     # via pytest
 pyproject-hooks==1.2.0
     # via
@@ -50,7 +50,7 @@ pytest-cov==7.1.0
     # via -r requirements/dev.in
 tenjin==1.1.1
     # via -r requirements/dev.in
-wheel==0.47.0
+wheel==0.48.0
     # via pip-tools
 wheezy.template==3.2.5
     # via -r requirements/dev.in
