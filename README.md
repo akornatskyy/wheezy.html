@@ -28,7 +28,7 @@ Resources:
 ## Install
 
 [wheezy.html](https://pypi.org/project/wheezy.html) requires
-[python](http://www.python.org) version 3.10+. It is independent of operating
+[python](http://www.python.org) version 3.11+. It is independent of operating
 system. You can install it from [pypi](https://pypi.org/project/wheezy.html)
 site:
 
